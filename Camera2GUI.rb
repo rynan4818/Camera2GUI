@@ -6,6 +6,14 @@ class Form_main                                                     ##__BY_FDVR
   class TabPanel_main                                               ##__BY_FDVR
 
     class Panel1                                                    ##__BY_FDVR
+    
+      def edit_camera_name_changed
+      
+      end
+    
+      def comboBox_camera_type_selchanged
+      
+      end
 
     end                                                             ##__BY_FDVR
 
@@ -34,6 +42,32 @@ class Form_main                                                     ##__BY_FDVR
   def self_created
 
   end
+  
+  def button_add_clicked
+  
+  end
+  
+  def button_del_clicked
+  
+  end
+
+  def button_reflection_clicked
+  
+  end
+
+  def button_up_clicked
+  
+  end
+
+  def button_down_clicked
+  
+  end
+
+  def listBox_camera_selchanged
+  
+  end
+
+  
 end                                                                 ##__BY_FDVR
 
 

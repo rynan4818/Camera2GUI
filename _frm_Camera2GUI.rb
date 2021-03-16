@@ -2,10 +2,23 @@
 ## CAUTION!! ## This code was automagically ;-) created by FormDesigner.
 ## NEVER modify manualy -- otherwise, you'll have a terrible experience.
 
+require 'vr/vrdialog'
 require 'vr/vruby'
 require 'vr/vrcontrol'
 require 'vr/vrcomctl'
 require 'vr/vrmgdlayout'
+
+class Modaldlg1 < VRModalDialog
+  include VRContainersSet
+
+  def construct
+    self.caption = 'modaldlg1'
+    self.move(675,357,597,391)
+    addControl(VRButton,'button1',"Open",520,40,40,24)
+    addControl(VREdit,'edit1',"",32,40,488,24)
+  end 
+
+end
 
 class Form_main < VRForm
   include VRMenuUseable if defined? VRMenuUseable
@@ -24,9 +37,9 @@ class Form_main < VRForm
     class Panel0 < VRPanel
       include VRStdControlContainer
       include VRComCtlContainer
+      attr_reader :comboBox_anti_aliasing
       attr_reader :comboBox_camera_type
       attr_reader :comboBox_worldcam_visibility
-      attr_reader :edit_anti_aliasing
       attr_reader :edit_camera_name
       attr_reader :edit_field_of_view
       attr_reader :edit_fps_limit
@@ -47,12 +60,11 @@ class Form_main < VRForm
       attr_reader :trackBar_preview_size
       attr_reader :trackBar_render_scale
       attr_reader :trackBar_z_offset
-      attr_reader :updown_anti_aliasing
 
       def construct
+        addControl(VRCombobox,'comboBox_anti_aliasing',"",140,200,104,80)
         addControl(VRCombobox,'comboBox_camera_type',"",140,64,384,80)
         addControl(VRCombobox,'comboBox_worldcam_visibility',"",140,240,376,80)
-        addControl(VREdit,'edit_anti_aliasing',"",140,200,64,24,0x800)
         addControl(VREdit,'edit_camera_name',"",140,24,384,24)
         addControl(VREdit,'edit_field_of_view',"",140,104,64,24)
         addControl(VREdit,'edit_fps_limit',"",140,136,64,24)
@@ -73,7 +85,6 @@ class Form_main < VRForm
         addControl(VRTrackbar,'trackBar_preview_size',"trackBar2",220,280,304,24)
         addControl(VRTrackbar,'trackBar_render_scale',"trackBar1",220,168,304,24)
         addControl(VRTrackbar,'trackBar_z_offset',"trackBar1",220,320,304,24)
-        addControl(VRUpdown,'updown_anti_aliasing',"updown1",228,200,80,24,0x40)
       end
     end
 
@@ -180,6 +191,26 @@ class Form_main < VRForm
 
     class Panel5 < VRPanel
       include VRStdControlContainer
+      attr_reader :button_target_pos_x_d
+      attr_reader :button_target_pos_x_u
+      attr_reader :button_target_pos_y_d
+      attr_reader :button_target_pos_y_u
+      attr_reader :button_target_pos_z_d
+      attr_reader :button_target_pos_z_u
+      attr_reader :button_target_rot_x_d
+      attr_reader :button_target_rot_x_u
+      attr_reader :button_target_rot_y_d
+      attr_reader :button_target_rot_y_u
+      attr_reader :button_target_rot_z_d
+      attr_reader :button_target_rot_z_u
+      attr_reader :button_view_rect_height_d
+      attr_reader :button_view_rect_height_u
+      attr_reader :button_view_rect_width_d
+      attr_reader :button_view_rect_width_u
+      attr_reader :button_view_rect_x_d
+      attr_reader :button_view_rect_x_u
+      attr_reader :button_view_rect_y_d
+      attr_reader :button_view_rect_y_u
       attr_reader :edit_target_pos_x
       attr_reader :edit_target_pos_y
       attr_reader :edit_target_pos_z
@@ -205,25 +236,45 @@ class Form_main < VRForm
       attr_reader :static_view_rect_y
 
       def construct
-        addControl(VREdit,'edit_target_pos_x',"",196,48,72,24)
-        addControl(VREdit,'edit_target_pos_y',"",196,88,72,24)
-        addControl(VREdit,'edit_target_pos_z',"",196,128,72,24)
-        addControl(VREdit,'edit_target_rot_x',"",364,48,72,24)
-        addControl(VREdit,'edit_target_rot_y',"",364,88,72,24)
-        addControl(VREdit,'edit_target_rot_z',"",364,128,72,24)
+        addControl(VRButton,'button_target_pos_x_d',"D",324,48,24,24)
+        addControl(VRButton,'button_target_pos_x_u',"U",300,48,24,24)
+        addControl(VRButton,'button_target_pos_y_d',"D",324,88,24,24)
+        addControl(VRButton,'button_target_pos_y_u',"U",300,88,24,24)
+        addControl(VRButton,'button_target_pos_z_d',"D",324,128,24,24)
+        addControl(VRButton,'button_target_pos_z_u',"U",300,128,24,24)
+        addControl(VRButton,'button_target_rot_x_d',"D",492,48,24,24)
+        addControl(VRButton,'button_target_rot_x_u',"U",468,48,24,24)
+        addControl(VRButton,'button_target_rot_y_d',"D",492,88,24,24)
+        addControl(VRButton,'button_target_rot_y_u',"U",468,88,24,24)
+        addControl(VRButton,'button_target_rot_z_d',"D",492,128,24,24)
+        addControl(VRButton,'button_target_rot_z_u',"U",468,128,24,24)
+        addControl(VRButton,'button_view_rect_height_d',"D",164,168,24,24)
+        addControl(VRButton,'button_view_rect_height_u',"U",140,168,24,24)
+        addControl(VRButton,'button_view_rect_width_d',"D",164,128,24,24)
+        addControl(VRButton,'button_view_rect_width_u',"U",140,128,24,24)
+        addControl(VRButton,'button_view_rect_x_d',"D",164,48,24,24)
+        addControl(VRButton,'button_view_rect_x_u',"U",140,48,24,24)
+        addControl(VRButton,'button_view_rect_y_d',"D",164,88,24,24)
+        addControl(VRButton,'button_view_rect_y_u',"U",140,88,24,24)
+        addControl(VREdit,'edit_target_pos_x',"",228,48,72,24)
+        addControl(VREdit,'edit_target_pos_y',"",228,88,72,24)
+        addControl(VREdit,'edit_target_pos_z',"",228,128,72,24)
+        addControl(VREdit,'edit_target_rot_x',"",396,48,72,24)
+        addControl(VREdit,'edit_target_rot_y',"",396,88,72,24)
+        addControl(VREdit,'edit_target_rot_z',"",396,128,72,24)
         addControl(VREdit,'edit_view_rect_height',"",76,168,64,24)
         addControl(VREdit,'edit_view_rect_width',"",76,128,64,24)
         addControl(VREdit,'edit_view_rect_x',"",76,48,64,24)
         addControl(VREdit,'edit_view_rect_y',"",76,88,64,24)
-        addControl(VRStatic,'static_target_pos',"Target Pos",188,16,88,24)
-        addControl(VRStatic,'static_target_pos_x',"X",180,48,16,24)
-        addControl(VRStatic,'static_target_pos_y',"Y",180,88,16,24)
-        addControl(VRStatic,'static_target_pos_z',"Z",180,128,16,24)
-        addControl(VRStatic,'static_target_rot',"Target Rot",356,16,80,24)
-        addControl(VRStatic,'static_target_rot_x',"X",348,48,16,24)
-        addControl(VRStatic,'static_target_rot_y',"Y",348,88,16,24)
-        addControl(VRStatic,'static_target_rot_z',"Z",348,128,16,24)
-        addControl(VRStatic,'static_view_rect',"View Rect",28,16,80,24)
+        addControl(VRStatic,'static_target_pos',"Target Pos",228,16,88,24)
+        addControl(VRStatic,'static_target_pos_x',"X",212,48,16,24)
+        addControl(VRStatic,'static_target_pos_y',"Y",212,88,16,24)
+        addControl(VRStatic,'static_target_pos_z',"Z",212,128,16,24)
+        addControl(VRStatic,'static_target_rot',"Target Rot",396,16,88,24)
+        addControl(VRStatic,'static_target_rot_x',"X",380,48,16,24)
+        addControl(VRStatic,'static_target_rot_y',"Y",380,88,16,24)
+        addControl(VRStatic,'static_target_rot_z',"Z",380,128,16,24)
+        addControl(VRStatic,'static_view_rect',"View Rect",68,16,80,24)
         addControl(VRStatic,'static_view_rect_height',"HEIGHT",12,168,56,16)
         addControl(VRStatic,'static_view_rect_width',"WIDTH",20,128,48,16)
         addControl(VRStatic,'static_view_rect_x',"X",60,48,16,24)
