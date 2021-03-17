@@ -1,9 +1,20 @@
 #! ruby -Ks
 require 'vr/vruby'
 require '_frm_Camera2GUI'
+class Modaldlg_setting                                              ##__BY_FDVR
+
+  def self_created
+
+  end
+end                                                                 ##__BY_FDVR
+
 class Form_main                                                     ##__BY_FDVR
 
   class TabPanel_main                                               ##__BY_FDVR
+
+    class Panel0                                                    ##__BY_FDVR
+
+    end                                                             ##__BY_FDVR
 
     class Panel1                                                    ##__BY_FDVR
     
@@ -31,9 +42,17 @@ class Form_main                                                     ##__BY_FDVR
 
     class Panel5                                                    ##__BY_FDVR
 
-    end                                                             ##__BY_FDVR
+      class Panel_view_rect                                         ##__BY_FDVR
 
-    class Panel0                                                    ##__BY_FDVR
+      end                                                           ##__BY_FDVR
+
+      class Panel_target_rot                                        ##__BY_FDVR
+
+      end                                                           ##__BY_FDVR
+
+      class Panel_target_pos                                        ##__BY_FDVR
+
+      end                                                           ##__BY_FDVR
 
     end                                                             ##__BY_FDVR
 
