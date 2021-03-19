@@ -1,6 +1,25 @@
 #! ruby -Ks
+# -*- mode:ruby; coding:shift_jis -*-
+$KCODE='s'
+
+#Set 'EXE_DIR' directly at runtime  直接実行時にEXE_DIRを設定する
+EXE_DIR = (File.dirname(File.expand_path($0)).sub(/\/$/,'') + '/').gsub(/\//,'\\') unless defined?(EXE_DIR)
+
+#Predefined Constants  設定済み定数
+#EXE_DIR ****** Folder with EXE files[It ends with '\']  EXEファイルのあるディレクトリ[末尾は\]
+#MAIN_RB ****** Main ruby script file name  メインのrubyスクリプトファイル名
+#ERR_LOG ****** Error log file name  エラーログファイル名
+
+SETTING_FILE = EXE_DIR + "setting.json"
+
+require 'rubygems'
+require 'json'
+require 'utility'
+require 'main_sub'
+
 require 'vr/vruby'
 require '_frm_Camera2GUI'
+
 class Modaldlg_setting                                              ##__BY_FDVR
 
   def self_created
