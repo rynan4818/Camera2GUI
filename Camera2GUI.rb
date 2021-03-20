@@ -1,112 +1,72 @@
 #! ruby -Ks
 # -*- mode:ruby; coding:shift_jis -*-
+#‚±‚ÌƒXƒNƒŠƒvƒg‚Ì•¶šƒR[ƒh‚ÍSJIS‚Å‚·B
 $KCODE='s'
+#==============================================================================
+#Project Name    : BeatSaber Camera2GUI
+#Creation Date   : 2021/03/20
+#Copyright       : 2021 (c) ƒŠƒ…ƒiƒ“ (Twitter @rynan4818)
+#License         : MIT License
+#                  https://github.com/rynan4818/Camera2GUI/blob/main/LICENSE
+#Tool            : ActiveScriptRuby(1.8.7-p330)
+#                  https://www.artonx.org/data/asr/
+#                  FormDesigner Release v2020/06/18
+#                  https://github.com/rynan4818/formdesigner
+#RubyGems Package: rubygems-update (1.8.21)      https://rubygems.org/
+#                  json (1.4.6 x86-mswin32)
+#==============================================================================
 
-#Set 'EXE_DIR' directly at runtime  ç›´æ¥å®Ÿè¡Œæ™‚ã«EXE_DIRã‚’è¨­å®šã™ã‚‹
+
+#Set 'EXE_DIR' directly at runtime  ’¼ÚÀs‚ÉEXE_DIR‚ğİ’è‚·‚é
 EXE_DIR = (File.dirname(File.expand_path($0)).sub(/\/$/,'') + '/').gsub(/\//,'\\') unless defined?(EXE_DIR)
 
-#Predefined Constants  è¨­å®šæ¸ˆã¿å®šæ•°
-#EXE_DIR ****** Folder with EXE files[It ends with '\']  EXEãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚ã‚‹ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª[æœ«å°¾ã¯\]
-#MAIN_RB ****** Main ruby script file name  ãƒ¡ã‚¤ãƒ³ã®rubyã‚¹ã‚¯ãƒªãƒ—ãƒˆãƒ•ã‚¡ã‚¤ãƒ«å
-#ERR_LOG ****** Error log file name  ã‚¨ãƒ©ãƒ¼ãƒ­ã‚°ãƒ•ã‚¡ã‚¤ãƒ«å
+#Predefined Constants  İ’èÏ‚İ’è”
+#EXE_DIR ****** Folder with EXE files[It ends with '\']  EXEƒtƒ@ƒCƒ‹‚Ì‚ ‚éƒfƒBƒŒƒNƒgƒŠ[––”ö‚Í\]
+#MAIN_RB ****** Main ruby script file name  ƒƒCƒ“‚ÌrubyƒXƒNƒŠƒvƒgƒtƒ@ƒCƒ‹–¼
+#ERR_LOG ****** Error log file name  ƒGƒ‰[ƒƒOƒtƒ@ƒCƒ‹–¼
 
+#Setting
 SETTING_FILE = EXE_DIR + "setting.json"
+DEFAULT_BS_FOLDER = ["C:\\Program Files (x86)\\Steam\\steamapps\\common\\Beat Saber",
+                     "C:\\Program Files\\Oculus\\Software\\hyperbolic-magnetism-beat-saber"]
+CAMERA2_SCENES_JSON  = "UserData\\Camera2\\Scenes.json"
+CAMERA2_CAMERAS_DIR  = "UserData\\Camera2\\Cameras"
+CAMERA2_MOVEMENT_DIR = "UserData\\Camera2\\MovementScripts"
 
+#Const
+TAB_GENERAL    = 0
+TAB_VISIBILITY = 1
+TAB_FOLLOW     = 2
+TAB_MODMAPEXT  = 3
+TAB_SCENES     = 4
+TAB_POSITION   = 5
+TAB_MOVEMENT   = 6
+
+#Combobox
+COMBO_CAMERA_TYPE         = ["FirstPerson","Positionable"]
+COMBO_WORLD_CAMVISIBILITY = ["Visible","HiddenWhilePlaying","Hidden"]
+COMBO_ANTI_ALIASING       = ["1","2","4","8"]
+COMBO_WALL_VISIBLITY      = ["Visible","Transparent","Hidden"]
+COMBO_NOTE_VISIBILITY     = ["Hidden","Visible","ForceCustomNotes"]
+
+#Library
 require 'rubygems'
 require 'json'
-require 'utility'
-require 'main_sub'
-
 require 'vr/vruby'
+require 'vr/vrdialog'
+require 'vr/contrib/msgboxconst'
+
+#Sub script
+require 'utility'
+setting_load
+require "#{$language}.rb"
+
 require '_frm_Camera2GUI'
-
-class Modaldlg_setting                                              ##__BY_FDVR
-
-  def self_created
-
-  end
-end                                                                 ##__BY_FDVR
-
-class Form_main                                                     ##__BY_FDVR
-
-  class TabPanel_main                                               ##__BY_FDVR
-
-    class Panel0                                                    ##__BY_FDVR
-
-    end                                                             ##__BY_FDVR
-
-    class Panel1                                                    ##__BY_FDVR
-    
-      def edit_camera_name_changed
-      
-      end
-    
-      def comboBox_camera_type_selchanged
-      
-      end
-
-    end                                                             ##__BY_FDVR
-
-    class Panel2                                                    ##__BY_FDVR
-
-    end                                                             ##__BY_FDVR
-
-    class Panel3                                                    ##__BY_FDVR
-
-    end                                                             ##__BY_FDVR
-
-    class Panel4                                                    ##__BY_FDVR
-
-    end                                                             ##__BY_FDVR
-
-    class Panel5                                                    ##__BY_FDVR
-
-      class Panel_view_rect                                         ##__BY_FDVR
-
-      end                                                           ##__BY_FDVR
-
-      class Panel_target_rot                                        ##__BY_FDVR
-
-      end                                                           ##__BY_FDVR
-
-      class Panel_target_pos                                        ##__BY_FDVR
-
-      end                                                           ##__BY_FDVR
-
-    end                                                             ##__BY_FDVR
-
-  end                                                               ##__BY_FDVR
-
-  def self_created
-
-  end
-  
-  def button_add_clicked
-  
-  end
-  
-  def button_del_clicked
-  
-  end
-
-  def button_reflection_clicked
-  
-  end
-
-  def button_up_clicked
-  
-  end
-
-  def button_down_clicked
-  
-  end
-
-  def listBox_camera_selchanged
-  
-  end
-
-  
-end                                                                 ##__BY_FDVR
+require 'main_event'
+require 'main_sub'
+require 'tabpanel_event'
+require 'tabpanel_set'
+require 'dialog'
 
 
 VRLocalScreen.start Form_main

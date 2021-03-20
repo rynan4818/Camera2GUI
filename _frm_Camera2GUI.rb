@@ -13,7 +13,7 @@ class Modaldlg_setting < VRModalDialog
 
   def construct
     self.caption = 'Setting'
-    self.move(1007,534,597,391)
+    self.move(269,351,597,391)
     addControl(VRButton,'button_bs_folder_open',"Open",520,40,40,24)
     addControl(VRButton,'button_cancel',"CANCEL",344,296,88,32)
     addControl(VRButton,'button_ok',"OK",456,296,96,32)
@@ -68,9 +68,9 @@ class Form_main < VRForm
       attr_reader :trackBar_z_offset
 
       def construct
-        addControl(VRCombobox,'comboBox_anti_aliasing',"",140,200,104,80)
+        addControl(VRCombobox,'comboBox_anti_aliasing',"",140,200,104,120)
         addControl(VRCombobox,'comboBox_camera_type',"",140,64,384,80)
-        addControl(VRCombobox,'comboBox_worldcam_visibility',"",140,240,376,80)
+        addControl(VRCombobox,'comboBox_worldcam_visibility',"",140,240,376,120)
         addControl(VREdit,'edit_camera_name',"",140,24,384,24)
         addControl(VREdit,'edit_field_of_view',"",140,104,64,24)
         addControl(VREdit,'edit_fps_limit',"",140,136,64,24)
@@ -112,8 +112,8 @@ class Form_main < VRForm
         addControl(VRCheckbox,'checkBox_cut_particles',"Cut Particles",108,152,120,24)
         addControl(VRCheckbox,'checkBox_debris',"Debris",108,112,80,24)
         addControl(VRCheckbox,'checkBox_floor',"Floor",108,272,136,24)
-        addControl(VRCombobox,'comboBox_notes',"",108,72,352,80)
-        addControl(VRCombobox,'comboBox_walls',"",108,32,352,80)
+        addControl(VRCombobox,'comboBox_notes',"",108,72,352,120)
+        addControl(VRCombobox,'comboBox_walls',"",108,32,352,120)
         addControl(VRStatic,'static_notes',"Notes",52,72,48,24)
         addControl(VRStatic,'static_walls',"Walls",60,32,40,24)
       end
@@ -125,6 +125,7 @@ class Form_main < VRForm
       attr_reader :checkBox_enabled
       attr_reader :checkBox_follow_replay_position
       attr_reader :checkBox_force_upright
+      attr_reader :checkBox_pivoting_offset
       attr_reader :edit_position_smoothing
       attr_reader :edit_rotation_smoothing
       attr_reader :static_follow360
@@ -140,6 +141,7 @@ class Form_main < VRForm
         addControl(VRCheckbox,'checkBox_enabled',"Enabled",60,184,96,32)
         addControl(VRCheckbox,'checkBox_follow_replay_position',"Follow Replay Position",60,72,208,24)
         addControl(VRCheckbox,'checkBox_force_upright',"Force Upright",60,32,200,32)
+        addControl(VRCheckbox,'checkBox_pivoting_offset',"Pivoting Offset",284,40,176,24)
         addControl(VREdit,'edit_position_smoothing',"",172,112,72,24)
         addControl(VREdit,'edit_rotation_smoothing',"",172,272,72,24)
         addControl(VRStatic,'static_follow360',"=======FOLLOW360=======",60,160,256,24)
@@ -387,7 +389,7 @@ class Form_main < VRForm
 
   def construct
     self.caption = 'Camera2GUI'
-    self.move(866,284,580,625)
+    self.move(224,483,580,625)
     #$_addControl(VRMenu,'mainmenu1',"",512,72,24,24)
     @mainmenu1 = newMenu.set(
       [
