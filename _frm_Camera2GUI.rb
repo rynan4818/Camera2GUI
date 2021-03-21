@@ -232,6 +232,7 @@ class Form_main < VRForm
       attr_reader :button_view_rect_y_u
       attr_reader :button_yaw_left
       attr_reader :button_yaw_right
+      attr_reader :checkBox_auto_apply
       attr_reader :checkBox_view_rect_full
       attr_reader :edit_target_pos_x
       attr_reader :edit_target_pos_y
@@ -296,11 +297,13 @@ class Form_main < VRForm
         attr_reader :radioBtn_target_pos1
         attr_reader :radioBtn_target_pos2
         attr_reader :radioBtn_target_pos3
+        attr_reader :radioBtn_target_pos4
 
         def construct
-          addControl(VRRadiobutton,'radioBtn_target_pos1',"0.01",16,8,56,24)
-          addControl(VRRadiobutton,'radioBtn_target_pos2',"0.1",80,8,40,24)
-          addControl(VRRadiobutton,'radioBtn_target_pos3',"1",136,8,32,24)
+          addControl(VRRadiobutton,'radioBtn_target_pos1',"0.01",8,8,56,24)
+          addControl(VRRadiobutton,'radioBtn_target_pos2',"0.1",64,8,40,24)
+          addControl(VRRadiobutton,'radioBtn_target_pos3',"0.5",112,8,40,24)
+          addControl(VRRadiobutton,'radioBtn_target_pos4',"1",160,8,32,24)
         end
       end
 
@@ -310,7 +313,7 @@ class Form_main < VRForm
         addControl(Panel_view_rect,'panel_view_rect',"panel1",20,200,192,24)
         addControl(VRButton,'button_back',"BACK",252,312,72,40)
         addControl(VRButton,'button_down',"DOWN",340,328,88,24)
-        addControl(VRButton,'button_front',"FRONT",252,232,72,40)
+        addControl(VRButton,'button_front',"FRONT",252,224,72,40)
         addControl(VRButton,'button_left',"LEFT",132,272,104,40)
         addControl(VRButton,'button_pitch_down',"PITCH DOWN",132,328,104,24)
         addControl(VRButton,'button_pitch_up',"PITCH UP",132,232,104,24)
@@ -341,6 +344,7 @@ class Form_main < VRForm
         addControl(VRButton,'button_view_rect_y_u',"U",156,88,24,24)
         addControl(VRButton,'button_yaw_left',"YAW LEFT",20,256,96,24)
         addControl(VRButton,'button_yaw_right',"YAW RIGHT",452,256,88,24)
+        addControl(VRCheckbox,'checkBox_auto_apply',"Auto Apply",244,200,112,16)
         addControl(VRCheckbox,'checkBox_view_rect_full',"Full Screen",108,16,104,24)
         addControl(VREdit,'edit_target_pos_x',"",244,48,72,24)
         addControl(VREdit,'edit_target_pos_y',"",244,88,72,24)
@@ -352,7 +356,7 @@ class Form_main < VRForm
         addControl(VREdit,'edit_view_rect_width',"",92,128,64,24)
         addControl(VREdit,'edit_view_rect_x',"",92,48,64,24)
         addControl(VREdit,'edit_view_rect_y',"",92,88,64,24)
-        addControl(VRStatic,'static_flying_control',"Camera flying control",212,200,168,24)
+        addControl(VRStatic,'static_flying_control',"Flying control",260,272,64,40)
         addControl(VRStatic,'static_target_pos',"Target Pos",244,16,88,24)
         addControl(VRStatic,'static_target_pos_x',"X",228,48,16,24)
         addControl(VRStatic,'static_target_pos_y',"Y",228,88,16,24)
@@ -425,13 +429,13 @@ class Form_main < VRForm
     setMenu(@mainmenu1,true)
     addControl(TabPanel_main,'tabPanel_main',"tabPanel1",8,168,552,272)
     addControl(VRButton,'button_add',"ADD",16,16,56,32)
+    addControl(VRButton,'button_apply',"SAVE and Apply",16,104,120,32)
     addControl(VRButton,'button_copy',"COPY",80,16,56,32)
     addControl(VRButton,'button_del',"DELETE",16,56,56,32)
     addControl(VRButton,'button_list_down',"DOWN",488,96,56,32)
     addControl(VRButton,'button_list_up',"UP",488,16,56,32)
-    addControl(VRButton,'button_save',"SAVE",16,96,56,32)
-    addControl(VRCheckbox,'checkBox_auto_save',"Auto SAVE",16,136,128,24)
-    addControl(VRListbox,'listBox_camera',"listBox1",144,16,336,114,0x80)
+    addControl(VRButton,'button_save',"SAVE",80,56,56,32)
+    addControl(VRListbox,'listBox_camera',"listBox1",144,8,336,150,0x80)
     #$_addControl(VRMgdVertLayoutFrame,'vertFrame1',"",496,64,24,24)
     @vertFrame1=setMarginedFrame(VRMgdVertLayoutFrame)
     @vertFrame1.register(@tabPanel_main)

@@ -29,6 +29,8 @@ EXE_DIR = (File.dirname(File.expand_path($0)).sub(/\/$/,'') + '/').gsub(/\//,'\\
 SETTING_FILE = EXE_DIR + "setting.json"
 FIRSTPERSON_DEFAULT  = EXE_DIR + "FirstPersonDefault.json"
 POSITIONABLE_DEFALUT = EXE_DIR + "PositionableDefault.json"
+BEATSABER_WINDOW_NAME = "Beat Saber"
+BS_WIN_ACTIVE_WAITE   = 0.5
 
 DEFAULT_BS_FOLDER = ["C:\\Program Files (x86)\\Steam\\steamapps\\common\\Beat Saber",
                      "C:\\Program Files\\Oculus\\Software\\hyperbolic-magnetism-beat-saber"]
@@ -65,6 +67,7 @@ require 'rubygems'
 require 'json'
 require 'vr/vruby'
 require 'vr/contrib/msgboxconst'
+require 'win32ole'
 
 #Sub script
 require 'utility'
@@ -78,5 +81,6 @@ require 'tabpanel_event'
 require 'tabpanel_set'
 require 'dialog'
 
+AUTOIT = WIN32OLE.new("AutoItX3.Control")
 
 VRLocalScreen.start Form_main

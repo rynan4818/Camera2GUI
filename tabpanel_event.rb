@@ -131,6 +131,10 @@ class Form_main                                                     ##__BY_FDVR
         change_rot_x = "%.15g"%((rot_x * POS_ROT_ROUND).round.to_f / POS_ROT_ROUND)
         @edit_target_rot_x.text = change_rot_x unless @edit_target_rot_x.text == change_rot_x
         @change_rot_x = false
+        if @checkBox_auto_apply.checked?
+          refresh
+          $main_form.button_apply_clicked
+        end
       end
     
       def edit_target_rot_y_changed
@@ -145,6 +149,10 @@ class Form_main                                                     ##__BY_FDVR
         change_rot_y = "%.15g"%((rot_y * POS_ROT_ROUND).round.to_f / POS_ROT_ROUND)
         @edit_target_rot_y.text = change_rot_y unless @edit_target_rot_y.text == change_rot_y
         @change_rot_y = false
+        if @checkBox_auto_apply.checked?
+          refresh
+          $main_form.button_apply_clicked
+        end
       end
     
       def edit_target_rot_z_changed
@@ -159,6 +167,10 @@ class Form_main                                                     ##__BY_FDVR
         change_rot_z = "%.15g"%((rot_z * POS_ROT_ROUND).round.to_f / POS_ROT_ROUND)
         @edit_target_rot_z.text = change_rot_z unless @edit_target_rot_z.text == change_rot_z
         @change_rot_z = false
+        if @checkBox_auto_apply.checked?
+          refresh
+          $main_form.button_apply_clicked
+        end
       end
       
       def edit_target_pos_x_changed
@@ -167,6 +179,10 @@ class Form_main                                                     ##__BY_FDVR
         change_pos_x = "%.15g"%((@edit_target_pos_x.text.to_f * POS_ROT_ROUND).round.to_f / POS_ROT_ROUND)
         @edit_target_pos_x.text = change_pos_x unless @edit_target_pos_x.text == change_pos_x
         @change_pos_x = false
+        if @checkBox_auto_apply.checked?
+          refresh
+          $main_form.button_apply_clicked
+        end
       end
     
       def edit_target_pos_y_changed
@@ -175,6 +191,10 @@ class Form_main                                                     ##__BY_FDVR
         change_pos_y = "%.15g"%((@edit_target_pos_y.text.to_f * POS_ROT_ROUND).round.to_f / POS_ROT_ROUND)
         @edit_target_pos_y.text = change_pos_y unless @edit_target_pos_y.text == change_pos_y
         @change_pos_y = false
+        if @checkBox_auto_apply.checked?
+          refresh
+          $main_form.button_apply_clicked
+        end
       end
     
       def edit_target_pos_z_changed
@@ -183,6 +203,10 @@ class Form_main                                                     ##__BY_FDVR
         change_pos_z = "%.15g"%((@edit_target_pos_z.text.to_f * POS_ROT_ROUND).round.to_f / POS_ROT_ROUND)
         @edit_target_pos_z.text = change_pos_z unless @edit_target_pos_z.text == change_pos_z
         @change_pos_z = false
+        if @checkBox_auto_apply.checked?
+          refresh
+          $main_form.button_apply_clicked
+        end
       end
       
       def edit_view_rect_x_changed
@@ -192,6 +216,10 @@ class Form_main                                                     ##__BY_FDVR
         change_x = 0 if change_x < 0
         @edit_view_rect_x.text = change_x.to_s unless @edit_view_rect_x.text == change_x.to_s
         @change_view_x = false
+        if @checkBox_auto_apply.checked?
+          refresh
+          $main_form.button_apply_clicked
+        end
       end
     
       def edit_view_rect_y_changed
@@ -201,6 +229,10 @@ class Form_main                                                     ##__BY_FDVR
         change_y = 0 if change_y < 0
         @edit_view_rect_y.text = change_y.to_s unless @edit_view_rect_y.text == change_y.to_s
         @change_view_y = false
+        if @checkBox_auto_apply.checked?
+          refresh
+          $main_form.button_apply_clicked
+        end
       end
     
       def edit_view_rect_width_changed
@@ -210,6 +242,10 @@ class Form_main                                                     ##__BY_FDVR
         change_w = -1 if change_w < 0
         @edit_view_rect_width.text = change_w.to_s unless @edit_view_rect_width.text == change_w.to_s
         @change_view_w = false
+        if @checkBox_auto_apply.checked?
+          refresh
+          $main_form.button_apply_clicked
+        end
       end
     
       def edit_view_rect_height_changed
@@ -219,6 +255,10 @@ class Form_main                                                     ##__BY_FDVR
         change_h = -1 if change_h < 0
         @edit_view_rect_height.text = change_h.to_s unless @edit_view_rect_height.text == change_h.to_s
         @change_view_h = false
+        if @checkBox_auto_apply.checked?
+          refresh
+          $main_form.button_apply_clicked
+        end
       end
 
       def button_view_rect_x_u_clicked
@@ -335,7 +375,24 @@ class Form_main                                                     ##__BY_FDVR
       end
     
       def button_front_clicked
-  
+        px = @edit_target_pos_x.text.to_f
+        py = @edit_target_pos_y.text.to_f
+        pz = @edit_target_pos_z.text.to_f
+        rx = @edit_target_rot_x.text.to_f
+        ry = @edit_target_rot_y.text.to_f
+        rz = @edit_target_rot_z.text.to_f
+        x = 0.0
+        y = 0.0
+        z = pos_amaount
+        y = y * Math.cos(radian(360.0 - ry)) + z * Math.sin(radian(360.0 - rz))
+        z = -y * Math.sin(radian(360.0 - ry)) + z * Math.cos(radian(360.0 - rz))
+        z = z * Math.cos(radian(360.0 - rz)) + x * Math.sin(radian(360.0 - rx))
+        x = -z * Math.sin(radian(360.0 - rz)) + x * Math.cos(radian(360.0 - rx))
+        x = x * Math.cos(radian(360.0 - rx)) + y * Math.sin(radian(360.0 - ry))
+        y = -x * Math.sin(radian(360.0 - rx)) + y * Math.cos(radian(360.0 - ry))
+        @edit_target_pos_x.text = "%.15g"%(((px + x) * POS_ROT_ROUND).round.to_f / POS_ROT_ROUND)
+        @edit_target_pos_y.text = "%.15g"%(((py + y) * POS_ROT_ROUND).round.to_f / POS_ROT_ROUND)
+        @edit_target_pos_z.text = "%.15g"%(((pz + z) * POS_ROT_ROUND).round.to_f / POS_ROT_ROUND)
       end
     
       def button_back_clicked

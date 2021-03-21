@@ -161,23 +161,41 @@ def json_file_save
     camera[CAMERA_JSON]["layer"] = idx + 1
   end
   $delete_camera.each do |camera|
-    File.delete camera[CAMERA_ORG] if File.exist? camera[CAMERA_ORG]
+    begin
+      File.delete camera[CAMERA_ORG] if File.exist? camera[CAMERA_ORG]
+    rescue
+    end
   end
   $cameras_json.each do |camera|
     if File.basename(camera[CAMERA_ORG], ".*") != camera[CAMERA_NAME]
       File.delete camera[CAMERA_ORG] if File.exist? camera[CAMERA_ORG]
     end
     camera_file = "#{$bs_folder}\\#{CAMERA2_CAMERAS_DIR}\\#{camera[CAMERA_NAME]}.json"
-    File.open(camera_file, 'w') do |file|
-      JSON.pretty_generate(camera[CAMERA_JSON]).each do |line|
-        file.puts line
+    begin
+      File.open(camera_file, 'w') do |file|
+        JSON.pretty_generate(camera[CAMERA_JSON]).each do |line|
+          file.puts line
+        end
       end
+    rescue
     end
   end
   scenes_file = "#{$bs_folder}\\#{CAMERA2_SCENES_JSON}"
-  File.open(scenes_file, 'w') do |file|
-    JSON.pretty_generate($scene_json).each do |line|
-      file.puts line
+  begin
+    File.open(scenes_file, 'w') do |file|
+      JSON.pretty_generate($scene_json).each do |line|
+        file.puts line
+      end
     end
+  rescue
   end
+end
+# degree => radian
+def radian(degree)
+  return degree * Math::PI / 180.0
+end
+
+# radian => degree
+def degree(radian)
+  return radian * 180.0 / Math::PI
 end

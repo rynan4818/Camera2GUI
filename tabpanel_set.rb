@@ -330,8 +330,10 @@ class Form_main                                                     ##__BY_FDVR
           @static_target_rot, @static_target_rot_x, @static_target_rot_y, @static_target_rot_z, @static_flying_control,
           @static_view_rect, @static_view_rect_height, @static_view_rect_width, @static_view_rect_x, @static_view_rect_y,
           @panel_target_rot.radioBtn_target_rot1, @panel_target_rot.radioBtn_target_rot2, @panel_target_rot.radioBtn_target_rot3, 
+          @panel_target_rot.radioBtn_target_rot4, @panel_target_rot.radioBtn_target_rot5,
           @panel_view_rect.radioBtn_view_rect1, @panel_view_rect.radioBtn_view_rect2, @panel_view_rect.radioBtn_view_rect3,
-          @panel_target_pos.radioBtn_target_pos1, @panel_target_pos.radioBtn_target_pos2, @panel_target_pos.radioBtn_target_pos3]
+          @panel_target_pos.radioBtn_target_pos1, @panel_target_pos.radioBtn_target_pos2, @panel_target_pos.radioBtn_target_pos3,
+          @panel_target_pos.radioBtn_target_pos4, @checkBox_auto_apply, @button_reset]
         if $camera_type == TYPE_FIRSTPERSON
           control_disable(control_list)
         elsif $camera_type == TYPE_POSITIONABLE
@@ -350,6 +352,7 @@ class Form_main                                                     ##__BY_FDVR
         return @panel_target_pos.radioBtn_target_pos1.caption.to_f if @panel_target_pos.radioBtn_target_pos1.checked?
         return @panel_target_pos.radioBtn_target_pos2.caption.to_f if @panel_target_pos.radioBtn_target_pos2.checked?
         return @panel_target_pos.radioBtn_target_pos3.caption.to_f if @panel_target_pos.radioBtn_target_pos3.checked?
+        return @panel_target_pos.radioBtn_target_pos4.caption.to_f if @panel_target_pos.radioBtn_target_pos4.checked?
       end
 
       def rot_amaount

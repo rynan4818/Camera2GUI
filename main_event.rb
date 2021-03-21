@@ -24,6 +24,7 @@ class Form_main                                                     ##__BY_FDVR
     $track_bar_position = {}
     $change_flag = false
     $camera_type = nil
+    $main_form = self
     unless $bs_folder && File.directory?($bs_folder)
       messageBox("#{$bs_folder ? "'#{$bs_folder}'" : ""}#{MAIN_SELF_CREATED_BSDIR_CHK_MES}",
          MAIN_SELF_CREATED_BSDIR_CHK_TITLE, WConst::MB_ICONWARNING | WConst::MB_OK)
@@ -77,6 +78,15 @@ class Form_main                                                     ##__BY_FDVR
     json_file_save
   end
   
+  def button_apply_clicked
+    button_save_clicked
+    if AUTOIT.WinWait(BEATSABER_WINDOW_NAME,"",5) == 1
+      AUTOIT.WinActivate(BEATSABER_WINDOW_NAME)
+      sleep(BS_WIN_ACTIVE_WAITE)
+      AUTOIT.Send("^+{F1}")
+    end
+  end
+
   def button_list_up_clicked
     return if $camera_idx == 0
     control_json_save
