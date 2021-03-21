@@ -67,18 +67,19 @@ def movement_dir_load
   end
 end
 
-def trackbar_set(edit_control, trackBar_control)
+def trackbar_set(edit_control, trackBar_control, default)
   return if $change_flag
   $change_flag = true
   if edit_control.text.strip == ""
-    trackBar_control.position = trackBar_control.rangeMin
+    edit_control.text = "%.15g"%default.to_f
+    trackBar_control.position = (default * 10.0).to_i
   else
-    if edit_control.text.to_f < trackBar_control.rangeMin.to_f / 10.0
+    if (edit_control.text.to_f * 10.0).to_i < trackBar_control.rangeMin
       edit_control.text = "%.15g"%(trackBar_control.rangeMin.to_f / 10.0)
-    elsif edit_control.text.to_f > trackBar_control.rangeMax.to_f / 10.0
+    elsif (edit_control.text.to_f * 10.0).to_i > trackBar_control.rangeMax
       edit_control.text = "%.15g"%(trackBar_control.rangeMax.to_f / 10.0)
-    elsif edit_control.text.to_f % (trackBar_control.linesize.to_f / 10.0) > 0.001
-      edit_control.text = "%.15g"%(edit_control.text.to_f - (edit_control.text.to_f % (trackBar_control.linesize.to_f / 10.0)))
+    elsif (edit_control.text.to_f * 10.0).to_i % trackBar_control.linesize > 0
+      edit_control.text = "%.15g"%(((edit_control.text.to_f * 10.0).to_i - ((edit_control.text.to_f * 10.0).to_i % trackBar_control.linesize)).to_f / 10.0)
     end
     trackBar_control.position = (edit_control.text.to_f * 10.0).to_i
   end
@@ -152,4 +153,8 @@ def scenes_json_set(scene, scene_enabled, before_camera_name, after_camera_name)
       end
     end
   end
+end
+
+def json_file_save
+
 end

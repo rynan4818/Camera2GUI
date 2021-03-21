@@ -47,7 +47,7 @@ class Form_main                                                     ##__BY_FDVR
   end
 
   def button_reflection_clicked
-  
+    json_file_save
   end
 
   def button_up_clicked

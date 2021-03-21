@@ -46,23 +46,23 @@ class Form_main                                                     ##__BY_FDVR
       end
     
       def edit_field_of_view_changed
-        trackbar_set(@edit_field_of_view, @trackBar_field_of_view)
+        trackbar_set(@edit_field_of_view, @trackBar_field_of_view, $firstperson_default["FOV"])
       end
     
       def edit_fps_limit_changed
-        trackbar_set(@edit_fps_limit, @trackBar_fps_limit)
+        trackbar_set(@edit_fps_limit, @trackBar_fps_limit, $firstperson_default["FPSLimiter"]["fpsLimit"])
       end
     
       def edit_render_scale_changed
-        trackbar_set(@edit_render_scale, @trackBar_render_scale)
+        trackbar_set(@edit_render_scale, @trackBar_render_scale, $firstperson_default["renderScale"])
       end
     
       def edit_preview_size_changed
-        trackbar_set(@edit_preview_size, @trackBar_preview_size)
+        trackbar_set(@edit_preview_size, @trackBar_preview_size , $positionable_default["previewScreenSize"]) if $camera_type == TYPE_POSITIONABLE
       end
     
       def edit_z_offset_changed
-        trackbar_set(@edit_z_offset, @trackBar_z_offset)
+        trackbar_set(@edit_z_offset, @trackBar_z_offset, $positionable_default["targetPos"]["z"]) if $camera_type == TYPE_FIRSTPERSON
       end
     
     end                                                             ##__BY_FDVR
@@ -80,11 +80,16 @@ class Form_main                                                     ##__BY_FDVR
       #FOLLOW
 
       def edit_position_smoothing_changed
-        trackbar_set(@edit_position_smoothing, @trackBar_position_smoothing)
+        trackbar_set(@edit_position_smoothing, @trackBar_position_smoothing, $firstperson_default["Smoothfollow"]["position"]) if $camera_type == TYPE_FIRSTPERSON
       end
     
       def edit_rotation_smoothing_changed
-        trackbar_set(@edit_rotation_smoothing, @trackBar_rotation_smoothing)
+        if $camera_type == TYPE_FIRSTPERSON
+          default = $firstperson_default["Smoothfollow"]["rotation"]
+        elsif $camera_type == TYPE_POSITIONABLE
+          default = $positionable_default["Follow360"]["smoothing"]
+        end
+        trackbar_set(@edit_rotation_smoothing, @trackBar_rotation_smoothing, default)
       end
     
         

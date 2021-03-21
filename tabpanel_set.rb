@@ -99,9 +99,14 @@ class Form_main                                                     ##__BY_FDVR
         if $camera_type == TYPE_FIRSTPERSON
           control_disable(positionable_control)
           control_enable(firstperson_control)
+          edit_z_offset_changed
         elsif $camera_type == TYPE_POSITIONABLE
           control_disable(firstperson_control)
           control_enable(positionable_control)
+          edit_preview_size_changed
+          if @comboBox_worldcam_visibility.selectedString == -1
+            @comboBox_worldcam_visibility.select(@comboBox_worldcam_visibility.findString($positionable_default["worldCamVisibility"]))
+          end
         end
         refresh
       end
@@ -178,9 +183,12 @@ class Form_main                                                     ##__BY_FDVR
         if $camera_type == TYPE_FIRSTPERSON
           control_disable(positionable_control)
           control_enable(firstperson_control)
+          edit_position_smoothing_changed
+          edit_rotation_smoothing_changed
         elsif $camera_type == TYPE_POSITIONABLE
           control_disable(firstperson_control)
           control_enable(positionable_control)
+          edit_rotation_smoothing_changed
         end
         refresh
       end

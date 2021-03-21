@@ -80,13 +80,15 @@ class Form_main
     tab_scenes     = @tabPanel_main.panels[TAB_SCENES]
     tab_position   = @tabPanel_main.panels[TAB_POSITION]
     tab_movement   = @tabPanel_main.panels[TAB_MOVEMENT]
+    camera = $cameras_json[$camera_idx][CAMERA_JSON]
+    #Camera Name
     before_camera_name = $cameras_json[$camera_idx][CAMERA_NAME]
     after_camera_name = tab_general.edit_camera_name.text.gsub(/[\\\/:\*\?"<>\|]/,'').gsub(/[^ -~]/,'')
     unless before_camera_name == after_camera_name
       $cameras_json[$camera_idx][CAMERA_NAME] = after_camera_name
       camera_list_refresh = true
     end
-    camera = $cameras_json[$camera_idx][CAMERA_JSON]
+    #Camera Type
     type = tab_general.comboBox_camera_type.getTextOf(tab_general.comboBox_camera_type.selectedString)
     unless camera["type"] == type
       camera["type"] = type
@@ -97,21 +99,6 @@ class Form_main
     camera["FPSLimiter"]["fpsLimit"] = tab_general.edit_fps_limit.text.to_i
     camera["renderScale"] = tab_general.edit_render_scale.text.to_f
     camera["antiAliasing"] = tab_general.comboBox_anti_aliasing.getTextOf(tab_general.comboBox_anti_aliasing.selectedString).to_i
-    worldcam_idx = tab_general.comboBox_worldcam_visibility.selectedString
-    if worldcam_idx > -1
-      camera["worldCamVisibility"] = tab_general.comboBox_worldcam_visibility.getTextOf(worldcam_idx)
-    end
-    camera["previewScreenSize"] = tab_general.edit_preview_size.text.to_f
-    camera["targetPos"] = {} unless camera["targetPos"]
-    if $camera_type == TYPE_FIRSTPERSON
-      camera["targetPos"]["x"] = 0.0
-      camera["targetPos"]["y"] = 0.0
-      camera["targetPos"]["z"] = tab_general.edit_z_offset.text.to_f
-    elsif $camera_type == TYPE_POSITIONABLE
-      camera["targetPos"]["x"] = tab_position.edit_target_pos_x.text.to_f
-      camera["targetPos"]["y"] = tab_position.edit_target_pos_y.text.to_f
-      camera["targetPos"]["z"] = tab_position.edit_target_pos_z.text.to_f
-    end
     camera["visibleObjects"] = {} unless camera["visibleObjects"]
     camera["visibleObjects"]["Walls"] = tab_visibility.comboBox_walls.getTextOf(tab_visibility.comboBox_walls.selectedString)
     camera["visibleObjects"]["Notes"] = tab_visibility.comboBox_notes.getTextOf(tab_visibility.comboBox_notes.selectedString)
@@ -120,22 +107,60 @@ class Form_main
     camera["visibleObjects"]["Avatar"] = tab_visibility.checkBox_avatar.checked?
     camera["visibleObjects"]["UI"] = tab_visibility.checkBox_UI.checked?
     camera["visibleObjects"]["Floor"] = tab_visibility.checkBox_floor.checked?
+    camera["targetPos"] = {} unless camera["targetPos"]
+    camera["targetRot"] = {} unless camera["targetRot"]
+    camera["ModmapExtensions"] = {} unless camera["ModmapExtensions"]
+    camera["ModmapExtensions"]["autoOpaqueWalls"] = tab_modmapext.checkBox_auto_visible_walls.checked?
+    camera["ModmapExtensions"]["autoHideHUD"] = tab_modmapext.checkBox_auto_hide_HUD.checked?
+    camera["viewRect"] = {} unless camera["viewRect"]
+    camera["viewRect"]["x"] = tab_position.edit_view_rect_x.text.to_f
+    camera["viewRect"]["y"] = tab_position.edit_view_rect_y.text.to_f
+    camera["viewRect"]["width"] = tab_position.edit_view_rect_width.text.to_f
+    camera["viewRect"]["height"] = tab_position.edit_view_rect_height.text.to_f
     if $camera_type == TYPE_FIRSTPERSON
+      camera.delete("worldCamVisibility")
+      camera.delete("previewScreenSize")
+      camera.delete("Follow360")
       camera["Smoothfollow"] = {} unless camera["Smoothfollow"]
       camera["Smoothfollow"]["forceUpright"] = tab_follow.checkBox_force_upright.checked?
       camera["Smoothfollow"]["followReplayPosition"] = tab_follow.checkBox_follow_replay_position.checked?
       camera["Smoothfollow"]["pivotingOffset"] = tab_follow.checkBox_pivoting_offset.checked?
       camera["Smoothfollow"]["position"] = tab_follow.edit_position_smoothing.text.to_f
       camera["Smoothfollow"]["rotation"] = tab_follow.edit_rotation_smoothing.text.to_f
+      camera["ModmapExtensions"].delete("moveWithMap")
+      camera["targetPos"]["x"] = 0.0
+      camera["targetPos"]["y"] = 0.0
+      camera["targetPos"]["z"] = tab_general.edit_z_offset.text.to_f
+      camera["targetRot"]["x"] = 0.0
+      camera["targetRot"]["y"] = 0.0
+      camera["targetRot"]["z"] = 0.0
+      camera.delete("MovementScript")
     elsif $camera_type == TYPE_POSITIONABLE
+      worldcam_idx = tab_general.comboBox_worldcam_visibility.selectedString
+      camera["worldCamVisibility"] = tab_general.comboBox_worldcam_visibility.getTextOf(worldcam_idx) if worldcam_idx > -1
+      camera["previewScreenSize"] = tab_general.edit_preview_size.text.to_f
+      camera.delete("Smoothfollow")
       camera["Follow360"] = {} unless camera["Follow360"]
       camera["Follow360"]["enabled"] = tab_follow.checkBox_enabled.checked?
       camera["Follow360"]["smoothing"] = tab_follow.edit_rotation_smoothing.text.to_f
+      camera["ModmapExtensions"]["moveWithMap"] = tab_modmapext.checkBox_move_with_map.checked?
+      camera["targetPos"]["x"] = tab_position.edit_target_pos_x.text.to_f
+      camera["targetPos"]["y"] = tab_position.edit_target_pos_y.text.to_f
+      camera["targetPos"]["z"] = tab_position.edit_target_pos_z.text.to_f
+      camera["targetRot"]["x"] = tab_position.edit_target_rot_x.text.to_f
+      camera["targetRot"]["y"] = tab_position.edit_target_rot_y.text.to_f
+      camera["targetRot"]["z"] = tab_position.edit_target_rot_z.text.to_f
+      camera["MovementScript"] = {} unless camera["MovementScript"]
+      scriptList = []
+      tab_movement.listBox_script_list.countStrings.times do |idx|
+        unless tab_movement.listBox_script_list.sendMessage(WMsg::LB_GETSEL,idx,0) == 0
+          scriptList.push "#{tab_movement.listBox_script_list.getTextOf(idx)}.json"
+        end
+      end
+      camera["MovementScript"]["scriptList"] = scriptList
+      camera["MovementScript"]["fromOrigin"] = tab_movement.checkBox_from_origin.checked?
+      camera["MovementScript"]["enableInMenu"] = tab_movement.checkBox_enable_in_menu.checked?
     end
-    camera["ModmapExtensions"] = {} unless camera["ModmapExtensions"]
-    camera["ModmapExtensions"]["moveWithMap"] = tab_modmapext.checkBox_move_with_map.checked?
-    camera["ModmapExtensions"]["autoOpaqueWalls"] = tab_modmapext.checkBox_auto_visible_walls.checked?
-    camera["ModmapExtensions"]["autoHideHUD"] = tab_modmapext.checkBox_auto_hide_HUD.checked?
     scenes_json_set("Menu", tab_scenes.checkBox_menu.checked?, before_camera_name, after_camera_name)
     scenes_json_set("MultiplayerMenu", tab_scenes.checkBox_multiplayer_menu.checked?, before_camera_name, after_camera_name)
     scenes_json_set("Playing", tab_scenes.checkBox_playing.checked?, before_camera_name, after_camera_name)
@@ -147,25 +172,6 @@ class Form_main
     scenes_json_set("Custom1", tab_scenes.checkBox_custom1.checked?, before_camera_name, after_camera_name)
     scenes_json_set("Custom2", tab_scenes.checkBox_custom2.checked?, before_camera_name, after_camera_name)
     scenes_json_set("Custom3", tab_scenes.checkBox_custom3.checked?, before_camera_name, after_camera_name)
-    camera["viewRect"] = {} unless camera["viewRect"]
-    camera["viewRect"]["x"] = tab_position.edit_view_rect_x.text.to_f
-    camera["viewRect"]["y"] = tab_position.edit_view_rect_y.text.to_f
-    camera["viewRect"]["width"] = tab_position.edit_view_rect_width.text.to_f
-    camera["viewRect"]["height"] = tab_position.edit_view_rect_height.text.to_f
-    camera["targetRot"] = {} unless camera["targetRot"]
-    camera["targetRot"]["x"] = tab_position.edit_target_rot_x.text.to_f
-    camera["targetRot"]["y"] = tab_position.edit_target_rot_y.text.to_f
-    camera["targetRot"]["z"] = tab_position.edit_target_rot_z.text.to_f
-    camera["MovementScript"] = {} unless camera["MovementScript"]
-    scriptList = []
-    tab_movement.listBox_script_list.countStrings.times do |idx|
-      unless tab_movement.listBox_script_list.sendMessage(WMsg::LB_GETSEL,idx,0) == 0
-        scriptList.push "#{tab_movement.listBox_script_list.getTextOf(idx)}.json"
-      end
-    end
-    camera["MovementScript"]["scriptList"] = scriptList
-    camera["MovementScript"]["fromOrigin"] = tab_movement.checkBox_from_origin.checked?
-    camera["MovementScript"]["enableInMenu"] = tab_movement.checkBox_enable_in_menu.checked?
     return camera_list_refresh
   end
 
