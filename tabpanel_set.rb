@@ -22,7 +22,6 @@ class Form_main                                                     ##__BY_FDVR
 
     class Panel0                                                    ##__BY_FDVR
       #GENERAL
-
       def self_created
         @comboBox_camera_type.setListStrings(COMBO_CAMERA_TYPE)
         @comboBox_worldcam_visibility.setListStrings(COMBO_WORLD_CAMVISIBILITY)
@@ -47,43 +46,42 @@ class Form_main                                                     ##__BY_FDVR
         @trackBar_z_offset.rangeMax = 5
         @trackBar_z_offset.linesize = 1
         @trackBar_z_offset.pagesize = 5
+        @camera_name_check = false
         addEvent WMsg::WM_HSCROLL
       end
 
       def control_set
-        @edit_camera_name.text = $cameras_name[$camera_idx]
-        type = $cameras_json[$camera_idx]["type"]
+        @edit_camera_name.text = $cameras_json[$camera_idx][CAMERA_NAME]
+        type = $cameras_json[$camera_idx][CAMERA_JSON]["type"]
         @comboBox_camera_type.select(@comboBox_camera_type.findString(type))
-        if type == COMBO_CAMERA_TYPE[0]
-          $camera_type = 0
-        elsif type == COMBO_CAMERA_TYPE[1]
-          $camera_type = 1
+        if type == COMBO_CAMERA_TYPE[TYPE_FIRSTPERSON]
+          $camera_type = TYPE_FIRSTPERSON
+        elsif type == COMBO_CAMERA_TYPE[TYPE_POSITIONABLE]
+          $camera_type = TYPE_POSITIONABLE
         else
           $camera_type = nil
           messageBox("'#{type}' : #{UNKNOWN_CAMERA_TYPE_MES}", UNKNOWN_CAMERA_TYPE_TITLE, WConst::MB_ICONWARNING | WConst::MB_OK)
         end
         comboBox_camera_type_selchanged
-        @edit_field_of_view.text = $cameras_json[$camera_idx]["FOV"]
+        @edit_field_of_view.text = "%.15g"%$cameras_json[$camera_idx][CAMERA_JSON]["FOV"]
         edit_field_of_view_changed
-        if fpslimit = $cameras_json[$camera_idx]["FPSLimiter"]
-          @edit_fps_limit.text = fpslimit["fpsLimit"]
+        if fpslimit = $cameras_json[$camera_idx][CAMERA_JSON]["FPSLimiter"]
+          @edit_fps_limit.text = "%.15g"%fpslimit["fpsLimit"]
           edit_fps_limit_changed
         end
-        @edit_render_scale.text = $cameras_json[$camera_idx]["renderScale"]
+        @edit_render_scale.text = "%.15g"%$cameras_json[$camera_idx][CAMERA_JSON]["renderScale"]
         edit_render_scale_changed
-        @comboBox_anti_aliasing.select(@comboBox_anti_aliasing.findString($cameras_json[$camera_idx]["antiAliasing"].to_s))
-        if $camera_type == 0
-          #FirstPerson
-          if zoffset = $cameras_json[$camera_idx]["targetPos"]
-            @edit_z_offset.text = zoffset["z"]
+        @comboBox_anti_aliasing.select(@comboBox_anti_aliasing.findString($cameras_json[$camera_idx][CAMERA_JSON]["antiAliasing"].to_s))
+        if $camera_type == TYPE_FIRSTPERSON
+          if zoffset = $cameras_json[$camera_idx][CAMERA_JSON]["targetPos"]
+            @edit_z_offset.text = "%.15g"%zoffset["z"]
           end
           @comboBox_worldcam_visibility.select(-1)
           @edit_preview_size.text = ""
-        elsif $camera_type == 1
-          #Positionable
+        elsif $camera_type == TYPE_POSITIONABLE
           @edit_z_offset.text = ""
-          @comboBox_worldcam_visibility.select(@comboBox_worldcam_visibility.findString($cameras_json[$camera_idx]["worldCamVisibility"]))
-          @edit_preview_size.text = $cameras_json[$camera_idx]["previewScreenSize"]
+          @comboBox_worldcam_visibility.select(@comboBox_worldcam_visibility.findString($cameras_json[$camera_idx][CAMERA_JSON]["worldCamVisibility"]))
+          @edit_preview_size.text = $cameras_json[$camera_idx][CAMERA_JSON]["previewScreenSize"]
         end
         edit_preview_size_changed
         edit_z_offset_changed
@@ -95,43 +93,29 @@ class Form_main                                                     ##__BY_FDVR
       end
 
       def view_set
-        if $camera_type == 0
-          #FirstPerson
-          @static_warldcam_visibiity.style |= 0x08000000
-          @comboBox_worldcam_visibility.style |= 0x08000000
-          @static_preview_size.style |= 0x08000000
-          @edit_preview_size.readonly = true
-          @trackBar_preview_size.style |= 0x08000000
-          @static_z_offset.style &= ~0x08000000
-          @edit_z_offset.readonly = false
-          @trackBar_z_offset.style &= ~0x08000000
-        elsif $camera_type == 1
-          #Positionable
-          @static_warldcam_visibiity.style &= ~0x08000000
-          @comboBox_worldcam_visibility.style &= ~0x08000000
-          @static_preview_size.style &= ~0x08000000
-          @edit_preview_size.readonly = false
-          @trackBar_preview_size.style &= ~0x08000000
-          @static_z_offset.style |= 0x08000000
-          @edit_z_offset.readonly = true
-          @trackBar_z_offset.style |= 0x08000000
+        firstperson_control = [@static_z_offset, @edit_z_offset, @trackBar_z_offset]
+        positionable_control = [@static_warldcam_visibiity, @comboBox_worldcam_visibility, @static_preview_size,
+                                @edit_preview_size, @trackBar_preview_size]
+        if $camera_type == TYPE_FIRSTPERSON
+          control_disable(positionable_control)
+          control_enable(firstperson_control)
+        elsif $camera_type == TYPE_POSITIONABLE
+          control_disable(firstperson_control)
+          control_enable(positionable_control)
         end
         refresh
       end
-
-
     end                                                             ##__BY_FDVR
 
     class Panel1                                                    ##__BY_FDVR
       #VISIBILITY
-
       def self_created
         @comboBox_walls.setListStrings(COMBO_WALL_VISIBLITY)
         @comboBox_notes.setListStrings(COMBO_NOTE_VISIBILITY)
       end
 
       def control_set
-        if visible = $cameras_json[$camera_idx]["visibleObjects"]
+        if visible = $cameras_json[$camera_idx][CAMERA_JSON]["visibleObjects"]
           @comboBox_walls.select(@comboBox_walls.findString(visible["Walls"]))
           @comboBox_notes.select(@comboBox_notes.findString(visible["Notes"]))
           @checkBox_debris.check(visible["Debris"])
@@ -141,7 +125,6 @@ class Form_main                                                     ##__BY_FDVR
           @checkBox_floor.check(visible["Floor"])
         end
       end
-
     end                                                             ##__BY_FDVR
 
     class Panel2                                                    ##__BY_FDVR
@@ -159,30 +142,28 @@ class Form_main                                                     ##__BY_FDVR
       end
 
       def control_set
-        if $camera_type == 0
-          #FirstPerson
-          if follow = $cameras_json[$camera_idx]["Smoothfollow"]
+        view_set
+        if $camera_type == TYPE_FIRSTPERSON
+          if follow = $cameras_json[$camera_idx][CAMERA_JSON]["Smoothfollow"]
             @checkBox_force_upright.check(follow["forceUpright"])
             @checkBox_follow_replay_position.check(follow["followReplayPosition"])
             @checkBox_pivoting_offset.check(follow["pivotingOffset"])
-            @edit_position_smoothing.text = follow["position"].to_s
-            @edit_rotation_smoothing.text = follow["rotation"].to_s
+            @edit_position_smoothing.text = "%.15g"%follow["position"]
+            @edit_rotation_smoothing.text = "%.15g"%follow["rotation"]
             @checkBox_enabled.check(false)
           end
-        elsif $camera_type == 1
-          #Positionable
-          if follow = $cameras_json[$camera_idx]["Follow360"]
+        elsif $camera_type == TYPE_POSITIONABLE
+          if follow = $cameras_json[$camera_idx][CAMERA_JSON]["Follow360"]
             @checkBox_force_upright.check(false)
             @checkBox_follow_replay_position.check(false)
             @checkBox_pivoting_offset.check(false)
             @edit_position_smoothing.text = ""
             @checkBox_enabled.check(follow["enabled"])
-            @edit_rotation_smoothing.text = follow["smoothing"].to_s
+            @edit_rotation_smoothing.text = "%.15g"%follow["smoothing"]
           end
         end
         edit_position_smoothing_changed
         edit_rotation_smoothing_changed
-        view_set
       end
 
       def msghandler(msg)
@@ -191,56 +172,40 @@ class Form_main                                                     ##__BY_FDVR
       end
 
       def view_set
-        if $camera_type == 0
-          #FirstPerson
-          @static_smoothfollow.style &= ~0x08000000
-          @checkBox_force_upright.style &= ~0x08000000
-          @checkBox_pivoting_offset.style &= ~0x08000000
-          @checkBox_follow_replay_position.style &= ~0x08000000
-          @static_position_smoothing.style &= ~0x08000000
-          @edit_position_smoothing.readonly = false
-          @trackBar_position_smoothing.style &= ~0x08000000
-          @static_follow360.style |= 0x08000000
-          @checkBox_enabled.style |= 0x08000000
-        elsif $camera_type == 1
-          #Positionable
-          @static_smoothfollow.style |= 0x08000000
-          @checkBox_force_upright.style |= 0x08000000
-          @checkBox_pivoting_offset.style |= 0x08000000
-          @checkBox_follow_replay_position.style |= 0x08000000
-          @static_position_smoothing.style |= 0x08000000
-          @edit_position_smoothing.readonly = true
-          @trackBar_position_smoothing.style |= 0x08000000
-          @static_follow360.style &= ~0x08000000
-          @checkBox_enabled.style &= ~0x08000000
+        firstperson_control = [@static_smoothfollow, @checkBox_force_upright, @checkBox_pivoting_offset, @checkBox_follow_replay_position,
+                               @static_position_smoothing, @edit_position_smoothing, @trackBar_position_smoothing]
+        positionable_control = [@static_follow360, @checkBox_enabled]
+        if $camera_type == TYPE_FIRSTPERSON
+          control_disable(positionable_control)
+          control_enable(firstperson_control)
+        elsif $camera_type == TYPE_POSITIONABLE
+          control_disable(firstperson_control)
+          control_enable(positionable_control)
         end
         refresh
       end
-
     end                                                             ##__BY_FDVR
 
     class Panel3                                                    ##__BY_FDVR
       #MODMAPEXT
       def control_set
-        if extensions = $cameras_json[$camera_idx]["ModmapExtensions"]
-          if $camera_type == 1
-            @checkBox_move_with_map.check(extensions["moveWithMap"])
-          else
+        view_set
+        if extensions = $cameras_json[$camera_idx][CAMERA_JSON]["ModmapExtensions"]
+          if $camera_type == TYPE_FIRSTPERSON
             @checkBox_move_with_map.check(false)
+          elsif $camera_type == TYPE_POSITIONABLE
+            @checkBox_move_with_map.check(extensions["moveWithMap"])
           end
           @checkBox_auto_visible_walls.check(extensions["autoOpaqueWalls"])
           @checkBox_auto_hide_HUD.check(extensions["autoHideHUD"])
         end
-        view_set
       end
 
       def view_set
-        if $camera_type == 0
-          #FirstPerson
-          @checkBox_move_with_map.style |= 0x08000000
-        elsif $camera_type == 1
-          #Positionable
-          @checkBox_move_with_map.style &= ~0x08000000
+        if $camera_type == TYPE_FIRSTPERSON
+          @checkBox_move_with_map.style |= WStyle::WS_DISABLED
+        elsif $camera_type == TYPE_POSITIONABLE
+          @checkBox_move_with_map.style &= ~WStyle::WS_DISABLED
         end
         refresh
       end
@@ -248,16 +213,130 @@ class Form_main                                                     ##__BY_FDVR
 
     class Panel4                                                    ##__BY_FDVR
       #SCENES
+      def control_set
+        @checkBox_menu.check(false)
+        @checkBox_multiplayer_menu.check(false)
+        @checkBox_playing.check(false)
+        @checkBox_playing_360.check(false)
+        @checkBox_playing_modmap.check(false)
+        @checkBox_playing_multi.check(false)
+        @checkBox_replay.check(false)
+        @checkBox_fpfc.check(false)
+        @checkBox_custom1.check(false)
+        @checkBox_custom2.check(false)
+        @checkBox_custom3.check(false)
+        if scenes = $scene_json["scenes"]
+          camera_name = $cameras_json[$camera_idx][CAMERA_NAME]
+          scenes.each do |scene, cameras|
+            @checkBox_menu.check(true) if scene == "Menu" && cameras.index(camera_name)
+            @checkBox_multiplayer_menu.check(true) if scene == "MultiplayerMenu" && cameras.index(camera_name)
+            @checkBox_playing.check(true) if scene == "Playing" && cameras.index(camera_name)
+            @checkBox_playing_360.check(true) if scene == "Playing360" && cameras.index(camera_name)
+            @checkBox_playing_modmap.check(true) if scene == "PlayingModmap" && cameras.index(camera_name)
+            @checkBox_playing_multi.check(true) if scene == "PlayingMulti" && cameras.index(camera_name)
+            @checkBox_replay.check(true) if scene == "Replay" && cameras.index(camera_name)
+            @checkBox_fpfc.check(true) if scene == "FPFC" && cameras.index(camera_name)
+            @checkBox_custom1.check(true) if scene == "Custom1" && cameras.index(camera_name)
+            @checkBox_custom2.check(true) if scene == "Custom2" && cameras.index(camera_name)
+            @checkBox_custom3.check(true) if scene == "Custom3" && cameras.index(camera_name)
+          end
+        end
+      end
 
     end                                                             ##__BY_FDVR
 
     class Panel5                                                    ##__BY_FDVR
       #POSITION
+      def self_created
+        @panel_target_rot.radioBtn_target_rot1.check(true)
+        @panel_view_rect.radioBtn_view_rect1.check(true)
+        @panel_target_pos.radioBtn_target_pos1.check(true)
+      end
 
+      def control_set
+        view_set
+        @edit_view_rect_x.text = ""
+        @edit_view_rect_y.text = ""
+        @edit_view_rect_width.text = ""
+        @edit_view_rect_height.text = ""
+        @edit_target_pos_x.text = ""
+        @edit_target_pos_y.text = ""
+        @edit_target_pos_z.text = ""
+        @edit_target_rot_x.text = ""
+        @edit_target_rot_y.text = ""
+        @edit_target_rot_z.text = ""
+        @checkBox_view_rect_full.check(false)
+        if $camera_type == TYPE_POSITIONABLE
+          if view = $cameras_json[$camera_idx][CAMERA_JSON]["viewRect"]
+            if view["x"] == 0.0 && view["y"] == 0.0 && view["width"] == -1.0 && view["height"] == -1.0
+              @checkBox_view_rect_full.check(true)
+              checkBox_view_rect_full_clicked
+              @view_x_backup = "0"
+              @view_y_backup = "0"
+              @view_width_backup = "640"
+              @view_height_backup = "380"
+            else
+              @checkBox_view_rect_full.check(false)
+              checkBox_view_rect_full_clicked
+              @view_x_backup = view["x"].to_i
+              @view_y_backup = view["y"].to_i
+              @view_width_backup = view["width"].to_i
+              @view_height_backup = view["height"].to_i
+              @edit_view_rect_x.text = view["x"].to_i
+              @edit_view_rect_y.text = view["y"].to_i
+              @edit_view_rect_width.text = view["width"].to_i
+              @edit_view_rect_height.text = view["height"].to_i
+            end
+          end
+          if pos = $cameras_json[$camera_idx][CAMERA_JSON]["targetPos"]
+            @edit_target_pos_x.text = "%.15g"%pos["x"]
+            @edit_target_pos_y.text = "%.15g"%pos["y"]
+            @edit_target_pos_z.text = "%.15g"%pos["z"]
+          end
+          if rot = $cameras_json[$camera_idx][CAMERA_JSON]["targetRot"]
+            @edit_target_rot_x.text = "%.15g"%rot["x"]
+            @edit_target_rot_y.text = "%.15g"%rot["y"]
+            @edit_target_rot_z.text = "%.15g"%rot["z"]
+          end
+        end
+      end
+
+      def view_set
+        control_list = [@button_back, @button_down, @button_front, @button_left, @button_pitch_down, @button_pitch_up, @button_right,
+          @button_roll_left, @button_roll_right, @button_target_pos_x_d, @button_target_pos_x_u, @button_target_pos_y_d,
+          @button_target_pos_y_u, @button_target_pos_z_d, @button_target_pos_z_u, @button_target_rot_x_d, @button_target_rot_x_u,
+          @button_target_rot_y_d, @button_target_rot_y_u, @button_target_rot_z_d, @button_target_rot_z_u, @button_up,
+          @button_view_rect_height_d, @button_view_rect_height_u, @button_view_rect_width_d, @button_view_rect_width_u,
+          @button_view_rect_x_d, @button_view_rect_x_u, @button_view_rect_y_d, @button_view_rect_y_u, @button_yaw_left,
+          @button_yaw_right, @edit_target_pos_x, @edit_target_pos_y, @edit_target_pos_z, @edit_target_rot_x, @edit_target_rot_y,
+          @edit_target_rot_z, @edit_view_rect_height, @edit_view_rect_width, @edit_view_rect_x, @edit_view_rect_y,@checkBox_view_rect_full,
+          @static_target_pos, @static_target_pos_x, @static_target_pos_y, @static_target_pos_z,
+          @static_target_rot, @static_target_rot_x, @static_target_rot_y, @static_target_rot_z,
+          @static_view_rect, @static_view_rect_height, @static_view_rect_width, @static_view_rect_x, @static_view_rect_y,
+          @panel_target_rot.radioBtn_target_rot1, @panel_target_rot.radioBtn_target_rot2, @panel_target_rot.radioBtn_target_rot3, 
+          @panel_view_rect.radioBtn_view_rect1, @panel_view_rect.radioBtn_view_rect2, @panel_view_rect.radioBtn_view_rect3,
+          @panel_target_pos.radioBtn_target_pos1, @panel_target_pos.radioBtn_target_pos2, @panel_target_pos.radioBtn_target_pos3]
+        if $camera_type == TYPE_FIRSTPERSON
+          control_disable(control_list)
+        elsif $camera_type == TYPE_POSITIONABLE
+          control_enable(control_list)
+        end
+      end
     end                                                             ##__BY_FDVR
 
     class Panel6                                                    ##__BY_FDVR
       #MOVEMENT
+      def control_set
+        view_set
+        @checkBox_from_origin.check(false)
+        @checkBox_enable_in_menu.check(false)
+        if $camera_type == TYPE_POSITIONABLE
+          if movement = $cameras_json[$camera_idx][CAMERA_JSON]["MovementScript"]
+            @checkBox_from_origin.check(movement["fromOrigin"])
+            @checkBox_enable_in_menu.check(movement["enableInMenu"])
+          end
+        end
+      end
 
       def movement_list_set
         if $movement_json == []
@@ -265,6 +344,16 @@ class Form_main                                                     ##__BY_FDVR
         else
           @listBox_script_list.setListStrings($movement_json)
         end
+      end
+
+      def view_set
+        positionable_control = [@checkBox_from_origin, @checkBox_enable_in_menu, @listBox_script_list, @static_movement_script]
+        if $camera_type == TYPE_FIRSTPERSON
+          control_disable(positionable_control)
+        elsif $camera_type == TYPE_POSITIONABLE
+          control_enable(positionable_control)
+        end
+        refresh
       end
     
     end                                                             ##__BY_FDVR

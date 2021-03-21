@@ -25,16 +25,26 @@ class Form_main                                                     ##__BY_FDVR
 
       def comboBox_camera_type_selchanged
         return unless $camera_type
-        if @comboBox_camera_type.getTextOf(@comboBox_camera_type.selectedString) == COMBO_CAMERA_TYPE[0]
-          #FirstPerson
-          $camera_type = 0
-        elsif @comboBox_camera_type.getTextOf(@comboBox_camera_type.selectedString) == COMBO_CAMERA_TYPE[1]
-          #Positionable
-          $camera_type = 1
+        if @comboBox_camera_type.getTextOf(@comboBox_camera_type.selectedString) == COMBO_CAMERA_TYPE[TYPE_FIRSTPERSON]
+          $camera_type = TYPE_FIRSTPERSON
+        elsif @comboBox_camera_type.getTextOf(@comboBox_camera_type.selectedString) == COMBO_CAMERA_TYPE[TYPE_POSITIONABLE]
+          $camera_type = TYPE_POSITIONABLE
         end
         view_set
       end
 
+      def edit_camera_name_changed
+        return if @camera_name_check
+        @camera_name_check = true
+        if rename_text = character_check(self,/[\\\/:\*\?"<>\|]/,@edit_camera_name.text)
+          @edit_camera_name.text = rename_text
+        end
+        if rename_text = character_check(self,/[^ -~]/,@edit_camera_name.text)
+          @edit_camera_name.text = rename_text
+        end
+        @camera_name_check = false
+      end
+    
       def edit_field_of_view_changed
         trackbar_set(@edit_field_of_view, @trackBar_field_of_view)
       end
@@ -94,6 +104,29 @@ class Form_main                                                     ##__BY_FDVR
     class Panel5                                                    ##__BY_FDVR
       #POSITION
 
+      def checkBox_view_rect_full_clicked
+        control_list = [@edit_view_rect_x, @edit_view_rect_y, @edit_view_rect_width, @edit_view_rect_height,
+                        @button_view_rect_x_u, @button_view_rect_x_d, @button_view_rect_y_u, @button_view_rect_y_d,
+                        @button_view_rect_width_u, @button_view_rect_width_d, @button_view_rect_height_u, @button_view_rect_height_d]
+        if @checkBox_view_rect_full.checked?
+          @view_x_backup = @edit_view_rect_x.text
+          @view_y_backup = @edit_view_rect_y.text
+          @view_width_backup = @edit_view_rect_width.text
+          @view_height_backup = @edit_view_rect_height.text
+          @edit_view_rect_x.text = "0"
+          @edit_view_rect_y.text = "0"
+          @edit_view_rect_width.text = "-1"
+          @edit_view_rect_height.text = "-1"
+          control_disable(control_list)
+        else
+          @edit_view_rect_x.text = @view_x_backup
+          @edit_view_rect_y.text = @view_y_backup
+          @edit_view_rect_width.text = @view_width_backup
+          @edit_view_rect_height.text = @view_height_backup
+          control_enable(control_list)
+        end
+      end
+        
       class Panel_view_rect                                         ##__BY_FDVR
 
       end                                                           ##__BY_FDVR

@@ -29,12 +29,13 @@ class Form_main                                                     ##__BY_FDVR
          MAIN_SELF_CREATED_BSDIR_CHK_TITLE, WConst::MB_ICONWARNING | WConst::MB_OK)
       exit unless VRLocalScreen.openModalDialog(self,nil,Modaldlg_setting,nil,nil)
     end
-    result, mes = camera2_setting_load
-    unless result
-      setting_load_error(mes)
-      return
-    end
-    camera_list_set
+    #Set tab stops for list box
+    #[0x192,count,[position,....]]
+    #style = LBS_USETABSTOPS
+    #0x192 : LB_SETTABSTOPS
+    #l*    : 32bit signed integer
+    @listBox_camera.sendMessage(0x192, 2,[15,60].pack('l*'))
+    camera_load
   end
   
   def button_add_clicked
@@ -59,8 +60,13 @@ class Form_main                                                     ##__BY_FDVR
 
   def listBox_camera_selchanged
     if @listBox_camera.selectedString > -1
+      camera_list_refresh = control_json_save
       $camera_idx = @listBox_camera.selectedString
-      camera_setting_set
+      if camera_list_refresh
+        camera_list_set($camera_idx)
+      else
+        camera_setting_set
+      end
     end
   end
   
@@ -73,6 +79,8 @@ class Form_main                                                     ##__BY_FDVR
   def tabPanel_main_selchanged
     @tabPanel_main.panels[TAB_FOLLOW].view_set
     @tabPanel_main.panels[TAB_MODMAPEXT].view_set
+    @tabPanel_main.panels[TAB_POSITION].view_set
+    @tabPanel_main.panels[TAB_MOVEMENT].view_set
   end
 
 end                                                                 ##__BY_FDVR

@@ -45,16 +45,16 @@ def setting_save
 end
 
 def camera2_setting_load
+  return [false, SETTING_LOAD_ERROR_NO_DEFAULT] unless $firstperson_default  = json_read(FIRSTPERSON_DEFAULT)
+  return [false, SETTING_LOAD_ERROR_NO_DEFAULT] unless $positionable_default = json_read(POSITIONABLE_DEFALUT)
   $scene_json = json_read("#{$bs_folder}\\#{CAMERA2_SCENES_JSON}")
   cameras_dir = "#{$bs_folder}\\#{CAMERA2_CAMERAS_DIR}\\*.json".gsub(/\\/,"/")
-  $cameras_name = []
   $cameras_json = []
   Dir.glob(cameras_dir) do |json_file|
-    $cameras_name.push File.basename(json_file, ".*")
-    $cameras_json.push json_read(json_file)
+    $cameras_json.push [File.basename(json_file, ".*"), json_read(json_file), json_file]
   end
   return [false, SETTING_LOAD_ERROR_NO_SCENE] unless $scene_json
-  return [false, SETTING_LOAD_ERROR_NO_CAMERA] if $cameras_name == []
+  return [false, SETTING_LOAD_ERROR_NO_CAMERA] if $cameras_json == []
   movement_dir_load
   return [true, nil]
 end
@@ -99,4 +99,57 @@ def edit_set
     end
   end
   $change_flag = false
+end
+
+def control_disable(control_list)
+  control_list.each do |control|
+    if control.class == VREdit
+      control.readonly = true
+    else
+      control.style |= WStyle::WS_DISABLED
+    end
+  end
+  refresh
+end
+
+def control_enable(control_list)
+  control_list.each do |control|
+    if control.class == VREdit
+      control.readonly = false
+    else
+      control.style &= ~WStyle::WS_DISABLED
+    end
+  end
+  refresh
+end
+
+def character_check(vr_ogj,regular,text)
+  if text =~ Regexp.new(regular)
+    vr_ogj.messageBox("'#{$&}' #{CHARACTER_CHECK_MES}", CHARACTER_CHECK_TITLE, WConst::MB_ICONWARNING | WConst::MB_OK)
+    return text.gsub(regular,'')
+  else
+    return false
+  end
+end
+
+def scenes_json_set(scene, scene_enabled, before_camera_name, after_camera_name)
+  $scene_json.each do |key, value|
+    if key == "scenes"
+      value.each do |json_scene, json_camera|
+        if json_scene == scene
+          if idx = json_camera.index(before_camera_name)
+            if scene_enabled
+              json_camera[idx] = after_camera_name
+            else
+              json_camera.delete_at(idx)
+            end
+          else
+            if scene_enabled
+              json_camera.push after_camera_name
+            end
+          end
+        end
+      end
+    end
+  end
 end

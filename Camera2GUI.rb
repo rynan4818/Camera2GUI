@@ -17,16 +17,19 @@ $KCODE='s'
 #==============================================================================
 
 
-#Set 'EXE_DIR' directly at runtime  直接実行時にEXE_DIRを設定する
+#Set 'EXE_DIR' directly at runtime
 EXE_DIR = (File.dirname(File.expand_path($0)).sub(/\/$/,'') + '/').gsub(/\//,'\\') unless defined?(EXE_DIR)
 
-#Predefined Constants  設定済み定数
-#EXE_DIR ****** Folder with EXE files[It ends with '\']  EXEファイルのあるディレクトリ[末尾は\]
-#MAIN_RB ****** Main ruby script file name  メインのrubyスクリプトファイル名
-#ERR_LOG ****** Error log file name  エラーログファイル名
+#Predefined Constants
+#EXE_DIR ****** Folder with EXE files[It ends with '\']
+#MAIN_RB ****** Main ruby script file name
+#ERR_LOG ****** Error log file name
 
 #Setting
 SETTING_FILE = EXE_DIR + "setting.json"
+FIRSTPERSON_DEFAULT  = EXE_DIR + "FirstPersonDefault.json"
+POSITIONABLE_DEFALUT = EXE_DIR + "PositionableDefault.json"
+
 DEFAULT_BS_FOLDER = ["C:\\Program Files (x86)\\Steam\\steamapps\\common\\Beat Saber",
                      "C:\\Program Files\\Oculus\\Software\\hyperbolic-magnetism-beat-saber"]
 CAMERA2_SCENES_JSON  = "UserData\\Camera2\\Scenes.json"
@@ -42,6 +45,9 @@ TAB_SCENES     = 4
 TAB_POSITION   = 5
 TAB_MOVEMENT   = 6
 
+CAMERA_NAME = 0
+CAMERA_JSON = 1
+CAMERA_ORG  = 2
 #Combobox
 COMBO_CAMERA_TYPE         = ["FirstPerson","Positionable"]
 COMBO_WORLD_CAMVISIBILITY = ["Visible","HiddenWhilePlaying","Hidden"]
@@ -49,11 +55,13 @@ COMBO_ANTI_ALIASING       = ["1","2","4","8"]
 COMBO_WALL_VISIBLITY      = ["Visible","Transparent","Hidden"]
 COMBO_NOTE_VISIBILITY     = ["Hidden","Visible","ForceCustomNotes"]
 
+TYPE_FIRSTPERSON  = COMBO_CAMERA_TYPE.index("FirstPerson")
+TYPE_POSITIONABLE = COMBO_CAMERA_TYPE.index("Positionable")
+
 #Library
 require 'rubygems'
 require 'json'
 require 'vr/vruby'
-require 'vr/vrdialog'
 require 'vr/contrib/msgboxconst'
 
 #Sub script
