@@ -38,7 +38,7 @@ class Form_main                                                     ##__BY_FDVR
     camera_load
   end
   
-  def button_add_clicked
+  def button_add_clicked(copy_json = $positionable_default)
     number = 1
     camera_name = ""
     ok = true
@@ -54,12 +54,17 @@ class Form_main                                                     ##__BY_FDVR
         ok = true
       end
     end
-    $cameras_json.push [camera_name, $positionable_default, ""]
+    $cameras_json.push [camera_name, copy_json, ""]
     control_json_save
     $camera_idx = $cameras_json.size - 1
     camera_list_set($camera_idx)
   end
   
+  def button_copy_clicked
+    control_json_save
+    button_add_clicked($cameras_json[$camera_idx][CAMERA_JSON])
+  end
+
   def button_del_clicked
     return if $cameras_json.size <= 1
     $delete_camera.push $cameras_json.delete_at($camera_idx)
@@ -67,7 +72,7 @@ class Form_main                                                     ##__BY_FDVR
     camera_list_set($camera_idx)
   end
 
-  def button_reflection_clicked
+  def button_save_clicked
     camera_list_set($camera_idx) if control_json_save
     json_file_save
   end

@@ -259,10 +259,19 @@ class Form_main                                                     ##__BY_FDVR
         @panel_target_rot.radioBtn_target_rot1.check(true)
         @panel_view_rect.radioBtn_view_rect1.check(true)
         @panel_target_pos.radioBtn_target_pos1.check(true)
+        @change_pos_x = false
+        @change_pos_y = false
+        @change_pos_z = false
+        @change_rot_x = false
+        @change_rot_y = false
+        @change_rot_z = false
+        @change_view_x = false
+        @change_view_y = false
+        @change_view_w = false
+        @change_view_h = false
       end
 
       def control_set
-        view_set
         @edit_view_rect_x.text = ""
         @edit_view_rect_y.text = ""
         @edit_view_rect_width.text = ""
@@ -278,14 +287,12 @@ class Form_main                                                     ##__BY_FDVR
           if view = $cameras_json[$camera_idx][CAMERA_JSON]["viewRect"]
             if view["x"] == 0.0 && view["y"] == 0.0 && view["width"] == -1.0 && view["height"] == -1.0
               @checkBox_view_rect_full.check(true)
-              checkBox_view_rect_full_clicked
               @view_x_backup = "0"
               @view_y_backup = "0"
               @view_width_backup = "640"
               @view_height_backup = "380"
             else
               @checkBox_view_rect_full.check(false)
-              checkBox_view_rect_full_clicked
               @view_x_backup = view["x"].to_i
               @view_y_backup = view["y"].to_i
               @view_width_backup = view["width"].to_i
@@ -307,6 +314,7 @@ class Form_main                                                     ##__BY_FDVR
             @edit_target_rot_z.text = "%.15g"%rot["z"]
           end
         end
+        view_set
       end
 
       def view_set
@@ -319,7 +327,7 @@ class Form_main                                                     ##__BY_FDVR
           @button_yaw_right, @edit_target_pos_x, @edit_target_pos_y, @edit_target_pos_z, @edit_target_rot_x, @edit_target_rot_y,
           @edit_target_rot_z, @edit_view_rect_height, @edit_view_rect_width, @edit_view_rect_x, @edit_view_rect_y,@checkBox_view_rect_full,
           @static_target_pos, @static_target_pos_x, @static_target_pos_y, @static_target_pos_z,
-          @static_target_rot, @static_target_rot_x, @static_target_rot_y, @static_target_rot_z,
+          @static_target_rot, @static_target_rot_x, @static_target_rot_y, @static_target_rot_z, @static_flying_control,
           @static_view_rect, @static_view_rect_height, @static_view_rect_width, @static_view_rect_x, @static_view_rect_y,
           @panel_target_rot.radioBtn_target_rot1, @panel_target_rot.radioBtn_target_rot2, @panel_target_rot.radioBtn_target_rot3, 
           @panel_view_rect.radioBtn_view_rect1, @panel_view_rect.radioBtn_view_rect2, @panel_view_rect.radioBtn_view_rect3,
@@ -328,7 +336,28 @@ class Form_main                                                     ##__BY_FDVR
           control_disable(control_list)
         elsif $camera_type == TYPE_POSITIONABLE
           control_enable(control_list)
+          checkBox_view_rect_full_clicked
         end
+      end
+
+      def view_amaount
+        return @panel_view_rect.radioBtn_view_rect1.caption.to_i if @panel_view_rect.radioBtn_view_rect1.checked?
+        return @panel_view_rect.radioBtn_view_rect2.caption.to_i if @panel_view_rect.radioBtn_view_rect2.checked?
+        return @panel_view_rect.radioBtn_view_rect3.caption.to_i if @panel_view_rect.radioBtn_view_rect3.checked?
+      end
+
+      def pos_amaount
+        return @panel_target_pos.radioBtn_target_pos1.caption.to_f if @panel_target_pos.radioBtn_target_pos1.checked?
+        return @panel_target_pos.radioBtn_target_pos2.caption.to_f if @panel_target_pos.radioBtn_target_pos2.checked?
+        return @panel_target_pos.radioBtn_target_pos3.caption.to_f if @panel_target_pos.radioBtn_target_pos3.checked?
+      end
+
+      def rot_amaount
+        return @panel_target_rot.radioBtn_target_rot1.caption.to_f if @panel_target_rot.radioBtn_target_rot1.checked?
+        return @panel_target_rot.radioBtn_target_rot2.caption.to_f if @panel_target_rot.radioBtn_target_rot2.checked?
+        return @panel_target_rot.radioBtn_target_rot3.caption.to_f if @panel_target_rot.radioBtn_target_rot3.checked?
+        return @panel_target_rot.radioBtn_target_rot4.caption.to_f if @panel_target_rot.radioBtn_target_rot4.checked?
+        return @panel_target_rot.radioBtn_target_rot5.caption.to_f if @panel_target_rot.radioBtn_target_rot5.checked?
       end
     end                                                             ##__BY_FDVR
 

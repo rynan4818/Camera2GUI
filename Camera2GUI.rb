@@ -48,6 +48,8 @@ TAB_MOVEMENT   = 6
 CAMERA_NAME = 0
 CAMERA_JSON = 1
 CAMERA_ORG  = 2
+
+POS_ROT_ROUND = 1000000.0
 #Combobox
 COMBO_CAMERA_TYPE         = ["FirstPerson","Positionable"]
 COMBO_WORLD_CAMVISIBILITY = ["Visible","HiddenWhilePlaying","Hidden"]

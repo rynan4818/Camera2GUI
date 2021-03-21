@@ -205,6 +205,7 @@ class Form_main < VRForm
       attr_reader :button_left
       attr_reader :button_pitch_down
       attr_reader :button_pitch_up
+      attr_reader :button_reset
       attr_reader :button_right
       attr_reader :button_roll_left
       attr_reader :button_roll_right
@@ -245,6 +246,7 @@ class Form_main < VRForm
       attr_reader :panel_target_pos
       attr_reader :panel_target_rot
       attr_reader :panel_view_rect
+      attr_reader :static_flying_control
       attr_reader :static_target_pos
       attr_reader :static_target_pos_x
       attr_reader :static_target_pos_y
@@ -264,11 +266,15 @@ class Form_main < VRForm
         attr_reader :radioBtn_target_rot1
         attr_reader :radioBtn_target_rot2
         attr_reader :radioBtn_target_rot3
+        attr_reader :radioBtn_target_rot4
+        attr_reader :radioBtn_target_rot5
 
         def construct
-          addControl(VRRadiobutton,'radioBtn_target_rot1',"1",16,8,32,24)
-          addControl(VRRadiobutton,'radioBtn_target_rot2',"2",56,8,40,24)
-          addControl(VRRadiobutton,'radioBtn_target_rot3',"3",96,8,32,24)
+          addControl(VRRadiobutton,'radioBtn_target_rot1',"0.01",16,8,56,24)
+          addControl(VRRadiobutton,'radioBtn_target_rot2',"0.1",72,8,40,24)
+          addControl(VRRadiobutton,'radioBtn_target_rot3',"1",120,8,40,24)
+          addControl(VRRadiobutton,'radioBtn_target_rot4',"10",16,32,40,24)
+          addControl(VRRadiobutton,'radioBtn_target_rot5',"45",72,32,40,24)
         end
       end
 
@@ -279,9 +285,9 @@ class Form_main < VRForm
         attr_reader :radioBtn_view_rect3
 
         def construct
-          addControl(VRRadiobutton,'radioBtn_view_rect1',"1",24,0,32,24)
-          addControl(VRRadiobutton,'radioBtn_view_rect2',"2",72,0,32,24)
-          addControl(VRRadiobutton,'radioBtn_view_rect3',"3",120,0,32,24)
+          addControl(VRRadiobutton,'radioBtn_view_rect1',"1",8,0,40,24)
+          addControl(VRRadiobutton,'radioBtn_view_rect2',"10",56,0,48,24)
+          addControl(VRRadiobutton,'radioBtn_view_rect3',"50",112,0,56,24)
         end
       end
 
@@ -292,22 +298,23 @@ class Form_main < VRForm
         attr_reader :radioBtn_target_pos3
 
         def construct
-          addControl(VRRadiobutton,'radioBtn_target_pos1',"1",8,8,32,24)
-          addControl(VRRadiobutton,'radioBtn_target_pos2',"2",48,8,40,24)
-          addControl(VRRadiobutton,'radioBtn_target_pos3',"3",88,8,32,24)
+          addControl(VRRadiobutton,'radioBtn_target_pos1',"0.01",16,8,56,24)
+          addControl(VRRadiobutton,'radioBtn_target_pos2',"0.1",80,8,40,24)
+          addControl(VRRadiobutton,'radioBtn_target_pos3',"1",136,8,32,24)
         end
       end
 
       def construct
-        addControl(Panel_target_pos,'panel_target_pos',"panel1",228,160,136,32)
-        addControl(Panel_target_rot,'panel_target_rot',"panel2",388,160,160,40)
-        addControl(Panel_view_rect,'panel_view_rect',"panel1",44,200,168,24)
+        addControl(Panel_target_pos,'panel_target_pos',"panel1",204,160,192,32)
+        addControl(Panel_target_rot,'panel_target_rot',"panel2",388,160,168,56)
+        addControl(Panel_view_rect,'panel_view_rect',"panel1",20,200,192,24)
         addControl(VRButton,'button_back',"BACK",252,312,72,40)
         addControl(VRButton,'button_down',"DOWN",340,328,88,24)
         addControl(VRButton,'button_front',"FRONT",252,232,72,40)
         addControl(VRButton,'button_left',"LEFT",132,272,104,40)
         addControl(VRButton,'button_pitch_down',"PITCH DOWN",132,328,104,24)
         addControl(VRButton,'button_pitch_up',"PITCH UP",132,232,104,24)
+        addControl(VRButton,'button_reset',"RESET",340,16,48,24)
         addControl(VRButton,'button_right',"RIGHT",340,272,88,40)
         addControl(VRButton,'button_roll_left',"ROLL LEFT",20,304,96,24)
         addControl(VRButton,'button_roll_right',"ROLL RIGHT",452,304,88,24)
@@ -345,6 +352,7 @@ class Form_main < VRForm
         addControl(VREdit,'edit_view_rect_width',"",92,128,64,24)
         addControl(VREdit,'edit_view_rect_x',"",92,48,64,24)
         addControl(VREdit,'edit_view_rect_y',"",92,88,64,24)
+        addControl(VRStatic,'static_flying_control',"Camera flying control",212,200,168,24)
         addControl(VRStatic,'static_target_pos',"Target Pos",244,16,88,24)
         addControl(VRStatic,'static_target_pos_x',"X",228,48,16,24)
         addControl(VRStatic,'static_target_pos_y',"Y",228,88,16,24)
@@ -392,7 +400,7 @@ class Form_main < VRForm
   def construct
     self.caption = 'Camera2GUI'
     self.move(224,483,580,625)
-    #$_addControl(VRMenu,'mainmenu1',"",512,64,24,24)
+    #$_addControl(VRMenu,'mainmenu1',"",520,64,24,24)
     @mainmenu1 = newMenu.set(
       [
         ["&File",[
@@ -416,14 +424,15 @@ class Form_main < VRForm
     )
     setMenu(@mainmenu1,true)
     addControl(TabPanel_main,'tabPanel_main',"tabPanel1",8,168,552,272)
-    addControl(VRButton,'button_add',"ADD CAMERA",16,16,128,32)
-    addControl(VRButton,'button_del',"DELETE CAMERA",16,56,128,32)
-    addControl(VRButton,'button_list_down',"DOWN",480,96,64,32)
-    addControl(VRButton,'button_list_up',"UP",480,16,64,32)
-    addControl(VRButton,'button_reflection',"REFLECTION",16,96,128,32)
-    addControl(VRCheckbox,'checkBox_auto_reflection',"Auto reflection",16,136,128,24)
-    addControl(VRListbox,'listBox_camera',"listBox1",160,16,304,114,0x80)
-    #$_addControl(VRMgdVertLayoutFrame,'vertFrame1',"",480,64,24,24)
+    addControl(VRButton,'button_add',"ADD",16,16,56,32)
+    addControl(VRButton,'button_copy',"COPY",80,16,56,32)
+    addControl(VRButton,'button_del',"DELETE",16,56,56,32)
+    addControl(VRButton,'button_list_down',"DOWN",488,96,56,32)
+    addControl(VRButton,'button_list_up',"UP",488,16,56,32)
+    addControl(VRButton,'button_save',"SAVE",16,96,56,32)
+    addControl(VRCheckbox,'checkBox_auto_save',"Auto SAVE",16,136,128,24)
+    addControl(VRListbox,'listBox_camera',"listBox1",144,16,336,114,0x80)
+    #$_addControl(VRMgdVertLayoutFrame,'vertFrame1',"",496,64,24,24)
     @vertFrame1=setMarginedFrame(VRMgdVertLayoutFrame)
     @vertFrame1.register(@tabPanel_main)
     @vertFrame1.setMargin(0,165,0,0)

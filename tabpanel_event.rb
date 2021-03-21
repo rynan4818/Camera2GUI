@@ -116,19 +116,247 @@ class Form_main                                                     ##__BY_FDVR
           @edit_view_rect_height.text = @view_height_backup
           control_enable(control_list)
         end
+        refresh
       end
-        
-      class Panel_view_rect                                         ##__BY_FDVR
+      
+      def edit_target_rot_x_changed
+        return if @change_rot_x
+        @change_rot_x = true
+        rot_x = @edit_target_rot_x.text.to_f
+        if @edit_target_rot_x.text.to_f >= 360.0
+          rot_x = @edit_target_rot_x.text.to_f - 360.0
+        elsif @edit_target_rot_x.text.to_f < 0.0
+          rot_x = 360.0 + @edit_target_rot_x.text.to_f
+        end
+        change_rot_x = "%.15g"%((rot_x * POS_ROT_ROUND).round.to_f / POS_ROT_ROUND)
+        @edit_target_rot_x.text = change_rot_x unless @edit_target_rot_x.text == change_rot_x
+        @change_rot_x = false
+      end
+    
+      def edit_target_rot_y_changed
+        return if @change_rot_y
+        @change_rot_y = true
+        rot_y = @edit_target_rot_y.text.to_f
+        if @edit_target_rot_y.text.to_f >= 360.0
+          rot_y = @edit_target_rot_y.text.to_f - 360.0
+        elsif @edit_target_rot_y.text.to_f < 0.0
+          rot_y = 360.0 + @edit_target_rot_y.text.to_f
+        end
+        change_rot_y = "%.15g"%((rot_y * POS_ROT_ROUND).round.to_f / POS_ROT_ROUND)
+        @edit_target_rot_y.text = change_rot_y unless @edit_target_rot_y.text == change_rot_y
+        @change_rot_y = false
+      end
+    
+      def edit_target_rot_z_changed
+        return if @change_rot_z
+        @change_rot_z = true
+        rot_z = @edit_target_rot_z.text.to_f
+        if @edit_target_rot_z.text.to_f >= 360.0
+          rot_z = @edit_target_rot_z.text.to_f - 360.0
+        elsif @edit_target_rot_z.text.to_f < 0.0
+          rot_z = 360.0 + @edit_target_rot_z.text.to_f
+        end
+        change_rot_z = "%.15g"%((rot_z * POS_ROT_ROUND).round.to_f / POS_ROT_ROUND)
+        @edit_target_rot_z.text = change_rot_z unless @edit_target_rot_z.text == change_rot_z
+        @change_rot_z = false
+      end
+      
+      def edit_target_pos_x_changed
+        return if @change_pos_x
+        @change_pos_x = true
+        change_pos_x = "%.15g"%((@edit_target_pos_x.text.to_f * POS_ROT_ROUND).round.to_f / POS_ROT_ROUND)
+        @edit_target_pos_x.text = change_pos_x unless @edit_target_pos_x.text == change_pos_x
+        @change_pos_x = false
+      end
+    
+      def edit_target_pos_y_changed
+        return if @change_pos_y
+        @change_pos_y = true
+        change_pos_y = "%.15g"%((@edit_target_pos_y.text.to_f * POS_ROT_ROUND).round.to_f / POS_ROT_ROUND)
+        @edit_target_pos_y.text = change_pos_y unless @edit_target_pos_y.text == change_pos_y
+        @change_pos_y = false
+      end
+    
+      def edit_target_pos_z_changed
+        return if @change_pos_z
+        @change_pos_z = true
+        change_pos_z = "%.15g"%((@edit_target_pos_z.text.to_f * POS_ROT_ROUND).round.to_f / POS_ROT_ROUND)
+        @edit_target_pos_z.text = change_pos_z unless @edit_target_pos_z.text == change_pos_z
+        @change_pos_z = false
+      end
+      
+      def edit_view_rect_x_changed
+        return if @change_view_x
+        @change_view_x = true
+        change_x = @edit_view_rect_x.text.to_i
+        change_x = 0 if change_x < 0
+        @edit_view_rect_x.text = change_x.to_s unless @edit_view_rect_x.text == change_x.to_s
+        @change_view_x = false
+      end
+    
+      def edit_view_rect_y_changed
+        return if @change_view_y
+        @change_view_y = true
+        change_y = @edit_view_rect_y.text.to_i
+        change_y = 0 if change_y < 0
+        @edit_view_rect_y.text = change_y.to_s unless @edit_view_rect_y.text == change_y.to_s
+        @change_view_y = false
+      end
+    
+      def edit_view_rect_width_changed
+        return if @change_view_w
+        @change_view_w = true
+        change_w = @edit_view_rect_width.text.to_i
+        change_w = -1 if change_w < 0
+        @edit_view_rect_width.text = change_w.to_s unless @edit_view_rect_width.text == change_w.to_s
+        @change_view_w = false
+      end
+    
+      def edit_view_rect_height_changed
+        return if @change_view_h
+        @change_view_h = true
+        change_h = @edit_view_rect_height.text.to_i
+        change_h = -1 if change_h < 0
+        @edit_view_rect_height.text = change_h.to_s unless @edit_view_rect_height.text == change_h.to_s
+        @change_view_h = false
+      end
 
-      end                                                           ##__BY_FDVR
-
-      class Panel_target_rot                                        ##__BY_FDVR
-
-      end                                                           ##__BY_FDVR
-
-      class Panel_target_pos                                        ##__BY_FDVR
-
-      end                                                           ##__BY_FDVR
+      def button_view_rect_x_u_clicked
+        @edit_view_rect_x.text = @edit_view_rect_x.text.to_i + view_amaount
+      end
+    
+      def button_view_rect_x_d_clicked
+        @edit_view_rect_x.text = @edit_view_rect_x.text.to_i - view_amaount
+      end
+    
+      def button_view_rect_y_u_clicked
+        @edit_view_rect_y.text = @edit_view_rect_y.text.to_i + view_amaount
+      end
+    
+      def button_view_rect_y_d_clicked
+        @edit_view_rect_y.text = @edit_view_rect_y.text.to_i - view_amaount
+      end
+    
+      def button_view_rect_width_u_clicked
+        @edit_view_rect_width.text = @edit_view_rect_width.text.to_i + view_amaount
+      end
+    
+      def button_view_rect_width_d_clicked
+        @edit_view_rect_width.text = @edit_view_rect_width.text.to_i - view_amaount
+      end
+    
+      def button_view_rect_height_u_clicked
+        @edit_view_rect_height.text = @edit_view_rect_height.text.to_i + view_amaount
+      end
+    
+      def button_view_rect_height_d_clicked
+        @edit_view_rect_height.text = @edit_view_rect_height.text.to_i - view_amaount
+      end
+    
+      def button_target_pos_x_u_clicked
+        @edit_target_pos_x.text = "%.15g"%(@edit_target_pos_x.text.to_f + pos_amaount)
+      end
+    
+      def button_target_pos_x_d_clicked
+        @edit_target_pos_x.text = "%.15g"%(@edit_target_pos_x.text.to_f - pos_amaount)
+      end
+    
+      def button_target_pos_y_u_clicked
+        @edit_target_pos_y.text = "%.15g"%(@edit_target_pos_y.text.to_f + pos_amaount)
+      end
+    
+      def button_target_pos_y_d_clicked
+        @edit_target_pos_y.text = "%.15g"%(@edit_target_pos_y.text.to_f - pos_amaount)
+      end
+    
+      def button_target_pos_z_u_clicked
+        @edit_target_pos_z.text = "%.15g"%(@edit_target_pos_z.text.to_f + pos_amaount)
+      end
+    
+      def button_target_pos_z_d_clicked
+        @edit_target_pos_z.text = "%.15g"%(@edit_target_pos_z.text.to_f - pos_amaount)
+      end
+    
+      def button_target_rot_x_u_clicked
+        @edit_target_rot_x.text = "%.15g"%(@edit_target_rot_x.text.to_f + rot_amaount)
+      end
+    
+      def button_target_rot_x_d_clicked
+        @edit_target_rot_x.text = "%.15g"%(@edit_target_rot_x.text.to_f - rot_amaount)
+      end
+    
+      def button_target_rot_y_u_clicked
+        @edit_target_rot_y.text = "%.15g"%(@edit_target_rot_y.text.to_f + rot_amaount)
+      end
+    
+      def button_target_rot_y_d_clicked
+        @edit_target_rot_y.text = "%.15g"%(@edit_target_rot_y.text.to_f - rot_amaount)
+      end
+    
+      def button_target_rot_z_u_clicked
+        @edit_target_rot_z.text = "%.15g"%(@edit_target_rot_z.text.to_f + rot_amaount)
+      end
+    
+      def button_target_rot_z_d_clicked
+        @edit_target_rot_z.text = "%.15g"%(@edit_target_rot_z.text.to_f - rot_amaount)
+      end
+    
+      def button_reset_clicked
+        @edit_target_pos_x.text = "0"
+        @edit_target_pos_y.text = "0"
+        @edit_target_pos_z.text = "0"
+        @edit_target_rot_x.text = "0"
+        @edit_target_rot_y.text = "0"
+        @edit_target_rot_z.text = "0"
+      end
+    
+      def button_yaw_left_clicked
+  
+      end
+    
+      def button_yaw_right_clicked
+  
+      end
+    
+      def button_roll_left_clicked
+  
+      end
+    
+      def button_roll_right_clicked
+  
+      end
+    
+      def button_pitch_up_clicked
+  
+      end
+    
+      def button_pitch_down_clicked
+  
+      end
+    
+      def button_front_clicked
+  
+      end
+    
+      def button_back_clicked
+  
+      end
+    
+      def button_left_clicked
+  
+      end
+    
+      def button_right_clicked
+  
+      end
+    
+      def button_up_clicked
+  
+      end
+    
+      def button_down_clicked
+  
+      end
     end                                                             ##__BY_FDVR
 
     class Panel6                                                    ##__BY_FDVR
