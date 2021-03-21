@@ -69,7 +69,6 @@ class Form_main
     @tabPanel_main.panels[TAB_SCENES].control_set
     @tabPanel_main.panels[TAB_POSITION].control_set
     @tabPanel_main.panels[TAB_MOVEMENT].control_set
-    @tabPanel_main.panels[TAB_MOVEMENT].movement_list_set
   end
 
   def control_json_save
@@ -159,7 +158,11 @@ class Form_main
     camera["targetRot"]["z"] = tab_position.edit_target_rot_z.text.to_f
     camera["MovementScript"] = {} unless camera["MovementScript"]
     scriptList = []
-    tab_movement.listBox_script_list.eachSelected{ |idx| scriptList.push "#{tab_movement.listBox_script_list.getTextOf(idx)}.json" }
+    tab_movement.listBox_script_list.countStrings.times do |idx|
+      unless tab_movement.listBox_script_list.sendMessage(WMsg::LB_GETSEL,idx,0) == 0
+        scriptList.push "#{tab_movement.listBox_script_list.getTextOf(idx)}.json"
+      end
+    end
     camera["MovementScript"]["scriptList"] = scriptList
     camera["MovementScript"]["fromOrigin"] = tab_movement.checkBox_from_origin.checked?
     camera["MovementScript"]["enableInMenu"] = tab_movement.checkBox_enable_in_menu.checked?

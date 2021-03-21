@@ -336,13 +336,18 @@ class Form_main                                                     ##__BY_FDVR
             @checkBox_enable_in_menu.check(movement["enableInMenu"])
           end
         end
-      end
-
-      def movement_list_set
         if $movement_json == []
           @listBox_script_list.clearStrings
         else
           @listBox_script_list.setListStrings($movement_json)
+          if movement = $cameras_json[$camera_idx][CAMERA_JSON]["MovementScript"]
+            movement["scriptList"].each do |script|
+              idx = @listBox_script_list.findString(File.basename(script, ".*"))
+              if idx > -1
+                @listBox_script_list.sendMessage(WMsg::LB_SETSEL, 1, idx)
+              end
+            end
+          end
         end
       end
 
