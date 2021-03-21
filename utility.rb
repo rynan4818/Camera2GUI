@@ -45,6 +45,7 @@ def setting_save
 end
 
 def camera2_setting_load
+  $delete_camera = []
   return [false, SETTING_LOAD_ERROR_NO_DEFAULT] unless $firstperson_default  = json_read(FIRSTPERSON_DEFAULT)
   return [false, SETTING_LOAD_ERROR_NO_DEFAULT] unless $positionable_default = json_read(POSITIONABLE_DEFALUT)
   $scene_json = json_read("#{$bs_folder}\\#{CAMERA2_SCENES_JSON}")
@@ -156,9 +157,15 @@ def scenes_json_set(scene, scene_enabled, before_camera_name, after_camera_name)
 end
 
 def json_file_save
+  $cameras_json.each_with_index do |camera,idx|
+    camera[CAMERA_JSON]["layer"] = idx + 1
+  end
+  $delete_camera.each do |camera|
+    File.delete camera[CAMERA_ORG] if File.exist? camera[CAMERA_ORG]
+  end
   $cameras_json.each do |camera|
     if File.basename(camera[CAMERA_ORG], ".*") != camera[CAMERA_NAME]
-      File.delete camera[CAMERA_ORG]
+      File.delete camera[CAMERA_ORG] if File.exist? camera[CAMERA_ORG]
     end
     camera_file = "#{$bs_folder}\\#{CAMERA2_CAMERAS_DIR}\\#{camera[CAMERA_NAME]}.json"
     File.open(camera_file, 'w') do |file|

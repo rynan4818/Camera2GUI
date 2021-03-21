@@ -37,9 +37,6 @@ class Form_main
       a[CAMERA_JSON]["layer"] <=> b[CAMERA_JSON]["layer"]
     end
     unless layer_conflict == []
-      $cameras_json.each_with_index do |camera,idx|
-        camera[CAMERA_JSON]["layer"] = idx + 1
-      end
       messageBox("'#{layer_conflict.join(",")}' #{LAYER_CONFLICT_MES}",
       LAYER_CONFLICT_TITLE, WConst::MB_ICONWARNING | WConst::MB_OK)
     end
@@ -52,7 +49,7 @@ class Form_main
     else
       camera_list = []
       $cameras_json.each do |camera|
-        camera_list.push "#{camera[CAMERA_JSON]["layer"]}\t#{camera[CAMERA_JSON]["type"]}\t#{camera[CAMERA_NAME]}"
+        camera_list.push "#{camera_list.size + 1}\t#{camera[CAMERA_JSON]["type"]}\t#{camera[CAMERA_NAME]}"
       end
       @listBox_camera.setListStrings(camera_list)
       $camera_idx = idx

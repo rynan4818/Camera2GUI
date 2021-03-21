@@ -22,7 +22,6 @@ class Form_main                                                     ##__BY_FDVR
 
     class Panel0                                                    ##__BY_FDVR
       #GENERAL
-
       def comboBox_camera_type_selchanged
         return unless $camera_type
         if @comboBox_camera_type.getTextOf(@comboBox_camera_type.selectedString) == COMBO_CAMERA_TYPE[TYPE_FIRSTPERSON]
@@ -64,21 +63,14 @@ class Form_main                                                     ##__BY_FDVR
       def edit_z_offset_changed
         trackbar_set(@edit_z_offset, @trackBar_z_offset, $positionable_default["targetPos"]["z"]) if $camera_type == TYPE_FIRSTPERSON
       end
-    
     end                                                             ##__BY_FDVR
 
     class Panel1                                                    ##__BY_FDVR
       #VISIBILITY
-    
-      def edit_camera_name_changed
-      
-      end
-    
     end                                                             ##__BY_FDVR
 
     class Panel2                                                    ##__BY_FDVR
       #FOLLOW
-
       def edit_position_smoothing_changed
         trackbar_set(@edit_position_smoothing, @trackBar_position_smoothing, $firstperson_default["Smoothfollow"]["position"]) if $camera_type == TYPE_FIRSTPERSON
       end
@@ -91,24 +83,18 @@ class Form_main                                                     ##__BY_FDVR
         end
         trackbar_set(@edit_rotation_smoothing, @trackBar_rotation_smoothing, default)
       end
-    
-        
-
     end                                                             ##__BY_FDVR
 
     class Panel3                                                    ##__BY_FDVR
       #MODMAPEXT
-
     end                                                             ##__BY_FDVR
 
     class Panel4                                                    ##__BY_FDVR
       #SCENES
-
     end                                                             ##__BY_FDVR
 
     class Panel5                                                    ##__BY_FDVR
       #POSITION
-
       def checkBox_view_rect_full_clicked
         control_list = [@edit_view_rect_x, @edit_view_rect_y, @edit_view_rect_width, @edit_view_rect_height,
                         @button_view_rect_x_u, @button_view_rect_x_d, @button_view_rect_y_u, @button_view_rect_y_d,
@@ -143,12 +129,10 @@ class Form_main                                                     ##__BY_FDVR
       class Panel_target_pos                                        ##__BY_FDVR
 
       end                                                           ##__BY_FDVR
-
     end                                                             ##__BY_FDVR
 
     class Panel6                                                    ##__BY_FDVR
       #MOVEMENT
-    
     end                                                             ##__BY_FDVR
     
   end                                                               ##__BY_FDVR

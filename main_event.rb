@@ -39,24 +39,53 @@ class Form_main                                                     ##__BY_FDVR
   end
   
   def button_add_clicked
-  
+    number = 1
+    camera_name = ""
+    ok = true
+    while (ok) do
+      camera_name = "NewCamera#{number}"
+      $cameras_json.each do |camera|
+        ok = false if camera[CAMERA_NAME] == camera_name
+      end
+      if ok
+        break
+      else
+        number += 1
+        ok = true
+      end
+    end
+    $cameras_json.push [camera_name, $positionable_default, ""]
+    control_json_save
+    $camera_idx = $cameras_json.size - 1
+    camera_list_set($camera_idx)
   end
   
   def button_del_clicked
-  
+    return if $cameras_json.size <= 1
+    $delete_camera.push $cameras_json.delete_at($camera_idx)
+    $camera_idx = $cameras_json.size - 1 if $camera_idx >= $cameras_json.size
+    camera_list_set($camera_idx)
   end
 
   def button_reflection_clicked
     camera_list_set($camera_idx) if control_json_save
     json_file_save
   end
-
-  def button_up_clicked
   
+  def button_list_up_clicked
+    return if $camera_idx == 0
+    control_json_save
+    $cameras_json[$camera_idx - 1], $cameras_json[$camera_idx] = $cameras_json[$camera_idx], $cameras_json[$camera_idx - 1]
+    $camera_idx -= 1
+    camera_list_set($camera_idx)
   end
 
-  def button_down_clicked
-  
+  def button_list_down_clicked
+    return if $camera_idx == $cameras_json.size - 1
+    control_json_save
+    $cameras_json[$camera_idx + 1], $cameras_json[$camera_idx] = $cameras_json[$camera_idx], $cameras_json[$camera_idx + 1]
+    $camera_idx += 1
+    camera_list_set($camera_idx)
   end
 
   def listBox_camera_selchanged
