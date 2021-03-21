@@ -47,6 +47,7 @@ class Form_main                                                     ##__BY_FDVR
   end
 
   def button_reflection_clicked
+    camera_list_set($camera_idx) if control_json_save
     json_file_save
   end
 

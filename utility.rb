@@ -156,5 +156,21 @@ def scenes_json_set(scene, scene_enabled, before_camera_name, after_camera_name)
 end
 
 def json_file_save
-
+  $cameras_json.each do |camera|
+    if File.basename(camera[CAMERA_ORG], ".*") != camera[CAMERA_NAME]
+      File.delete camera[CAMERA_ORG]
+    end
+    camera_file = "#{$bs_folder}\\#{CAMERA2_CAMERAS_DIR}\\#{camera[CAMERA_NAME]}.json"
+    File.open(camera_file, 'w') do |file|
+      JSON.pretty_generate(camera[CAMERA_JSON]).each do |line|
+        file.puts line
+      end
+    end
+  end
+  scenes_file = "#{$bs_folder}\\#{CAMERA2_SCENES_JSON}"
+  File.open(scenes_file, 'w') do |file|
+    JSON.pretty_generate($scene_json).each do |line|
+      file.puts line
+    end
+  end
 end

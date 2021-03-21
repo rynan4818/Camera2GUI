@@ -83,7 +83,7 @@ class Form_main
     camera = $cameras_json[$camera_idx][CAMERA_JSON]
     #Camera Name
     before_camera_name = $cameras_json[$camera_idx][CAMERA_NAME]
-    after_camera_name = tab_general.edit_camera_name.text.gsub(/[\\\/:\*\?"<>\|]/,'').gsub(/[^ -~]/,'')
+    after_camera_name = tab_general.edit_camera_name.text.gsub(/[\\\/:\*\?"<>\|]/,'').gsub(/[^ -~]/,'').strip
     unless before_camera_name == after_camera_name
       $cameras_json[$camera_idx][CAMERA_NAME] = after_camera_name
       camera_list_refresh = true
