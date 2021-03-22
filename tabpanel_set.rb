@@ -277,26 +277,26 @@ class Form_main                                                     ##__BY_FDVR
         @edit_target_rot_y.text = ""
         @edit_target_rot_z.text = ""
         @checkBox_view_rect_full.check(false)
-        if $camera_type == TYPE_POSITIONABLE
-          if view = $cameras_json[$camera_idx][CAMERA_JSON]["viewRect"]
-            if view["x"] == 0.0 && view["y"] == 0.0 && view["width"] == -1.0 && view["height"] == -1.0
-              @checkBox_view_rect_full.check(true)
-              @view_x_backup = "0"
-              @view_y_backup = "0"
-              @view_width_backup = "640"
-              @view_height_backup = "380"
-            else
-              @checkBox_view_rect_full.check(false)
-              @view_x_backup = view["x"].to_i
-              @view_y_backup = view["y"].to_i
-              @view_width_backup = view["width"].to_i
-              @view_height_backup = view["height"].to_i
-              @edit_view_rect_x.text = view["x"].to_i
-              @edit_view_rect_y.text = view["y"].to_i
-              @edit_view_rect_width.text = view["width"].to_i
-              @edit_view_rect_height.text = view["height"].to_i
-            end
+        if view = $cameras_json[$camera_idx][CAMERA_JSON]["viewRect"]
+          if view["x"] == 0.0 && view["y"] == 0.0 && view["width"] == -1.0 && view["height"] == -1.0
+            @checkBox_view_rect_full.check(true)
+            @view_x_backup = "0"
+            @view_y_backup = "0"
+            @view_width_backup = "640"
+            @view_height_backup = "380"
+          else
+            @checkBox_view_rect_full.check(false)
+            @view_x_backup = view["x"].to_i
+            @view_y_backup = view["y"].to_i
+            @view_width_backup = view["width"].to_i
+            @view_height_backup = view["height"].to_i
+            @edit_view_rect_x.text = view["x"].to_i
+            @edit_view_rect_y.text = view["y"].to_i
+            @edit_view_rect_width.text = view["width"].to_i
+            @edit_view_rect_height.text = view["height"].to_i
           end
+        end
+        if $camera_type == TYPE_POSITIONABLE
           if pos = $cameras_json[$camera_idx][CAMERA_JSON]["targetPos"]
             @edit_target_pos_x.text = "%.15g"%pos["x"]
             @edit_target_pos_y.text = "%.15g"%pos["y"]
@@ -316,18 +316,16 @@ class Form_main                                                     ##__BY_FDVR
           @button_roll_left, @button_roll_right, @button_target_pos_x_d, @button_target_pos_x_u, @button_target_pos_y_d,
           @button_target_pos_y_u, @button_target_pos_z_d, @button_target_pos_z_u, @button_target_rot_x_d, @button_target_rot_x_u,
           @button_target_rot_y_d, @button_target_rot_y_u, @button_target_rot_z_d, @button_target_rot_z_u, @button_up,
-          @button_view_rect_height_d, @button_view_rect_height_u, @button_view_rect_width_d, @button_view_rect_width_u,
-          @button_view_rect_x_d, @button_view_rect_x_u, @button_view_rect_y_d, @button_view_rect_y_u, @button_yaw_left,
+          @button_yaw_left,
           @button_yaw_right, @edit_target_pos_x, @edit_target_pos_y, @edit_target_pos_z, @edit_target_rot_x, @edit_target_rot_y,
-          @edit_target_rot_z, @edit_view_rect_height, @edit_view_rect_width, @edit_view_rect_x, @edit_view_rect_y,@checkBox_view_rect_full,
+          @edit_target_rot_z,
           @static_target_pos, @static_target_pos_x, @static_target_pos_y, @static_target_pos_z,
           @static_target_rot, @static_target_rot_x, @static_target_rot_y, @static_target_rot_z, @static_flying_control,
-          @static_view_rect, @static_view_rect_height, @static_view_rect_width, @static_view_rect_x, @static_view_rect_y,
           @panel_target_rot.radioBtn_target_rot1, @panel_target_rot.radioBtn_target_rot2, @panel_target_rot.radioBtn_target_rot3, 
           @panel_target_rot.radioBtn_target_rot4, @panel_target_rot.radioBtn_target_rot5,
-          @panel_view_rect.radioBtn_view_rect1, @panel_view_rect.radioBtn_view_rect2, @panel_view_rect.radioBtn_view_rect3,
           @panel_target_pos.radioBtn_target_pos1, @panel_target_pos.radioBtn_target_pos2, @panel_target_pos.radioBtn_target_pos3,
-          @panel_target_pos.radioBtn_target_pos4, @checkBox_auto_apply, @button_reset]
+          @panel_target_pos.radioBtn_target_pos4, @panel_target_pos.radioBtn_target_pos5, @panel_target_pos.radioBtn_target_pos6,
+          @checkBox_auto_apply, @button_reset]
         if $camera_type == TYPE_FIRSTPERSON
           control_disable(control_list)
         elsif $camera_type == TYPE_POSITIONABLE
