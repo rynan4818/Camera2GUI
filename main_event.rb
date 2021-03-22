@@ -91,7 +91,6 @@ class Form_main                                                     ##__BY_FDVR
       AUTOIT.WinActivate(BEATSABER_WINDOW_NAME)
       AUTOIT.WinWaitActive(BEATSABER_WINDOW_NAME, "", 1)
       AUTOIT.Send("^+{F1}")
-      puts "Send Key!"
     end
   end
 
@@ -137,6 +136,14 @@ class Form_main                                                     ##__BY_FDVR
     $main_windowrect = self.windowrect
     return unless VRLocalScreen.openModalDialog(self,nil,Modaldlg_setting,nil,nil)
     camera2_setting_load
+  end
+
+  def version_clicked
+    messageBox(APP_VER_COOMENT, MAIN_MENU_VERSION_TITLE, 0)
+  end
+
+  def exit_clicked
+    close
   end
 
   def tabPanel_main_selchanged

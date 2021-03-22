@@ -16,6 +16,7 @@ $KCODE='s'
 #                  json (1.4.6 x86-mswin32)
 #==============================================================================
 
+MAIN_MENU_VERSION_TITLE              = "BeatSaber Camera2 GUI バージョン情報"
 MAIN_SELF_CREATED_BSDIR_CHK_MES      = "BeatSaber フォルダの設定がありません。設定画面を開くので設定して下さい。"
 MAIN_SELF_CREATED_BSDIR_CHK_TITLE    = "BeatSaber フォルダ未設定"
 MODALDLG_SETTING_OK_BTN_NO_DIR_MES   = "BeatSaber Folderがありません。戻って再設定しますか？"

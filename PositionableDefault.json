@@ -1,0 +1,51 @@
+{
+  "visibleObjects": {
+    "Walls": "Visible",
+    "Debris": true,
+    "UI": true,
+    "Avatar": true,
+    "Floor": true,
+    "CutParticles": true,
+    "Notes": "Visible"
+  },
+  "type": "Positionable",
+  "worldCamVisibility": "HiddenWhilePlaying",
+  "previewScreenSize": 0.3,
+  "FOV": 90.0,
+  "layer": 8,
+  "antiAliasing": 2,
+  "renderScale": 1.3,
+  "viewRect": {
+    "x": 0.0,
+    "y": 0.0,
+    "width": -1.0,
+    "height": -1.0
+  },
+  "FPSLimiter": {
+    "fpsLimit": 0
+  },
+  "ModmapExtensions": {
+    "moveWithMap": true,
+    "autoOpaqueWalls": false,
+    "autoHideHUD": false
+  },
+  "Follow360": {
+    "enabled": true,
+    "smoothing": 10.0
+  },
+  "targetPos": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+  },
+  "targetRot": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+  },
+  "MovementScript": {
+    "scriptList": [],
+    "fromOrigin": true,
+    "enableInMenu": false
+  }
+}

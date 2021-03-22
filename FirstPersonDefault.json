@@ -1,0 +1,46 @@
+{
+  "visibleObjects": {
+    "Walls": "Visible",
+    "Debris": true,
+    "UI": true,
+    "Avatar": true,
+    "Floor": true,
+    "CutParticles": true,
+    "Notes": "Visible"
+  },
+  "type": "FirstPerson",
+  "FOV": 90.0,
+  "layer": 7,
+  "antiAliasing": 2,
+  "renderScale": 1.3,
+  "viewRect": {
+    "x": 0.0,
+    "y": 0.0,
+    "width": -1.0,
+    "height": -1.0
+  },
+  "FPSLimiter": {
+    "fpsLimit": 0
+  },
+  "Smoothfollow": {
+    "position": 10.0,
+    "rotation": 5.0,
+    "forceUpright": false,
+    "followReplayPosition": true,
+    "pivotingOffset": true
+  },
+  "ModmapExtensions": {
+    "autoOpaqueWalls": false,
+    "autoHideHUD": false
+  },
+  "targetPos": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+  },
+  "targetRot": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+  }
+}

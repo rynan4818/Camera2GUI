@@ -332,42 +332,42 @@ class Form_main                                                     ##__BY_FDVR
     
       def button_yaw_left_clicked
         $apply_ok = false
-        flying_rotation(0, rot_amaount, 0)
+        button_target_rot_y_d_clicked
         $apply_ok = true
         $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
     
       def button_yaw_right_clicked
         $apply_ok = false
-        flying_rotation(0, -rot_amaount, 0)
+        button_target_rot_y_u_clicked
         $apply_ok = true
         $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
     
       def button_roll_left_clicked
         $apply_ok = false
-        flying_rotation(0, 0, rot_amaount)
+        button_target_rot_z_u_clicked
         $apply_ok = true
         $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
     
       def button_roll_right_clicked
         $apply_ok = false
-        flying_rotation(0, 0, -rot_amaount)
+        button_target_rot_z_d_clicked
         $apply_ok = true
         $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
     
       def button_pitch_up_clicked
         $apply_ok = false
-        flying_rotation(rot_amaount, 0, 0)
+        button_target_rot_x_d_clicked
         $apply_ok = true
         $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
     
       def button_pitch_down_clicked
         $apply_ok = false
-        flying_rotation(-rot_amaount, 0, 0)
+        button_target_rot_x_u_clicked
         $apply_ok = true
         $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end

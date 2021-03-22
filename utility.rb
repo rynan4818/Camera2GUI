@@ -37,6 +37,7 @@ end
 def setting_save
   setting = {} unless setting = json_read(SETTING_FILE)
   setting["bs_folder"] = $bs_folder
+  setting["language"] = $language
   File.open(SETTING_FILE,'w') do |file|
     JSON.pretty_generate(setting).each do |line|
       file.puts line
@@ -192,7 +193,6 @@ def json_file_save
           file.puts line
         end
       end
-p camera_file
     rescue
       all_ok = false
     end
@@ -206,7 +206,6 @@ p camera_file
           file.puts line
         end
       end
-p scenes_file
     rescue
     end
   end
@@ -221,15 +220,8 @@ def sin(d)
   return Math.sin(d * Math::PI / 180.0)
 end
 
-def atan2(y, x)
-  return Math.atan2(y, x) * 180.0 / Math::PI
-end
-
-def asin(n)
-  return Math.asin(n) * 180.0 / Math::PI
-end
-
 def rotation_matrix(rx,ry,rz)
+  
   r11 = cos(ry) * cos(rz)
   r12 = sin(rx) * sin(ry) * cos(rz) - cos(rx) * sin(rz)
   r13 = cos(rx) * sin(ry) * cos(rz) + sin(rx) * sin(rz)

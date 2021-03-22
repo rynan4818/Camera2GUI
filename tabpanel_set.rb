@@ -347,6 +347,8 @@ class Form_main                                                     ##__BY_FDVR
         return @panel_target_pos.radioBtn_target_pos2.caption.to_f if @panel_target_pos.radioBtn_target_pos2.checked?
         return @panel_target_pos.radioBtn_target_pos3.caption.to_f if @panel_target_pos.radioBtn_target_pos3.checked?
         return @panel_target_pos.radioBtn_target_pos4.caption.to_f if @panel_target_pos.radioBtn_target_pos4.checked?
+        return @panel_target_pos.radioBtn_target_pos5.caption.to_f if @panel_target_pos.radioBtn_target_pos5.checked?
+        return @panel_target_pos.radioBtn_target_pos6.caption.to_f if @panel_target_pos.radioBtn_target_pos6.checked?
       end
 
       def rot_amaount
@@ -369,20 +371,6 @@ class Form_main                                                     ##__BY_FDVR
         @edit_target_pos_x.text = "%.15g"%(((px + xx) * POS_ROT_ROUND).round.to_f / POS_ROT_ROUND)
         @edit_target_pos_y.text = "%.15g"%(((py + yy) * POS_ROT_ROUND).round.to_f / POS_ROT_ROUND)
         @edit_target_pos_z.text = "%.15g"%(((pz + zz) * POS_ROT_ROUND).round.to_f / POS_ROT_ROUND)
-      end
-      
-      def flying_rotation(lrx,lry,lrz)
-        wrx = @edit_target_rot_x.text.to_f
-        wry = @edit_target_rot_y.text.to_f
-        wrz = @edit_target_rot_z.text.to_f
-        lr = rotation_matrix(lrx, lry, lrz)
-        wr = rotation_matrix(wrx, wry, wrz)
-        lx, ly, lz = rotation_cal(0, 0, 1 ,lr)
-        wx, wy, wz = rotation_cal(lx, ly, lz ,wr)
-        #roll = atan2(R.R32, R.R33);
-        #pitch = asin(-R.R31);
-        #yaw = atan2(R.R21, R.R11);        
-        puts "#{atan2(wx, wy)},#{atan2(wx, wz)},#{atan2(wz, wy)}"
       end
     end                                                             ##__BY_FDVR
 

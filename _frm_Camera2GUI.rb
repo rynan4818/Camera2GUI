@@ -17,10 +17,9 @@ class Modaldlg_setting < VRModalDialog
     addControl(VRButton,'button_bs_folder_open',"Open",520,40,40,24)
     addControl(VRButton,'button_cancel',"CANCEL",344,296,88,32)
     addControl(VRButton,'button_ok',"OK",456,296,96,32)
+    addControl(VRCheckbox,'checkBox_japanese',"Japanese messages (Restart)",320,184,232,32)
     addControl(VREdit,'edit_bs_folder',"",32,40,488,24)
-    addControl(VREditCombobox,'edCmbBox_bs_window',"",32,96,528,80)
     addControl(VRStatic,'static_bs_folder',"BeatSaber Folder",32,16,152,24)
-    addControl(VRStatic,'static_bs_window',"BeatSaber Window",32,72,152,24)
   end 
 
 end
@@ -298,17 +297,21 @@ class Form_main < VRForm
         attr_reader :radioBtn_target_pos2
         attr_reader :radioBtn_target_pos3
         attr_reader :radioBtn_target_pos4
+        attr_reader :radioBtn_target_pos5
+        attr_reader :radioBtn_target_pos6
 
         def construct
           addControl(VRRadiobutton,'radioBtn_target_pos1',"0.01",8,8,56,24)
           addControl(VRRadiobutton,'radioBtn_target_pos2',"0.1",64,8,40,24)
-          addControl(VRRadiobutton,'radioBtn_target_pos3',"0.5",112,8,40,24)
-          addControl(VRRadiobutton,'radioBtn_target_pos4',"1",160,8,32,24)
+          addControl(VRRadiobutton,'radioBtn_target_pos3',"0.2",112,8,56,24)
+          addControl(VRRadiobutton,'radioBtn_target_pos4',"0.3",8,40,48,24)
+          addControl(VRRadiobutton,'radioBtn_target_pos5',"0.5",64,40,40,24)
+          addControl(VRRadiobutton,'radioBtn_target_pos6',"1",120,40,32,24)
         end
       end
 
       def construct
-        addControl(Panel_target_pos,'panel_target_pos',"panel1",204,160,192,32)
+        addControl(Panel_target_pos,'panel_target_pos',"panel1",204,160,192,64)
         addControl(Panel_target_rot,'panel_target_rot',"panel2",388,160,168,56)
         addControl(Panel_view_rect,'panel_view_rect',"panel1",20,200,192,24)
         addControl(VRButton,'button_back',"BACK",252,312,72,40)
@@ -344,7 +347,7 @@ class Form_main < VRForm
         addControl(VRButton,'button_view_rect_y_u',"U",156,88,24,24)
         addControl(VRButton,'button_yaw_left',"YAW LEFT",20,256,96,24)
         addControl(VRButton,'button_yaw_right',"YAW RIGHT",452,256,88,24)
-        addControl(VRCheckbox,'checkBox_auto_apply',"Auto Apply",244,200,112,16)
+        addControl(VRCheckbox,'checkBox_auto_apply',"Auto Apply",436,224,112,16)
         addControl(VRCheckbox,'checkBox_view_rect_full',"Full Screen",108,16,104,24)
         addControl(VREdit,'edit_target_pos_x',"",244,48,72,24)
         addControl(VREdit,'edit_target_pos_y',"",244,88,72,24)
@@ -408,18 +411,10 @@ class Form_main < VRForm
     @mainmenu1 = newMenu.set(
       [
         ["&File",[
-          ["&New\tCtrl+N", "new"],
-          ["&Open", "open"],
-          ["&Save", "save"],
-          ["Save&As", "saveas"],
-          ["sep", "_vrmenusep", 2048],
           ["E&xit", "exit"]]
         ],
         ["&Option",[
-          ["&Setting", "menu_setting"],
-          ["Cu&t", "cut"],
-          ["&Copy", "copy"],
-          ["&Paste", "paste"]]
+          ["&Setting", "menu_setting"]]
         ],
         ["&Help",[
           ["Versio&n", "version"]]

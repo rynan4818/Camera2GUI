@@ -20,6 +20,7 @@ class Modaldlg_setting                                              ##__BY_FDVR
 
   def self_created
     @edit_bs_folder.text = $bs_folder if $bs_folder
+    @checkBox_japanese.check(true) if $language == "japanese"
   end
 
   def button_bs_folder_open_clicked
@@ -53,6 +54,11 @@ class Modaldlg_setting                                              ##__BY_FDVR
         close(false)
         return
       end
+    end
+    if @checkBox_japanese.checked?
+      $language  = "japanese"
+    else
+      $language  = "english"
     end
     setting_save
     close(true)
