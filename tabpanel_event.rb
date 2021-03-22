@@ -1,11 +1,11 @@
 #! ruby -Ks
 # -*- mode:ruby; coding:shift_jis -*-
-#このスクリプトの文字コードはSJISです。
+#
 $KCODE='s'
 #==============================================================================
 #Project Name    : BeatSaber Camera2GUI
 #Creation Date   : 2021/03/20
-#Copyright       : 2021 (c) リュナン (Twitter @rynan4818)
+#Copyright       : (c) 2021 rynan4818 (Twitter @rynan4818)
 #License         : MIT License
 #                  https://github.com/rynan4818/Camera2GUI/blob/main/LICENSE
 #Tool            : ActiveScriptRuby(1.8.7-p330)
@@ -94,8 +94,9 @@ class Form_main                                                     ##__BY_FDVR
     end                                                             ##__BY_FDVR
 
     class Panel5                                                    ##__BY_FDVR
-      #POSITION
+      #LAYOUT
       def checkBox_view_rect_full_clicked
+        @change_view_ok = false
         control_list = [@edit_view_rect_x, @edit_view_rect_y, @edit_view_rect_width, @edit_view_rect_height,
                         @button_view_rect_x_u, @button_view_rect_x_d, @button_view_rect_y_u, @button_view_rect_y_d,
                         @button_view_rect_width_u, @button_view_rect_width_d, @button_view_rect_height_u, @button_view_rect_height_d]
@@ -117,11 +118,13 @@ class Form_main                                                     ##__BY_FDVR
           control_enable(control_list)
         end
         refresh
+        @change_view_ok = true
+        $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
       
       def edit_target_rot_x_changed
-        return if @change_rot_x
-        @change_rot_x = true
+        return unless @change_rot_ok
+        @change_rot_ok = false
         rot_x = @edit_target_rot_x.text.to_f
         if @edit_target_rot_x.text.to_f >= 360.0
           rot_x = @edit_target_rot_x.text.to_f - 360.0
@@ -130,16 +133,13 @@ class Form_main                                                     ##__BY_FDVR
         end
         change_rot_x = "%.15g"%((rot_x * POS_ROT_ROUND).round.to_f / POS_ROT_ROUND)
         @edit_target_rot_x.text = change_rot_x unless @edit_target_rot_x.text == change_rot_x
-        @change_rot_x = false
-        if @checkBox_auto_apply.checked?
-          refresh
-          $main_form.button_apply_clicked
-        end
+        @change_rot_ok = true
+        $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
     
       def edit_target_rot_y_changed
-        return if @change_rot_y
-        @change_rot_y = true
+        return unless @change_rot_ok
+        @change_rot_ok = false
         rot_y = @edit_target_rot_y.text.to_f
         if @edit_target_rot_y.text.to_f >= 360.0
           rot_y = @edit_target_rot_y.text.to_f - 360.0
@@ -148,16 +148,13 @@ class Form_main                                                     ##__BY_FDVR
         end
         change_rot_y = "%.15g"%((rot_y * POS_ROT_ROUND).round.to_f / POS_ROT_ROUND)
         @edit_target_rot_y.text = change_rot_y unless @edit_target_rot_y.text == change_rot_y
-        @change_rot_y = false
-        if @checkBox_auto_apply.checked?
-          refresh
-          $main_form.button_apply_clicked
-        end
+        @change_rot_ok = true
+        $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
     
       def edit_target_rot_z_changed
-        return if @change_rot_z
-        @change_rot_z = true
+        return unless @change_rot_ok
+        @change_rot_ok = false
         rot_z = @edit_target_rot_z.text.to_f
         if @edit_target_rot_z.text.to_f >= 360.0
           rot_z = @edit_target_rot_z.text.to_f - 360.0
@@ -166,99 +163,75 @@ class Form_main                                                     ##__BY_FDVR
         end
         change_rot_z = "%.15g"%((rot_z * POS_ROT_ROUND).round.to_f / POS_ROT_ROUND)
         @edit_target_rot_z.text = change_rot_z unless @edit_target_rot_z.text == change_rot_z
-        @change_rot_z = false
-        if @checkBox_auto_apply.checked?
-          refresh
-          $main_form.button_apply_clicked
-        end
+        @change_rot_ok = true
+        $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
       
       def edit_target_pos_x_changed
-        return if @change_pos_x
-        @change_pos_x = true
+        return unless @change_pos_ok
+        @change_pos_ok = false
         change_pos_x = "%.15g"%((@edit_target_pos_x.text.to_f * POS_ROT_ROUND).round.to_f / POS_ROT_ROUND)
         @edit_target_pos_x.text = change_pos_x unless @edit_target_pos_x.text == change_pos_x
-        @change_pos_x = false
-        if @checkBox_auto_apply.checked?
-          refresh
-          $main_form.button_apply_clicked
-        end
+        @change_pos_ok = true
+        $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
     
       def edit_target_pos_y_changed
-        return if @change_pos_y
-        @change_pos_y = true
+        return unless @change_pos_ok
+        @change_pos_ok = false
         change_pos_y = "%.15g"%((@edit_target_pos_y.text.to_f * POS_ROT_ROUND).round.to_f / POS_ROT_ROUND)
         @edit_target_pos_y.text = change_pos_y unless @edit_target_pos_y.text == change_pos_y
-        @change_pos_y = false
-        if @checkBox_auto_apply.checked?
-          refresh
-          $main_form.button_apply_clicked
-        end
+        @change_pos_ok = true
+        $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
     
       def edit_target_pos_z_changed
-        return if @change_pos_z
-        @change_pos_z = true
+        return unless @change_pos_ok
+        @change_pos_ok = false
         change_pos_z = "%.15g"%((@edit_target_pos_z.text.to_f * POS_ROT_ROUND).round.to_f / POS_ROT_ROUND)
         @edit_target_pos_z.text = change_pos_z unless @edit_target_pos_z.text == change_pos_z
-        @change_pos_z = false
-        if @checkBox_auto_apply.checked?
-          refresh
-          $main_form.button_apply_clicked
-        end
+        @change_pos_ok = true
+        $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
       
       def edit_view_rect_x_changed
-        return if @change_view_x
-        @change_view_x = true
+        return unless @change_view_ok
+        @change_view_ok = false
         change_x = @edit_view_rect_x.text.to_i
         change_x = 0 if change_x < 0
         @edit_view_rect_x.text = change_x.to_s unless @edit_view_rect_x.text == change_x.to_s
-        @change_view_x = false
-        if @checkBox_auto_apply.checked?
-          refresh
-          $main_form.button_apply_clicked
-        end
+        @change_view_ok = true
+        $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
     
       def edit_view_rect_y_changed
-        return if @change_view_y
-        @change_view_y = true
+        return unless @change_view_ok
+        @change_view_ok = false
         change_y = @edit_view_rect_y.text.to_i
         change_y = 0 if change_y < 0
         @edit_view_rect_y.text = change_y.to_s unless @edit_view_rect_y.text == change_y.to_s
-        @change_view_y = false
-        if @checkBox_auto_apply.checked?
-          refresh
-          $main_form.button_apply_clicked
-        end
+        @change_view_ok = true
+        $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
     
       def edit_view_rect_width_changed
-        return if @change_view_w
-        @change_view_w = true
+        return unless @change_view_ok
+        @change_view_ok = false
         change_w = @edit_view_rect_width.text.to_i
         change_w = -1 if change_w < 0
         @edit_view_rect_width.text = change_w.to_s unless @edit_view_rect_width.text == change_w.to_s
-        @change_view_w = false
-        if @checkBox_auto_apply.checked?
-          refresh
-          $main_form.button_apply_clicked
-        end
+        @change_view_ok = true
+        $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
     
       def edit_view_rect_height_changed
-        return if @change_view_h
-        @change_view_h = true
+        return unless @change_view_ok
+        @change_view_ok = false
         change_h = @edit_view_rect_height.text.to_i
         change_h = -1 if change_h < 0
         @edit_view_rect_height.text = change_h.to_s unless @edit_view_rect_height.text == change_h.to_s
-        @change_view_h = false
-        if @checkBox_auto_apply.checked?
-          refresh
-          $main_form.button_apply_clicked
-        end
+        @change_view_ok = true
+        $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
 
       def button_view_rect_x_u_clicked
@@ -342,77 +315,103 @@ class Form_main                                                     ##__BY_FDVR
       end
     
       def button_reset_clicked
+        $apply_ok = false
+        change_pos_ok = false
+        change_rot_ok = false
         @edit_target_pos_x.text = "0"
         @edit_target_pos_y.text = "0"
         @edit_target_pos_z.text = "0"
         @edit_target_rot_x.text = "0"
         @edit_target_rot_y.text = "0"
         @edit_target_rot_z.text = "0"
+        $apply_ok = true
+        change_pos_ok = true
+        change_rot_ok = true
+        $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
     
       def button_yaw_left_clicked
-  
+        $apply_ok = false
+        flying_rotation(0, rot_amaount, 0)
+        $apply_ok = true
+        $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
     
       def button_yaw_right_clicked
-  
+        $apply_ok = false
+        flying_rotation(0, -rot_amaount, 0)
+        $apply_ok = true
+        $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
     
       def button_roll_left_clicked
-  
+        $apply_ok = false
+        flying_rotation(0, 0, rot_amaount)
+        $apply_ok = true
+        $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
     
       def button_roll_right_clicked
-  
+        $apply_ok = false
+        flying_rotation(0, 0, -rot_amaount)
+        $apply_ok = true
+        $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
     
       def button_pitch_up_clicked
-  
+        $apply_ok = false
+        flying_rotation(rot_amaount, 0, 0)
+        $apply_ok = true
+        $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
     
       def button_pitch_down_clicked
-  
+        $apply_ok = false
+        flying_rotation(-rot_amaount, 0, 0)
+        $apply_ok = true
+        $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
     
       def button_front_clicked
-        px = @edit_target_pos_x.text.to_f
-        py = @edit_target_pos_y.text.to_f
-        pz = @edit_target_pos_z.text.to_f
-        rx = @edit_target_rot_x.text.to_f
-        ry = @edit_target_rot_y.text.to_f
-        rz = @edit_target_rot_z.text.to_f
-        x = 0.0
-        y = 0.0
-        z = pos_amaount
-        y = y * Math.cos(radian(360.0 - ry)) + z * Math.sin(radian(360.0 - rz))
-        z = -y * Math.sin(radian(360.0 - ry)) + z * Math.cos(radian(360.0 - rz))
-        z = z * Math.cos(radian(360.0 - rz)) + x * Math.sin(radian(360.0 - rx))
-        x = -z * Math.sin(radian(360.0 - rz)) + x * Math.cos(radian(360.0 - rx))
-        x = x * Math.cos(radian(360.0 - rx)) + y * Math.sin(radian(360.0 - ry))
-        y = -x * Math.sin(radian(360.0 - rx)) + y * Math.cos(radian(360.0 - ry))
-        @edit_target_pos_x.text = "%.15g"%(((px + x) * POS_ROT_ROUND).round.to_f / POS_ROT_ROUND)
-        @edit_target_pos_y.text = "%.15g"%(((py + y) * POS_ROT_ROUND).round.to_f / POS_ROT_ROUND)
-        @edit_target_pos_z.text = "%.15g"%(((pz + z) * POS_ROT_ROUND).round.to_f / POS_ROT_ROUND)
+        $apply_ok = false
+        flying_move(0.0, 0.0, pos_amaount)
+        $apply_ok = true
+        $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
     
       def button_back_clicked
-  
+        $apply_ok = false
+        flying_move(0.0, 0.0, -pos_amaount)
+        $apply_ok = true
+        $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
     
       def button_left_clicked
-  
+        $apply_ok = false
+        flying_move(-pos_amaount, 0.0, 0.0)
+        $apply_ok = true
+        $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
     
       def button_right_clicked
-  
+        $apply_ok = false
+        flying_move(pos_amaount, 0.0, 0.0)
+        $apply_ok = true
+        $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
     
       def button_up_clicked
-  
+        $apply_ok = false
+        flying_move(0.0, pos_amaount, 0.0)
+        $apply_ok = true
+        $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
     
       def button_down_clicked
-  
+        $apply_ok = false
+        flying_move(0.0, -pos_amaount, 0.0)
+        $apply_ok = true
+        $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
     end                                                             ##__BY_FDVR
 

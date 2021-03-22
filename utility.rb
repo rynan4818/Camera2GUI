@@ -1,12 +1,12 @@
 #! ruby -Ks
 # -*- mode:ruby; coding:shift_jis -*-
-#このスクリプトの文字コードはSJISです。
+#
 $KCODE='s'
 
 #==============================================================================
 #Project Name    : BeatSaber Camera2GUI
 #Creation Date   : 2021/03/20
-#Copyright       : 2021 (c) リュナン (Twitter @rynan4818)
+#Copyright       : (c) 2021 rynan4818 (Twitter @rynan4818)
 #License         : MIT License
 #                  https://github.com/rynan4818/Camera2GUI/blob/main/LICENSE
 #Tool            : ActiveScriptRuby(1.8.7-p330)
@@ -49,10 +49,11 @@ def camera2_setting_load
   return [false, SETTING_LOAD_ERROR_NO_DEFAULT] unless $firstperson_default  = json_read(FIRSTPERSON_DEFAULT)
   return [false, SETTING_LOAD_ERROR_NO_DEFAULT] unless $positionable_default = json_read(POSITIONABLE_DEFALUT)
   $scene_json = json_read("#{$bs_folder}\\#{CAMERA2_SCENES_JSON}")
+  $scene_json_change = false
   cameras_dir = "#{$bs_folder}\\#{CAMERA2_CAMERAS_DIR}\\*.json".gsub(/\\/,"/")
   $cameras_json = []
   Dir.glob(cameras_dir) do |json_file|
-    $cameras_json.push [File.basename(json_file, ".*"), json_read(json_file), json_file]
+    $cameras_json.push [File.basename(json_file, ".*"), json_read(json_file), json_file, false]
   end
   return [false, SETTING_LOAD_ERROR_NO_SCENE] unless $scene_json
   return [false, SETTING_LOAD_ERROR_NO_CAMERA] if $cameras_json == []
@@ -141,13 +142,18 @@ def scenes_json_set(scene, scene_enabled, before_camera_name, after_camera_name)
         if json_scene == scene
           if idx = json_camera.index(before_camera_name)
             if scene_enabled
-              json_camera[idx] = after_camera_name
+              unless before_camera_name == after_camera_name
+                json_camera[idx] = after_camera_name
+                $scene_json_change = true
+              end
             else
               json_camera.delete_at(idx)
+              $scene_json_change = true
             end
           else
             if scene_enabled
               json_camera.push after_camera_name
+              $scene_json_change = true
             end
           end
         end
@@ -160,15 +166,24 @@ def json_file_save
   $cameras_json.each_with_index do |camera,idx|
     camera[CAMERA_JSON]["layer"] = idx + 1
   end
+  fail_list = []
   $delete_camera.each do |camera|
     begin
       File.delete camera[CAMERA_ORG] if File.exist? camera[CAMERA_ORG]
     rescue
+      fail_list.push camera
     end
   end
+  $delete_camera = fail_list
   $cameras_json.each do |camera|
+    next unless camera[CAMERA_CHANGE]
+    all_ok = true
     if File.basename(camera[CAMERA_ORG], ".*") != camera[CAMERA_NAME]
-      File.delete camera[CAMERA_ORG] if File.exist? camera[CAMERA_ORG]
+      begin
+        File.delete camera[CAMERA_ORG] if File.exist? camera[CAMERA_ORG]
+      rescue
+        all_ok = false
+      end
     end
     camera_file = "#{$bs_folder}\\#{CAMERA2_CAMERAS_DIR}\\#{camera[CAMERA_NAME]}.json"
     begin
@@ -177,25 +192,62 @@ def json_file_save
           file.puts line
         end
       end
+p camera_file
+    rescue
+      all_ok = false
+    end
+    camera[CAMERA_CHANGE] = false if all_ok
+  end
+  if $scene_json_change
+    scenes_file = "#{$bs_folder}\\#{CAMERA2_SCENES_JSON}"
+    begin
+      File.open(scenes_file, 'w') do |file|
+        JSON.pretty_generate($scene_json).each do |line|
+          file.puts line
+        end
+      end
+p scenes_file
     rescue
     end
   end
-  scenes_file = "#{$bs_folder}\\#{CAMERA2_SCENES_JSON}"
-  begin
-    File.open(scenes_file, 'w') do |file|
-      JSON.pretty_generate($scene_json).each do |line|
-        file.puts line
-      end
-    end
-  rescue
-  end
-end
-# degree => radian
-def radian(degree)
-  return degree * Math::PI / 180.0
+  $scene_json_change = false
 end
 
-# radian => degree
-def degree(radian)
-  return radian * 180.0 / Math::PI
+def cos(d)
+  return Math.cos(d * Math::PI / 180.0)
+end
+
+def sin(d)
+  return Math.sin(d * Math::PI / 180.0)
+end
+
+def atan2(y, x)
+  return Math.atan2(y, x) * 180.0 / Math::PI
+end
+
+def asin(n)
+  return Math.asin(n) * 180.0 / Math::PI
+end
+
+def rotation_matrix(rx,ry,rz)
+  r11 = cos(ry) * cos(rz)
+  r12 = sin(rx) * sin(ry) * cos(rz) - cos(rx) * sin(rz)
+  r13 = cos(rx) * sin(ry) * cos(rz) + sin(rx) * sin(rz)
+
+  r21 = cos(ry) * sin(rz)
+  r22 = sin(rx) * sin(ry) * sin(rz) + cos(rx) * cos(rz)
+  r23 = cos(rx) * sin(ry) * sin(rz) - sin(rx) * cos(rz)
+
+  r31 = -sin(ry)
+  r32 = sin(rx) * cos(ry)
+  r33 = cos(rx) * cos(ry)
+  
+  return [[r11, r12, r13], [r21, r22, r23], [r31, r32, r33]]
+end
+
+def rotation_cal(x, y, z ,r)
+  xx = x * r[0][0] + y * r[0][1] + z * r[0][2]
+  yy = x * r[1][0] + y * r[1][1] + z * r[1][2]
+  zz = x * r[2][0] + y * r[2][1] + z * r[2][2]
+  return [xx, yy, zz]
 end

@@ -1,11 +1,11 @@
 #! ruby -Ks
 # -*- mode:ruby; coding:shift_jis -*-
-#このスクリプトの文字コードはSJISです。
+#
 $KCODE='s'
 #==============================================================================
 #Project Name    : BeatSaber Camera2GUI
 #Creation Date   : 2021/03/20
-#Copyright       : 2021 (c) リュナン (Twitter @rynan4818)
+#Copyright       : (c) 2021 rynan4818 (Twitter @rynan4818)
 #License         : MIT License
 #                  https://github.com/rynan4818/Camera2GUI/blob/main/LICENSE
 #Tool            : ActiveScriptRuby(1.8.7-p330)

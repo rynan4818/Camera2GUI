@@ -1,11 +1,11 @@
 #! ruby -Ks
 # -*- mode:ruby; coding:shift_jis -*-
-#このスクリプトの文字コードはSJISです。
+#
 $KCODE='s'
 #==============================================================================
 #Project Name    : BeatSaber Camera2GUI
 #Creation Date   : 2021/03/20
-#Copyright       : 2021 (c) リュナン (Twitter @rynan4818)
+#Copyright       : (c) 2021 rynan4818 (Twitter @rynan4818)
 #License         : MIT License
 #                  https://github.com/rynan4818/Camera2GUI/blob/main/LICENSE
 #Tool            : ActiveScriptRuby(1.8.7-p330)
@@ -47,9 +47,10 @@ TAB_SCENES     = 4
 TAB_POSITION   = 5
 TAB_MOVEMENT   = 6
 
-CAMERA_NAME = 0
-CAMERA_JSON = 1
-CAMERA_ORG  = 2
+CAMERA_NAME   = 0
+CAMERA_JSON   = 1
+CAMERA_ORG    = 2
+CAMERA_CHANGE = 3
 
 POS_ROT_ROUND = 1000000.0
 #Combobox
@@ -82,5 +83,7 @@ require 'tabpanel_set'
 require 'dialog'
 
 AUTOIT = WIN32OLE.new("AutoItX3.Control")
+AUTOIT.AutoItSetOption("SendKeyDownDelay", 100)
+AUTOIT.AutoItSetOption("WinWaitDelay", 10)
 
 VRLocalScreen.start Form_main

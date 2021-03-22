@@ -1,11 +1,11 @@
 #! ruby -Ks
 # -*- mode:ruby; coding:shift_jis -*-
-#このスクリプトの文字コードはSJISです。
+#
 $KCODE='s'
 #==============================================================================
 #Project Name    : BeatSaber Camera2GUI
 #Creation Date   : 2021/03/20
-#Copyright       : 2021 (c) リュナン (Twitter @rynan4818)
+#Copyright       : (c) 2021 rynan4818 (Twitter @rynan4818)
 #License         : MIT License
 #                  https://github.com/rynan4818/Camera2GUI/blob/main/LICENSE
 #Tool            : ActiveScriptRuby(1.8.7-p330)
@@ -39,6 +39,9 @@ class Form_main
     unless layer_conflict == []
       messageBox("'#{layer_conflict.join(",")}' #{LAYER_CONFLICT_MES}",
       LAYER_CONFLICT_TITLE, WConst::MB_ICONWARNING | WConst::MB_OK)
+      $cameras_json.each do |camera|
+        camera[CAMERA_CHANGE] = true
+      end
     end
     camera_list_set
   end
@@ -69,6 +72,7 @@ class Form_main
   end
 
   def control_json_save
+    $cameras_json[$camera_idx][CAMERA_CHANGE] = true
     camera_list_refresh = false
     tab_general    = @tabPanel_main.panels[TAB_GENERAL]
     tab_visibility = @tabPanel_main.panels[TAB_VISIBILITY]

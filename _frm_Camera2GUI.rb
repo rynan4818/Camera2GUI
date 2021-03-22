@@ -395,7 +395,7 @@ class Form_main < VRForm
         ['FOLLOW',Panel2,'panel2'],
         ['MODMAPEXT',Panel3,'panel3'],
         ['SCENES',Panel4,'panel4'],
-        ['POSITION',Panel5,'panel5'],
+        ['LAYOUT',Panel5,'panel5'],
         ['MOVEMENT',Panel6,'panel6']
       ])
     end

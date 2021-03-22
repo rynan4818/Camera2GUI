@@ -1,11 +1,11 @@
 #! ruby -Ks
 # -*- mode:ruby; coding:shift_jis -*-
-#このスクリプトの文字コードはSJISです。
+#
 $KCODE='s'
 #==============================================================================
 #Project Name    : BeatSaber Camera2GUI
 #Creation Date   : 2021/03/20
-#Copyright       : 2021 (c) リュナン (Twitter @rynan4818)
+#Copyright       : (c) 2021 rynan4818 (Twitter @rynan4818)
 #License         : MIT License
 #                  https://github.com/rynan4818/Camera2GUI/blob/main/LICENSE
 #Tool            : ActiveScriptRuby(1.8.7-p330)
@@ -254,21 +254,15 @@ class Form_main                                                     ##__BY_FDVR
     end                                                             ##__BY_FDVR
 
     class Panel5                                                    ##__BY_FDVR
-      #POSITION
+      #LAYOUT
       def self_created
         @panel_target_rot.radioBtn_target_rot1.check(true)
         @panel_view_rect.radioBtn_view_rect1.check(true)
         @panel_target_pos.radioBtn_target_pos1.check(true)
-        @change_pos_x = false
-        @change_pos_y = false
-        @change_pos_z = false
-        @change_rot_x = false
-        @change_rot_y = false
-        @change_rot_z = false
-        @change_view_x = false
-        @change_view_y = false
-        @change_view_w = false
-        @change_view_h = false
+        @change_pos_ok = true
+        @change_rot_ok = true
+        @change_view_ok = true
+        $apply_ok = true
       end
 
       def control_set
@@ -361,6 +355,34 @@ class Form_main                                                     ##__BY_FDVR
         return @panel_target_rot.radioBtn_target_rot3.caption.to_f if @panel_target_rot.radioBtn_target_rot3.checked?
         return @panel_target_rot.radioBtn_target_rot4.caption.to_f if @panel_target_rot.radioBtn_target_rot4.checked?
         return @panel_target_rot.radioBtn_target_rot5.caption.to_f if @panel_target_rot.radioBtn_target_rot5.checked?
+      end
+      
+      def flying_move(x,y,z)
+        px = @edit_target_pos_x.text.to_f
+        py = @edit_target_pos_y.text.to_f
+        pz = @edit_target_pos_z.text.to_f
+        rx = @edit_target_rot_x.text.to_f
+        ry = @edit_target_rot_y.text.to_f
+        rz = @edit_target_rot_z.text.to_f
+        r = rotation_matrix(rx, ry, rz)
+        xx, yy, zz = rotation_cal(x, y, z ,r)
+        @edit_target_pos_x.text = "%.15g"%(((px + xx) * POS_ROT_ROUND).round.to_f / POS_ROT_ROUND)
+        @edit_target_pos_y.text = "%.15g"%(((py + yy) * POS_ROT_ROUND).round.to_f / POS_ROT_ROUND)
+        @edit_target_pos_z.text = "%.15g"%(((pz + zz) * POS_ROT_ROUND).round.to_f / POS_ROT_ROUND)
+      end
+      
+      def flying_rotation(lrx,lry,lrz)
+        wrx = @edit_target_rot_x.text.to_f
+        wry = @edit_target_rot_y.text.to_f
+        wrz = @edit_target_rot_z.text.to_f
+        lr = rotation_matrix(lrx, lry, lrz)
+        wr = rotation_matrix(wrx, wry, wrz)
+        lx, ly, lz = rotation_cal(0, 0, 1 ,lr)
+        wx, wy, wz = rotation_cal(lx, ly, lz ,wr)
+        #roll = atan2(R.R32, R.R33);
+        #pitch = asin(-R.R31);
+        #yaw = atan2(R.R21, R.R11);        
+        puts "#{atan2(wx, wy)},#{atan2(wx, wz)},#{atan2(wz, wy)}"
       end
     end                                                             ##__BY_FDVR
 
