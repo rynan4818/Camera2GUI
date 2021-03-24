@@ -178,7 +178,7 @@ class Form_main                                                     ##__BY_FDVR
 
       def view_set
         firstperson_control = [@static_smoothfollow, @checkBox_force_upright, @checkBox_pivoting_offset, @checkBox_follow_replay_position,
-                               @static_position_smoothing, @edit_position_smoothing, @trackBar_position_smoothing]
+          @static_position_smoothing, @edit_position_smoothing, @trackBar_position_smoothing]
         positionable_control = [@static_follow360, @checkBox_enabled]
         if $camera_type == TYPE_FIRSTPERSON
           control_disable(positionable_control)
@@ -230,9 +230,8 @@ class Form_main                                                     ##__BY_FDVR
         @checkBox_playing_multi.check(false)
         @checkBox_replay.check(false)
         @checkBox_fpfc.check(false)
-        @checkBox_custom1.check(false)
-        @checkBox_custom2.check(false)
-        @checkBox_custom3.check(false)
+        @checkBox_enable_auto_switch.check(false)
+        @checkBox_autoswitch_from_custom.check(false)
         if scenes = $scene_json["scenes"]
           camera_name = $cameras_json[$camera_idx][CAMERA_NAME]
           scenes.each do |scene, cameras|
@@ -244,11 +243,10 @@ class Form_main                                                     ##__BY_FDVR
             @checkBox_playing_multi.check(true) if scene == "PlayingMulti" && cameras.index(camera_name)
             @checkBox_replay.check(true) if scene == "Replay" && cameras.index(camera_name)
             @checkBox_fpfc.check(true) if scene == "FPFC" && cameras.index(camera_name)
-            @checkBox_custom1.check(true) if scene == "Custom1" && cameras.index(camera_name)
-            @checkBox_custom2.check(true) if scene == "Custom2" && cameras.index(camera_name)
-            @checkBox_custom3.check(true) if scene == "Custom3" && cameras.index(camera_name)
           end
         end
+        @checkBox_enable_auto_switch.check(true) if $scene_json["enableAutoSwitch"]
+        @checkBox_autoswitch_from_custom.check(true) if $scene_json["autoswitchFromCustom"]
       end
 
     end                                                             ##__BY_FDVR
@@ -256,13 +254,27 @@ class Form_main                                                     ##__BY_FDVR
     class Panel5                                                    ##__BY_FDVR
       #LAYOUT
       def self_created
-        @panel_target_rot.radioBtn_target_rot1.check(true)
-        @panel_view_rect.radioBtn_view_rect1.check(true)
-        @panel_target_pos.radioBtn_target_pos1.check(true)
+        @panel_target_rot.radioBtn_target_rot1.check(true) unless $rot_amount
+        @panel_view_rect.radioBtn_view_rect1.check(true) unless $view_amount
         @change_pos_ok = true
         @change_rot_ok = true
         @change_view_ok = true
         $apply_ok = true
+        @trackBar_pos_amount.rangeMin = 0
+        @trackBar_pos_amount.rangeMax = 22
+        @trackBar_pos_amount.linesize = 1
+        @trackBar_pos_amount.pagesize = 4
+        @panel_view_rect.radioBtn_view_rect1.check(true) if @panel_view_rect.radioBtn_view_rect1.caption.to_i == $view_amount
+        @panel_view_rect.radioBtn_view_rect2.check(true) if @panel_view_rect.radioBtn_view_rect2.caption.to_i == $view_amount
+        @panel_view_rect.radioBtn_view_rect3.check(true) if @panel_view_rect.radioBtn_view_rect3.caption.to_i == $view_amount
+        @panel_view_rect.radioBtn_view_rect4.check(true) if @panel_view_rect.radioBtn_view_rect4.caption.to_i == $view_amount
+        @panel_target_rot.radioBtn_target_rot1.check(true) if @panel_target_rot.radioBtn_target_rot1.caption.to_f == $rot_amount
+        @panel_target_rot.radioBtn_target_rot2.check(true) if @panel_target_rot.radioBtn_target_rot2.caption.to_f == $rot_amount
+        @panel_target_rot.radioBtn_target_rot3.check(true) if @panel_target_rot.radioBtn_target_rot3.caption.to_f == $rot_amount
+        @panel_target_rot.radioBtn_target_rot4.check(true) if @panel_target_rot.radioBtn_target_rot4.caption.to_f == $rot_amount
+        @panel_target_rot.radioBtn_target_rot5.check(true) if @panel_target_rot.radioBtn_target_rot5.caption.to_f == $rot_amount
+        @panel_target_rot.radioBtn_target_rot6.check(true) if @panel_target_rot.radioBtn_target_rot6.caption.to_f == $rot_amount
+        addEvent WMsg::WM_HSCROLL
       end
 
       def control_set
@@ -308,24 +320,26 @@ class Form_main                                                     ##__BY_FDVR
             @edit_target_rot_z.text = "%.15g"%rot["z"]
           end
         end
+        @edit_pos_amount.text = $pos_amount
         view_set
+      end
+
+      def msghandler(msg)
+        super
+        amount_edit_set(0.01, 2, @trackBar_pos_amount.rangeMax) if msg.msg == WMsg::WM_HSCROLL
       end
 
       def view_set
         control_list = [@button_back, @button_down, @button_front, @button_left, @button_pitch_down, @button_pitch_up, @button_right,
           @button_roll_left, @button_roll_right, @button_target_pos_x_d, @button_target_pos_x_u, @button_target_pos_y_d,
           @button_target_pos_y_u, @button_target_pos_z_d, @button_target_pos_z_u, @button_target_rot_x_d, @button_target_rot_x_u,
-          @button_target_rot_y_d, @button_target_rot_y_u, @button_target_rot_z_d, @button_target_rot_z_u, @button_up,
-          @button_yaw_left,
+          @button_target_rot_y_d, @button_target_rot_y_u, @button_target_rot_z_d, @button_target_rot_z_u, @button_up,@button_yaw_left,
           @button_yaw_right, @edit_target_pos_x, @edit_target_pos_y, @edit_target_pos_z, @edit_target_rot_x, @edit_target_rot_y,
-          @edit_target_rot_z,
-          @static_target_pos, @static_target_pos_x, @static_target_pos_y, @static_target_pos_z,
+          @edit_target_rot_z, @static_target_pos, @static_target_pos_x, @static_target_pos_y, @static_target_pos_z,
           @static_target_rot, @static_target_rot_x, @static_target_rot_y, @static_target_rot_z, @static_flying_control,
           @panel_target_rot.radioBtn_target_rot1, @panel_target_rot.radioBtn_target_rot2, @panel_target_rot.radioBtn_target_rot3, 
-          @panel_target_rot.radioBtn_target_rot4, @panel_target_rot.radioBtn_target_rot5,
-          @panel_target_pos.radioBtn_target_pos1, @panel_target_pos.radioBtn_target_pos2, @panel_target_pos.radioBtn_target_pos3,
-          @panel_target_pos.radioBtn_target_pos4, @panel_target_pos.radioBtn_target_pos5, @panel_target_pos.radioBtn_target_pos6,
-          @checkBox_auto_apply, @button_reset]
+          @panel_target_rot.radioBtn_target_rot4, @panel_target_rot.radioBtn_target_rot5, @panel_target_rot.radioBtn_target_rot6,
+          @static_pos_amount, @edit_pos_amount, @trackBar_pos_amount, @checkBox_auto_apply, @button_reset]
         if $camera_type == TYPE_FIRSTPERSON
           control_disable(control_list)
         elsif $camera_type == TYPE_POSITIONABLE
@@ -334,27 +348,24 @@ class Form_main                                                     ##__BY_FDVR
         end
       end
 
-      def view_amaount
+      def view_amount
         return @panel_view_rect.radioBtn_view_rect1.caption.to_i if @panel_view_rect.radioBtn_view_rect1.checked?
         return @panel_view_rect.radioBtn_view_rect2.caption.to_i if @panel_view_rect.radioBtn_view_rect2.checked?
         return @panel_view_rect.radioBtn_view_rect3.caption.to_i if @panel_view_rect.radioBtn_view_rect3.checked?
+        return @panel_view_rect.radioBtn_view_rect4.caption.to_i if @panel_view_rect.radioBtn_view_rect4.checked?
       end
 
-      def pos_amaount
-        return @panel_target_pos.radioBtn_target_pos1.caption.to_f if @panel_target_pos.radioBtn_target_pos1.checked?
-        return @panel_target_pos.radioBtn_target_pos2.caption.to_f if @panel_target_pos.radioBtn_target_pos2.checked?
-        return @panel_target_pos.radioBtn_target_pos3.caption.to_f if @panel_target_pos.radioBtn_target_pos3.checked?
-        return @panel_target_pos.radioBtn_target_pos4.caption.to_f if @panel_target_pos.radioBtn_target_pos4.checked?
-        return @panel_target_pos.radioBtn_target_pos5.caption.to_f if @panel_target_pos.radioBtn_target_pos5.checked?
-        return @panel_target_pos.radioBtn_target_pos6.caption.to_f if @panel_target_pos.radioBtn_target_pos6.checked?
+      def pos_amount
+        return @edit_pos_amount.text.to_f
       end
 
-      def rot_amaount
+      def rot_amount
         return @panel_target_rot.radioBtn_target_rot1.caption.to_f if @panel_target_rot.radioBtn_target_rot1.checked?
         return @panel_target_rot.radioBtn_target_rot2.caption.to_f if @panel_target_rot.radioBtn_target_rot2.checked?
         return @panel_target_rot.radioBtn_target_rot3.caption.to_f if @panel_target_rot.radioBtn_target_rot3.checked?
         return @panel_target_rot.radioBtn_target_rot4.caption.to_f if @panel_target_rot.radioBtn_target_rot4.checked?
         return @panel_target_rot.radioBtn_target_rot5.caption.to_f if @panel_target_rot.radioBtn_target_rot5.checked?
+        return @panel_target_rot.radioBtn_target_rot6.caption.to_f if @panel_target_rot.radioBtn_target_rot6.checked?
       end
       
       def flying_move(x,y,z)

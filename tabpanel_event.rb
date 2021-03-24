@@ -91,6 +91,10 @@ class Form_main                                                     ##__BY_FDVR
 
     class Panel4                                                    ##__BY_FDVR
       #SCENES
+      def button_custom_scenes_clicked
+        $main_windowrect = self.windowrect
+        return unless VRLocalScreen.openModalDialog(self,nil,Modaldlg_custom_scenes,nil,nil)
+      end
     end                                                             ##__BY_FDVR
 
     class Panel5                                                    ##__BY_FDVR
@@ -234,84 +238,88 @@ class Form_main                                                     ##__BY_FDVR
         $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
 
+      def edit_pos_amount_changed
+        amount_trackbar_set(@edit_pos_amount, @trackBar_pos_amount, 0.01, 2, @trackBar_pos_amount.rangeMax)
+      end
+    
       def button_view_rect_x_u_clicked
-        @edit_view_rect_x.text = @edit_view_rect_x.text.to_i + view_amaount
+        @edit_view_rect_x.text = @edit_view_rect_x.text.to_i + view_amount
       end
     
       def button_view_rect_x_d_clicked
-        @edit_view_rect_x.text = @edit_view_rect_x.text.to_i - view_amaount
+        @edit_view_rect_x.text = @edit_view_rect_x.text.to_i - view_amount
       end
     
       def button_view_rect_y_u_clicked
-        @edit_view_rect_y.text = @edit_view_rect_y.text.to_i + view_amaount
+        @edit_view_rect_y.text = @edit_view_rect_y.text.to_i + view_amount
       end
     
       def button_view_rect_y_d_clicked
-        @edit_view_rect_y.text = @edit_view_rect_y.text.to_i - view_amaount
+        @edit_view_rect_y.text = @edit_view_rect_y.text.to_i - view_amount
       end
     
       def button_view_rect_width_u_clicked
-        @edit_view_rect_width.text = @edit_view_rect_width.text.to_i + view_amaount
+        @edit_view_rect_width.text = @edit_view_rect_width.text.to_i + view_amount
       end
     
       def button_view_rect_width_d_clicked
-        @edit_view_rect_width.text = @edit_view_rect_width.text.to_i - view_amaount
+        @edit_view_rect_width.text = @edit_view_rect_width.text.to_i - view_amount
       end
     
       def button_view_rect_height_u_clicked
-        @edit_view_rect_height.text = @edit_view_rect_height.text.to_i + view_amaount
+        @edit_view_rect_height.text = @edit_view_rect_height.text.to_i + view_amount
       end
     
       def button_view_rect_height_d_clicked
-        @edit_view_rect_height.text = @edit_view_rect_height.text.to_i - view_amaount
+        @edit_view_rect_height.text = @edit_view_rect_height.text.to_i - view_amount
       end
     
       def button_target_pos_x_u_clicked
-        @edit_target_pos_x.text = "%.15g"%(@edit_target_pos_x.text.to_f + pos_amaount)
+        @edit_target_pos_x.text = "%.15g"%(@edit_target_pos_x.text.to_f + pos_amount)
       end
     
       def button_target_pos_x_d_clicked
-        @edit_target_pos_x.text = "%.15g"%(@edit_target_pos_x.text.to_f - pos_amaount)
+        @edit_target_pos_x.text = "%.15g"%(@edit_target_pos_x.text.to_f - pos_amount)
       end
     
       def button_target_pos_y_u_clicked
-        @edit_target_pos_y.text = "%.15g"%(@edit_target_pos_y.text.to_f + pos_amaount)
+        @edit_target_pos_y.text = "%.15g"%(@edit_target_pos_y.text.to_f + pos_amount)
       end
     
       def button_target_pos_y_d_clicked
-        @edit_target_pos_y.text = "%.15g"%(@edit_target_pos_y.text.to_f - pos_amaount)
+        @edit_target_pos_y.text = "%.15g"%(@edit_target_pos_y.text.to_f - pos_amount)
       end
     
       def button_target_pos_z_u_clicked
-        @edit_target_pos_z.text = "%.15g"%(@edit_target_pos_z.text.to_f + pos_amaount)
+        @edit_target_pos_z.text = "%.15g"%(@edit_target_pos_z.text.to_f + pos_amount)
       end
     
       def button_target_pos_z_d_clicked
-        @edit_target_pos_z.text = "%.15g"%(@edit_target_pos_z.text.to_f - pos_amaount)
+        @edit_target_pos_z.text = "%.15g"%(@edit_target_pos_z.text.to_f - pos_amount)
       end
     
       def button_target_rot_x_u_clicked
-        @edit_target_rot_x.text = "%.15g"%(@edit_target_rot_x.text.to_f + rot_amaount)
+        @edit_target_rot_x.text = "%.15g"%(@edit_target_rot_x.text.to_f + rot_amount)
       end
     
       def button_target_rot_x_d_clicked
-        @edit_target_rot_x.text = "%.15g"%(@edit_target_rot_x.text.to_f - rot_amaount)
+        @edit_target_rot_x.text = "%.15g"%(@edit_target_rot_x.text.to_f - rot_amount)
       end
     
       def button_target_rot_y_u_clicked
-        @edit_target_rot_y.text = "%.15g"%(@edit_target_rot_y.text.to_f + rot_amaount)
+        @edit_target_rot_y.text = "%.15g"%(@edit_target_rot_y.text.to_f + rot_amount)
       end
     
       def button_target_rot_y_d_clicked
-        @edit_target_rot_y.text = "%.15g"%(@edit_target_rot_y.text.to_f - rot_amaount)
+        @edit_target_rot_y.text = "%.15g"%(@edit_target_rot_y.text.to_f - rot_amount)
       end
     
       def button_target_rot_z_u_clicked
-        @edit_target_rot_z.text = "%.15g"%(@edit_target_rot_z.text.to_f + rot_amaount)
+        @edit_target_rot_z.text = "%.15g"%(@edit_target_rot_z.text.to_f + rot_amount)
       end
     
       def button_target_rot_z_d_clicked
-        @edit_target_rot_z.text = "%.15g"%(@edit_target_rot_z.text.to_f - rot_amaount)
+        @edit_target_rot_z.text = "%.15g"%(@edit_target_rot_z.text.to_f - rot_amount)
       end
     
       def button_reset_clicked
@@ -374,42 +382,42 @@ class Form_main                                                     ##__BY_FDVR
     
       def button_front_clicked
         $apply_ok = false
-        flying_move(0.0, 0.0, pos_amaount)
+        flying_move(0.0, 0.0, pos_amount)
         $apply_ok = true
         $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
     
       def button_back_clicked
         $apply_ok = false
-        flying_move(0.0, 0.0, -pos_amaount)
+        flying_move(0.0, 0.0, -pos_amount)
         $apply_ok = true
         $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
     
       def button_left_clicked
         $apply_ok = false
-        flying_move(-pos_amaount, 0.0, 0.0)
+        flying_move(-pos_amount, 0.0, 0.0)
         $apply_ok = true
         $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
     
       def button_right_clicked
         $apply_ok = false
-        flying_move(pos_amaount, 0.0, 0.0)
+        flying_move(pos_amount, 0.0, 0.0)
         $apply_ok = true
         $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
     
       def button_up_clicked
         $apply_ok = false
-        flying_move(0.0, pos_amaount, 0.0)
+        flying_move(0.0, pos_amount, 0.0)
         $apply_ok = true
         $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
     
       def button_down_clicked
         $apply_ok = false
-        flying_move(0.0, -pos_amaount, 0.0)
+        flying_move(0.0, -pos_amount, 0.0)
         $apply_ok = true
         $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end

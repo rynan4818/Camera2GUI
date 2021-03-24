@@ -8,12 +8,33 @@ require 'vr/vrcontrol'
 require 'vr/vrcomctl'
 require 'vr/vrmgdlayout'
 
+class Modaldlg_custom_scenes < VRModalDialog
+  include VRContainersSet
+
+  def construct
+    self.caption = 'Custom Scenes'
+    self.move(530,361,507,534)
+    addControl(VRButton,'button_add',"ADD",16,24,48,32)
+    addControl(VRButton,'button_cancel',"CANCEL",288,440,80,32)
+    addControl(VRButton,'button_del',"DEL",16,88,48,32)
+    addControl(VRButton,'button_ok',"OK",384,440,80,32)
+    addControl(VREdit,'edit_bind',"",72,192,120,24)
+    addControl(VREdit,'edit_scene',"",72,144,392,24)
+    addControl(VRListbox,'listBox_camera',"listBox1",72,240,392,168,0x8)
+    addControl(VRListbox,'listBox_custom_scenes',"listBox1",72,24,392,96,0x80)
+    addControl(VRStatic,'static_camera',"Camera",8,240,64,24)
+    addControl(VRStatic,'static_keybind',"Key bind",8,192,64,24)
+    addControl(VRStatic,'static_scene',"Scene",16,144,48,24)
+  end 
+
+end
+
 class Modaldlg_setting < VRModalDialog
   include VRContainersSet
 
   def construct
     self.caption = 'Setting'
-    self.move(269,351,597,391)
+    self.move(321,364,597,391)
     addControl(VRButton,'button_bs_folder_open',"Open",520,40,40,24)
     addControl(VRButton,'button_cancel',"CANCEL",344,296,88,32)
     addControl(VRButton,'button_ok',"OK",456,296,96,32)
@@ -169,9 +190,9 @@ class Form_main < VRForm
 
     class Panel4 < VRPanel
       include VRStdControlContainer
-      attr_reader :checkBox_custom1
-      attr_reader :checkBox_custom2
-      attr_reader :checkBox_custom3
+      attr_reader :button_custom_scenes
+      attr_reader :checkBox_autoswitch_from_custom
+      attr_reader :checkBox_enable_auto_switch
       attr_reader :checkBox_fpfc
       attr_reader :checkBox_menu
       attr_reader :checkBox_multiplayer_menu
@@ -180,24 +201,27 @@ class Form_main < VRForm
       attr_reader :checkBox_playing_modmap
       attr_reader :checkBox_playing_multi
       attr_reader :checkBox_replay
+      attr_reader :static1
 
       def construct
-        addControl(VRCheckbox,'checkBox_custom1',"Custom1",36,184,88,24)
-        addControl(VRCheckbox,'checkBox_custom2',"Custom2",284,184,96,32)
-        addControl(VRCheckbox,'checkBox_custom3',"Custom3",36,224,96,32)
-        addControl(VRCheckbox,'checkBox_fpfc',"FPFC",284,144,176,32)
+        addControl(VRButton,'button_custom_scenes',"Custom scenes setup",28,288,168,32)
+        addControl(VRCheckbox,'checkBox_autoswitch_from_custom',"autoswitchFromCustom",36,248,184,24)
+        addControl(VRCheckbox,'checkBox_enable_auto_switch',"enableAutoSwitch",36,208,144,32)
+        addControl(VRCheckbox,'checkBox_fpfc',"FPFC",284,136,176,32)
         addControl(VRCheckbox,'checkBox_menu',"Menu",36,16,72,32)
         addControl(VRCheckbox,'checkBox_multiplayer_menu',"Multiplayer Menu",284,16,152,32)
         addControl(VRCheckbox,'checkBox_playing',"Playing",36,56,72,24)
         addControl(VRCheckbox,'checkBox_playing_360',"Playing360",284,56,104,32)
         addControl(VRCheckbox,'checkBox_playing_modmap',"Playing Modmap",36,96,136,32)
-        addControl(VRCheckbox,'checkBox_playing_multi',"Playing Multi",284,96,120,40)
+        addControl(VRCheckbox,'checkBox_playing_multi',"Playing Multi",284,96,120,32)
         addControl(VRCheckbox,'checkBox_replay',"Replay",36,136,80,32)
+        addControl(VRStatic,'static1',"=== Camera2 common settings ===",28,184,264,24)
       end
     end
 
     class Panel5 < VRPanel
       include VRStdControlContainer
+      include VRComCtlContainer
       attr_reader :button_back
       attr_reader :button_down
       attr_reader :button_front
@@ -233,6 +257,7 @@ class Form_main < VRForm
       attr_reader :button_yaw_right
       attr_reader :checkBox_auto_apply
       attr_reader :checkBox_view_rect_full
+      attr_reader :edit_pos_amount
       attr_reader :edit_target_pos_x
       attr_reader :edit_target_pos_y
       attr_reader :edit_target_pos_z
@@ -243,10 +268,10 @@ class Form_main < VRForm
       attr_reader :edit_view_rect_width
       attr_reader :edit_view_rect_x
       attr_reader :edit_view_rect_y
-      attr_reader :panel_target_pos
       attr_reader :panel_target_rot
       attr_reader :panel_view_rect
       attr_reader :static_flying_control
+      attr_reader :static_pos_amount
       attr_reader :static_target_pos
       attr_reader :static_target_pos_x
       attr_reader :static_target_pos_y
@@ -260,6 +285,22 @@ class Form_main < VRForm
       attr_reader :static_view_rect_width
       attr_reader :static_view_rect_x
       attr_reader :static_view_rect_y
+      attr_reader :trackBar_pos_amount
+
+      class Panel_view_rect < VRPanel
+        include VRStdControlContainer
+        attr_reader :radioBtn_view_rect1
+        attr_reader :radioBtn_view_rect2
+        attr_reader :radioBtn_view_rect3
+        attr_reader :radioBtn_view_rect4
+
+        def construct
+          addControl(VRRadiobutton,'radioBtn_view_rect1',"1",8,8,32,24)
+          addControl(VRRadiobutton,'radioBtn_view_rect2',"10",48,8,48,24)
+          addControl(VRRadiobutton,'radioBtn_view_rect3',"50",96,8,40,24)
+          addControl(VRRadiobutton,'radioBtn_view_rect4',"100",144,8,48,24)
+        end
+      end
 
       class Panel_target_rot < VRPanel
         include VRStdControlContainer
@@ -268,52 +309,21 @@ class Form_main < VRForm
         attr_reader :radioBtn_target_rot3
         attr_reader :radioBtn_target_rot4
         attr_reader :radioBtn_target_rot5
+        attr_reader :radioBtn_target_rot6
 
         def construct
-          addControl(VRRadiobutton,'radioBtn_target_rot1',"0.01",16,8,56,24)
-          addControl(VRRadiobutton,'radioBtn_target_rot2',"0.1",72,8,40,24)
-          addControl(VRRadiobutton,'radioBtn_target_rot3',"1",120,8,40,24)
-          addControl(VRRadiobutton,'radioBtn_target_rot4',"10",16,32,40,24)
-          addControl(VRRadiobutton,'radioBtn_target_rot5',"45",72,32,40,24)
-        end
-      end
-
-      class Panel_view_rect < VRPanel
-        include VRStdControlContainer
-        attr_reader :radioBtn_view_rect1
-        attr_reader :radioBtn_view_rect2
-        attr_reader :radioBtn_view_rect3
-
-        def construct
-          addControl(VRRadiobutton,'radioBtn_view_rect1',"1",8,0,40,24)
-          addControl(VRRadiobutton,'radioBtn_view_rect2',"10",56,0,48,24)
-          addControl(VRRadiobutton,'radioBtn_view_rect3',"50",112,0,56,24)
-        end
-      end
-
-      class Panel_target_pos < VRPanel
-        include VRStdControlContainer
-        attr_reader :radioBtn_target_pos1
-        attr_reader :radioBtn_target_pos2
-        attr_reader :radioBtn_target_pos3
-        attr_reader :radioBtn_target_pos4
-        attr_reader :radioBtn_target_pos5
-        attr_reader :radioBtn_target_pos6
-
-        def construct
-          addControl(VRRadiobutton,'radioBtn_target_pos1',"0.01",8,8,56,24)
-          addControl(VRRadiobutton,'radioBtn_target_pos2',"0.1",64,8,40,24)
-          addControl(VRRadiobutton,'radioBtn_target_pos3',"0.2",112,8,56,24)
-          addControl(VRRadiobutton,'radioBtn_target_pos4',"0.3",8,40,48,24)
-          addControl(VRRadiobutton,'radioBtn_target_pos5',"0.5",64,40,40,24)
-          addControl(VRRadiobutton,'radioBtn_target_pos6',"1",120,40,32,24)
+          addControl(VRRadiobutton,'radioBtn_target_rot1',"0.01",8,0,56,24)
+          addControl(VRRadiobutton,'radioBtn_target_rot2',"0.1",64,0,40,24)
+          addControl(VRRadiobutton,'radioBtn_target_rot3',"1",120,0,40,24)
+          addControl(VRRadiobutton,'radioBtn_target_rot4',"10",8,24,40,24)
+          addControl(VRRadiobutton,'radioBtn_target_rot5',"30",64,24,40,24)
+          addControl(VRRadiobutton,'radioBtn_target_rot6',"45",120,24,40,24)
         end
       end
 
       def construct
-        addControl(Panel_target_pos,'panel_target_pos',"panel1",204,160,192,64)
-        addControl(Panel_target_rot,'panel_target_rot',"panel2",388,160,168,56)
-        addControl(Panel_view_rect,'panel_view_rect',"panel1",20,200,192,24)
+        addControl(Panel_target_rot,'panel_target_rot',"panel1",372,160,184,64)
+        addControl(Panel_view_rect,'panel_view_rect',"panel2",12,192,208,32)
         addControl(VRButton,'button_back',"BACK",252,312,72,40)
         addControl(VRButton,'button_down',"DOWN",340,328,88,24)
         addControl(VRButton,'button_front',"FRONT",252,224,72,40)
@@ -347,8 +357,9 @@ class Form_main < VRForm
         addControl(VRButton,'button_view_rect_y_u',"U",156,88,24,24)
         addControl(VRButton,'button_yaw_left',"YAW LEFT",20,256,96,24)
         addControl(VRButton,'button_yaw_right',"YAW RIGHT",452,256,88,24)
-        addControl(VRCheckbox,'checkBox_auto_apply',"Auto Apply",436,224,112,16)
+        addControl(VRCheckbox,'checkBox_auto_apply',"Auto Apply",444,224,104,16)
         addControl(VRCheckbox,'checkBox_view_rect_full',"Full Screen",108,16,104,24)
+        addControl(VREdit,'edit_pos_amount',"",316,184,48,24)
         addControl(VREdit,'edit_target_pos_x',"",244,48,72,24)
         addControl(VREdit,'edit_target_pos_y',"",244,88,72,24)
         addControl(VREdit,'edit_target_pos_z',"",244,128,72,24)
@@ -360,6 +371,7 @@ class Form_main < VRForm
         addControl(VREdit,'edit_view_rect_x',"",92,48,64,24)
         addControl(VREdit,'edit_view_rect_y',"",92,88,64,24)
         addControl(VRStatic,'static_flying_control',"Flying control",260,272,64,40)
+        addControl(VRStatic,'static_pos_amount',"Pos amount",228,192,80,16)
         addControl(VRStatic,'static_target_pos',"Target Pos",244,16,88,24)
         addControl(VRStatic,'static_target_pos_x',"X",228,48,16,24)
         addControl(VRStatic,'static_target_pos_y',"Y",228,88,16,24)
@@ -373,6 +385,7 @@ class Form_main < VRForm
         addControl(VRStatic,'static_view_rect_width',"WIDTH",36,128,48,16)
         addControl(VRStatic,'static_view_rect_x',"X",76,48,16,24)
         addControl(VRStatic,'static_view_rect_y',"Y",76,88,16,24)
+        addControl(VRTrackbar,'trackBar_pos_amount',"trackBar2",220,160,152,24)
       end
     end
 
@@ -386,7 +399,7 @@ class Form_main < VRForm
       def construct
         addControl(VRCheckbox,'checkBox_enable_in_menu',"Enable in menu",308,16,128,32)
         addControl(VRCheckbox,'checkBox_from_origin',"From Origin",180,16,104,32)
-        addControl(VRListbox,'listBox_script_list',"listBox1",28,56,488,222,0x8)
+        addControl(VRListbox,'listBox_script_list',"listBox1",28,56,488,240,0x8)
         addControl(VRStatic,'static_movement_script',"Movement Script",28,24,128,16)
       end
     end
@@ -405,8 +418,10 @@ class Form_main < VRForm
   end
 
   def construct
+    self.sizebox=false
+    self.maximizebox=false
     self.caption = 'Camera2GUI'
-    self.move(224,483,580,625)
+    self.move(482,322,580,625)
     #$_addControl(VRMenu,'mainmenu1',"",520,64,24,24)
     @mainmenu1 = newMenu.set(
       [
@@ -423,13 +438,14 @@ class Form_main < VRForm
     )
     setMenu(@mainmenu1,true)
     addControl(TabPanel_main,'tabPanel_main',"tabPanel1",8,168,552,272)
-    addControl(VRButton,'button_add',"ADD",16,16,56,32)
-    addControl(VRButton,'button_apply',"SAVE and Apply",16,104,120,32)
-    addControl(VRButton,'button_copy',"COPY",80,16,56,32)
-    addControl(VRButton,'button_del',"DELETE",16,56,56,32)
+    addControl(VRButton,'button_add',"ADD",16,56,56,24)
+    addControl(VRButton,'button_apply',"SAVE and Apply",16,120,120,32)
+    addControl(VRButton,'button_copy',"COPY",80,56,56,24)
+    addControl(VRButton,'button_del',"DELETE",16,88,56,24)
     addControl(VRButton,'button_list_down',"DOWN",488,96,56,32)
     addControl(VRButton,'button_list_up',"UP",488,16,56,32)
-    addControl(VRButton,'button_save',"SAVE",80,56,56,32)
+    addControl(VRButton,'button_reload',"Reload",16,8,120,32)
+    addControl(VRButton,'button_save',"SAVE",80,88,56,24)
     addControl(VRListbox,'listBox_camera',"listBox1",144,8,336,150,0x80)
     #$_addControl(VRMgdVertLayoutFrame,'vertFrame1',"",496,64,24,24)
     @vertFrame1=setMarginedFrame(VRMgdVertLayoutFrame)

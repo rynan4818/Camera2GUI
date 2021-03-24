@@ -17,17 +17,22 @@ $KCODE='s'
 #==============================================================================
 
 class Form_main                                                     ##__BY_FDVR
+  include VRClosingSensitive
+  include VRTimerFeasible
 
   def self_created
+    self.caption += "  Ver #{SOFT_VER}"
     $main_windowrect = self.windowrect
+    self.move($main_form_x, $main_form_y, $main_windowrect[2], $main_windowrect[3]) 
     $camera_idx = nil
     $track_bar_position = {}
+    $amount_track_bar_position = {}
     $change_flag = false
     $camera_type = nil
     $main_form = self
     unless $bs_folder && File.directory?($bs_folder)
       messageBox("#{$bs_folder ? "'#{$bs_folder}'" : ""}#{MAIN_SELF_CREATED_BSDIR_CHK_MES}",
-         MAIN_SELF_CREATED_BSDIR_CHK_TITLE, WConst::MB_ICONWARNING | WConst::MB_OK)
+        MAIN_SELF_CREATED_BSDIR_CHK_TITLE, WConst::MB_ICONWARNING | WConst::MB_OK)
       exit unless VRLocalScreen.openModalDialog(self,nil,Modaldlg_setting,nil,nil)
     end
     #Set tab stops for list box
@@ -37,8 +42,29 @@ class Form_main                                                     ##__BY_FDVR
     #l*    : 32bit signed integer
     @listBox_camera.sendMessage(0x192, 2,[15,60].pack('l*'))
     camera_load
+    addTimer(1000,"filecheck")
   end
   
+  def self_close
+    $main_windowrect = self.windowrect
+    $pos_amount = @tabPanel_main.panels[TAB_LAYOUT].pos_amount
+    $view_amount = @tabPanel_main.panels[TAB_LAYOUT].view_amount
+    $rot_amount = @tabPanel_main.panels[TAB_LAYOUT].rot_amount
+    setting_save
+  end
+
+  def filecheck_timer
+    deleteTimer("filecheck")
+    unless file_timestamp_check
+      if messageBox(FILE_TIME_CHECK_MES, FILE_TIME_CHECK_TITLE, WConst::MB_ICONQUESTION | WConst::MB_YESNO) == VRDialogComponent::IDYES
+        camera_load
+      else
+        file_timestamp_reset
+      end
+    end
+    addTimer(1000,"filecheck")
+  end
+
   def button_add_clicked(copy_json = $positionable_default)
     $apply_ok = false
     number = 1
@@ -72,6 +98,7 @@ class Form_main                                                     ##__BY_FDVR
 
   def button_del_clicked
     return if $cameras_json.size <= 1
+    return if messageBox(MAIN_DELETE_MES, MAIN_DELETE_TITLE, WConst::MB_ICONQUESTION | WConst::MB_YESNO) == VRDialogComponent::IDNO
     $apply_ok = false
     $delete_camera.push $cameras_json.delete_at($camera_idx)
     $camera_idx = $cameras_json.size - 1 if $camera_idx >= $cameras_json.size
@@ -82,7 +109,10 @@ class Form_main                                                     ##__BY_FDVR
   def button_save_clicked
     SWin::Application.doevents
     camera_list_set($camera_idx) if control_json_save
+    deleteTimer("filecheck")
     json_file_save
+    file_timestamp_reset
+    addTimer(1000,"filecheck")
   end
   
   def button_apply_clicked
@@ -92,6 +122,10 @@ class Form_main                                                     ##__BY_FDVR
       AUTOIT.WinWaitActive(BEATSABER_WINDOW_NAME, "", 1)
       AUTOIT.Send("^+{F1}")
     end
+  end
+
+  def button_reload_clicked
+    camera_load
   end
 
   def button_list_up_clicked
@@ -150,7 +184,7 @@ class Form_main                                                     ##__BY_FDVR
     $apply_ok = false
     @tabPanel_main.panels[TAB_FOLLOW].view_set
     @tabPanel_main.panels[TAB_MODMAPEXT].view_set
-    @tabPanel_main.panels[TAB_POSITION].view_set
+    @tabPanel_main.panels[TAB_LAYOUT].view_set
     @tabPanel_main.panels[TAB_MOVEMENT].view_set
     $apply_ok = true
   end

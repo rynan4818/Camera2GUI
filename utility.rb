@@ -27,10 +27,20 @@ end
 def setting_load
   $bs_folder = nil
   $language  = "english"
+  $pos_amount = 0.01
+  $view_amount = nil
+  $rot_amount = nil
+  $main_form_x = 200
+  $main_form_y = 200
   if setting = json_read(SETTING_FILE)
     set = proc{|defalut, key| setting[key] ? setting[key] : defalut}
-    $bs_folder = set.call($bs_folder, "bs_folder")
-    $language  = set.call($language, "language")
+    $bs_folder   = set.call($bs_folder, "bs_folder")
+    $language    = set.call($language, "language")
+    $pos_amount  = set.call($pos_amount, "pos_amount")
+    $view_amount = set.call($view_amount, "view_amount")
+    $rot_amount  = set.call($rot_amount, "rot_amount")
+    $main_form_x = set.call($main_form_x, "main_form_x")
+    $main_form_y = set.call($main_form_y, "main_form_y")
   end
 end
 
@@ -38,6 +48,11 @@ def setting_save
   setting = {} unless setting = json_read(SETTING_FILE)
   setting["bs_folder"] = $bs_folder
   setting["language"] = $language
+  setting["pos_amount"] = $pos_amount
+  setting["view_amount"] = $view_amount
+  setting["rot_amount"] = $rot_amount
+  setting['main_form_x'] = $main_windowrect[0]
+  setting['main_form_y'] = $main_windowrect[1]
   File.open(SETTING_FILE,'w') do |file|
     JSON.pretty_generate(setting).each do |line|
       file.puts line
@@ -49,17 +64,44 @@ def camera2_setting_load
   $delete_camera = []
   return [false, SETTING_LOAD_ERROR_NO_DEFAULT] unless $firstperson_default  = json_read(FIRSTPERSON_DEFAULT)
   return [false, SETTING_LOAD_ERROR_NO_DEFAULT] unless $positionable_default = json_read(POSITIONABLE_DEFALUT)
-  $scene_json = json_read("#{$bs_folder}\\#{CAMERA2_SCENES_JSON}")
+  scene_json_file = "#{$bs_folder}\\#{CAMERA2_SCENES_JSON}"
+  $scene_json = json_read(scene_json_file)
+  $scene_json_mtime =  File.stat(scene_json_file).mtime if $scene_json
   $scene_json_change = false
   cameras_dir = "#{$bs_folder}\\#{CAMERA2_CAMERAS_DIR}\\*.json".gsub(/\\/,"/")
   $cameras_json = []
+  $cameras_json_mtime = {}
   Dir.glob(cameras_dir) do |json_file|
     $cameras_json.push [File.basename(json_file, ".*"), json_read(json_file), json_file, false]
+    $cameras_json_mtime[json_file] = File.stat(json_file).mtime
   end
   return [false, SETTING_LOAD_ERROR_NO_SCENE] unless $scene_json
   return [false, SETTING_LOAD_ERROR_NO_CAMERA] if $cameras_json == []
   movement_dir_load
   return [true, nil]
+end
+
+def file_timestamp_check
+  scene_json_file = "#{$bs_folder}\\#{CAMERA2_SCENES_JSON}"
+  if File.exist? scene_json_file
+    return false if $scene_json_mtime < File.stat(scene_json_file).mtime - TIMESTAMP_NOCHECK_SEC
+  end
+  cameras_dir = "#{$bs_folder}\\#{CAMERA2_CAMERAS_DIR}\\*.json".gsub(/\\/,"/")
+  Dir.glob(cameras_dir) do |json_file|
+    if timestamp = $cameras_json_mtime[json_file]
+      return false if timestamp < File.stat(json_file).mtime - TIMESTAMP_NOCHECK_SEC
+    else
+      return false
+    end
+  end
+  return true
+end
+
+def file_timestamp_reset
+  $scene_json_mtime = Time.now
+  $cameras_json_mtime.each do |json_file, mtime|
+    $cameras_json_mtime[json_file] = Time.now
+  end
 end
 
 def movement_dir_load
@@ -103,6 +145,62 @@ def edit_set
     end
   end
   $change_flag = false
+end
+
+def amount_trackbar_set(edit_control, trackBar_control, min, max, split)
+  return if $change_flag
+  $change_flag = true
+  base = base_cal(min, max, split)
+  if edit_control.text.strip == ""
+    edit_control.text = "%.15g"%rounding(base ** trackBar_control.rangeMin.to_f / 100.0, 3)
+    trackBar_control.position = trackBar_control.rangeMin
+  else
+    if edit_control.text.to_f < base ** trackBar_control.rangeMin.to_f / 100.0
+      edit_control.text = "%.15g"%rounding(base ** trackBar_control.rangeMin.to_f / 100.0, 3)
+    elsif edit_control.text.to_f > base ** trackBar_control.rangeMax.to_f / 100.0
+      edit_control.text = "%.15g"%rounding(base ** trackBar_control.rangeMax.to_f / 100.0, 3)
+    end
+    trackBar_control.position = (Math.log10(edit_control.text.to_f * 100.0) / Math.log10(base)).to_i
+  end
+  $amount_track_bar_position[trackBar_control] = [trackBar_control.position,edit_control]
+  $change_flag = false
+end
+
+def amount_edit_set(min, max, split)
+  return if $change_flag
+  $change_flag = true
+  base = base_cal(min, max, split)
+  $amount_track_bar_position.each do |control,value|
+    position = value[0]
+    edit_control = value[1]
+    if control.position != position
+      control.position = (control.position - (control.position % control.linesize))
+      $amount_track_bar_position[control] = [control.position,edit_control]
+      edit_control.text = "%.15g"%rounding(base ** control.position.to_f / 100.0, 3)
+    end
+  end
+  $change_flag = false
+end
+
+def base_cal(min, max, split)
+#pos
+#amount   = 0.01    - 1
+#           (1/100) - (100/100)
+#trackbar = 0       - 20 (21split)
+#
+#x^0  = 1(Fixed) =>  1*0.01 = 0.01
+#x^20 = 100      =>  100*0.01 = 1
+#logx(100) = 20
+#log10(100)/log10(x) = 20
+#log10(x) = log10(100)/20
+#x = 10^(log10(100)/20)
+#x = 1.258925412
+return 10**(Math.log10(max / min) / (split))
+end
+
+def rounding(num, point)
+  point = 10 ** point
+  return (num * point).round.to_f / point.to_f
 end
 
 def control_disable(control_list)
@@ -242,4 +340,14 @@ def rotation_cal(x, y, z ,r)
   yy = x * r[1][0] + y * r[1][1] + z * r[1][2]
   zz = x * r[2][0] + y * r[2][1] + z * r[2][2]
   return [xx, yy, zz]
+end
+
+def dlg_move(dlg_self)
+  m = $main_windowrect
+  d = dlg_self.windowrect
+  cx = m[0] + (m[2] / 2)
+  cy = m[1] + (m[3] / 2)
+  x = cx - (d[2] / 2)
+  y = cy - (d[3] / 2)
+  dlg_self.move(x, y, d[2], d[3])
 end

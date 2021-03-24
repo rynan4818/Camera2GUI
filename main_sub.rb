@@ -67,7 +67,7 @@ class Form_main
     @tabPanel_main.panels[TAB_FOLLOW].control_set
     @tabPanel_main.panels[TAB_MODMAPEXT].control_set
     @tabPanel_main.panels[TAB_SCENES].control_set
-    @tabPanel_main.panels[TAB_POSITION].control_set
+    @tabPanel_main.panels[TAB_LAYOUT].control_set
     @tabPanel_main.panels[TAB_MOVEMENT].control_set
   end
 
@@ -79,7 +79,7 @@ class Form_main
     tab_follow     = @tabPanel_main.panels[TAB_FOLLOW]
     tab_modmapext  = @tabPanel_main.panels[TAB_MODMAPEXT]
     tab_scenes     = @tabPanel_main.panels[TAB_SCENES]
-    tab_position   = @tabPanel_main.panels[TAB_POSITION]
+    tab_position   = @tabPanel_main.panels[TAB_LAYOUT]
     tab_movement   = @tabPanel_main.panels[TAB_MOVEMENT]
     camera = $cameras_json[$camera_idx][CAMERA_JSON]
     #Camera Name
@@ -170,9 +170,14 @@ class Form_main
     scenes_json_set("PlayingMulti", tab_scenes.checkBox_playing_multi.checked?, before_camera_name, after_camera_name)
     scenes_json_set("Replay", tab_scenes.checkBox_replay.checked?, before_camera_name, after_camera_name)
     scenes_json_set("FPFC", tab_scenes.checkBox_fpfc.checked?, before_camera_name, after_camera_name)
-    scenes_json_set("Custom1", tab_scenes.checkBox_custom1.checked?, before_camera_name, after_camera_name)
-    scenes_json_set("Custom2", tab_scenes.checkBox_custom2.checked?, before_camera_name, after_camera_name)
-    scenes_json_set("Custom3", tab_scenes.checkBox_custom3.checked?, before_camera_name, after_camera_name)
+    unless $scene_json["enableAutoSwitch"] == tab_scenes.checkBox_enable_auto_switch.checked?
+      $scene_json_change = true
+      $scene_json["enableAutoSwitch"] = tab_scenes.checkBox_enable_auto_switch.checked?
+    end
+    unless $scene_json["autoswitchFromCustom"] == tab_scenes.checkBox_autoswitch_from_custom.checked?
+      $scene_json_change = true
+      $scene_json["autoswitchFromCustom"] = tab_scenes.checkBox_autoswitch_from_custom.checked?
+    end
     return camera_list_refresh
   end
 
