@@ -20,6 +20,8 @@ class Form_main                                                     ##__BY_FDVR
   include VRClosingSensitive
   include VRTimerFeasible
 
+  attr_reader :tooltip
+  
   def self_created
     self.caption += "  Ver #{SOFT_VER}"
     $main_windowrect = self.windowrect
@@ -42,6 +44,11 @@ class Form_main                                                     ##__BY_FDVR
     #l*    : 32bit signed integer
     @listBox_camera.sendMessage(0x192, 2,[15,60].pack('l*'))
     camera_load
+    @tooltip = createTooltip
+    @tooltip.maxtipwidth = 30
+    @tooltip.autopopTime = 30000
+    @tooltip.bkColor = RGB(0xff,0xff,0xe1)
+    @tabPanel_main.panels[TAB_GENERAL].main_created
     addTimer(1000,"filecheck")
   end
   
@@ -56,12 +63,13 @@ class Form_main                                                     ##__BY_FDVR
   def filecheck_timer
     deleteTimer("filecheck")
     unless file_timestamp_check
-      if messageBox(FILE_TIME_CHECK_MES, FILE_TIME_CHECK_TITLE, WConst::MB_ICONQUESTION | WConst::MB_YESNO) == VRDialogComponent::IDYES
-        camera_load
-      else
-        file_timestamp_reset
+      unless file_json_compare
+        if messageBox(FILE_TIME_CHECK_MES, FILE_TIME_CHECK_TITLE, WConst::MB_ICONQUESTION | WConst::MB_YESNO) == VRDialogComponent::IDYES
+          camera_load
+        end
       end
     end
+    file_timestamp_reset
     addTimer(1000,"filecheck")
   end
 

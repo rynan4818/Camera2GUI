@@ -33,7 +33,7 @@ SETTING_FILE = EXE_DIR + "setting.json"
 FIRSTPERSON_DEFAULT  = EXE_DIR + "FirstPersonDefault.json"
 POSITIONABLE_DEFALUT = EXE_DIR + "PositionableDefault.json"
 BEATSABER_WINDOW_NAME = "Beat Saber"
-TIMESTAMP_NOCHECK_SEC = 2
+TIMESTAMP_NOCHECK_SEC = 0
 
 DEFAULT_BS_FOLDER = ["C:\\Program Files (x86)\\Steam\\steamapps\\common\\Beat Saber",
                      "C:\\Program Files\\Oculus\\Software\\hyperbolic-magnetism-beat-saber"]
@@ -55,7 +55,7 @@ CAMERA_JSON   = 1
 CAMERA_ORG    = 2
 CAMERA_CHANGE = 3
 
-POS_ROT_ROUND = 1000000.0
+POS_ROT_ROUND = 1000.0
 #Combobox
 COMBO_CAMERA_TYPE         = ["FirstPerson","Positionable"]
 COMBO_WORLD_CAMVISIBILITY = ["Visible","HiddenWhilePlaying","Hidden"]
@@ -72,6 +72,7 @@ require 'json'
 require 'vr/vruby'
 require 'vr/contrib/msgboxconst'
 require 'vr/vrtimer'
+require 'vr/vrtooltip'
 require 'win32ole'
 
 #Sub script
@@ -88,6 +89,6 @@ require 'dialog'
 
 AUTOIT = WIN32OLE.new("AutoItX3.Control")
 AUTOIT.AutoItSetOption("SendKeyDownDelay", 100)
-AUTOIT.AutoItSetOption("WinWaitDelay", 10)
+AUTOIT.AutoItSetOption("WinWaitDelay", 1)
 
 VRLocalScreen.start Form_main

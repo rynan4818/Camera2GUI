@@ -97,6 +97,26 @@ def file_timestamp_check
   return true
 end
 
+def file_json_compare
+  scene_json_file = "#{$bs_folder}\\#{CAMERA2_SCENES_JSON}"
+  scene_json_data = json_read(scene_json_file)
+  return false unless $scene_json == scene_json_data
+  cameras_dir = "#{$bs_folder}\\#{CAMERA2_CAMERAS_DIR}\\*.json".gsub(/\\/,"/")
+  cameras_json_data = []
+  Dir.glob(cameras_dir) do |json_file|
+    new_file = true
+    $cameras_json.each do |camera|
+      if camera[CAMERA_NAME] == File.basename(json_file, ".*")
+        return false unless json_read(json_file) == camera[CAMERA_JSON]
+        new_file = false
+        break
+      end
+    end
+    return false if new_file
+  end
+  return true
+end
+
 def file_timestamp_reset
   $scene_json_mtime = Time.now
   $cameras_json_mtime.each do |json_file, mtime|

@@ -38,8 +38,15 @@ class Modaldlg_setting < VRModalDialog
     addControl(VRButton,'button_bs_folder_open',"Open",520,40,40,24)
     addControl(VRButton,'button_cancel',"CANCEL",344,296,88,32)
     addControl(VRButton,'button_ok',"OK",456,296,96,32)
-    addControl(VRCheckbox,'checkBox_japanese',"Japanese messages (Restart)",320,184,232,32)
+    addControl(VRCheckbox,'checkBox1',"ツールチップを表示する",320,224,216,24)
+    addControl(VRCheckbox,'checkBox_japanese',"Japanese messages (Restart)",48,224,232,32)
+    addControl(VREdit,'edit1',"edit1",344,96,96,24)
+    addControl(VREdit,'edit2',"edit2",344,136,96,24)
+    addControl(VREdit,'edit3',"edit3",344,176,96,24)
     addControl(VREdit,'edit_bs_folder',"",32,40,488,24)
+    addControl(VRStatic,'static1',"ファイル更新チェックで無視する時間",40,96,296,24)
+    addControl(VRStatic,'static2',"Camera2へCtrl + Shift + F1 送信する時間",40,136,296,24)
+    addControl(VRStatic,'static3',"AutoITの処理待ち時間",40,176,304,24)
     addControl(VRStatic,'static_bs_folder',"BeatSaber Folder",32,16,152,24)
   end 
 

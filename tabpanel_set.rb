@@ -49,6 +49,11 @@ class Form_main                                                     ##__BY_FDVR
         @camera_name_check = false
         addEvent WMsg::WM_HSCROLL
       end
+      
+      def main_created
+        test = "カメラ名：半角英数記号空白(ASCII文字)のみ。\r\nただし、ファイル名に使用出来ない文字 \\/:*?\"<>| は使用不可。"
+        $main_form.tooltip.addTool(@edit_camera_name, test)
+      end
 
       def control_set
         @edit_camera_name.text = $cameras_json[$camera_idx][CAMERA_NAME]
