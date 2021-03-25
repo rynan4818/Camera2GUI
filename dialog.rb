@@ -222,7 +222,13 @@ class Modaldlg_custom_scenes                                              ##__BY
     $scene_json["customSceneBindings"] = {} unless $scene_json["customSceneBindings"]
     @customScenes.each do |scene_setting|
       $scene_json["customScenes"][scene_setting[0]] = scene_setting[1]
-      $scene_json["customSceneBindings"][scene_setting[2]] = scene_setting[0] unless scene_setting[2] == ""
+      if scene_setting[2] == ""
+        $scene_json["customSceneBindings"].each do |bind, scene|
+          $scene_json["customSceneBindings"].delete(bind) if scene == scene_setting[0]
+        end
+      else
+        $scene_json["customSceneBindings"][scene_setting[2]] = scene_setting[0]
+      end
     end
     $scene_json_change = true
     close(true)
