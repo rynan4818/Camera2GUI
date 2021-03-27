@@ -17,7 +17,7 @@ This is a GUI configuration tool for [Camera2](https://github.com/kinsi55/CS_Bea
 
 設定ファイルが壊れた場合はバックアップした設定ファイルを戻すか、Camera2フォルダごと削除してBeatSaberを起動すればもとに戻ります。
 
-特に動作確認をしていないCamera2のバージョンでの仕様は注意して下さい。
+特に動作確認をしていないCamera2のバージョンでの使用は注意して下さい。
 
 本ツールを使用した事により被った被害の苦情は受け付けていません。
 
@@ -31,7 +31,7 @@ Be sure to back up the configuration files in the \UserData\Camera2 folder befor
 
 If the configuration file is corrupted, you can restore the backed up configuration file or delete the entire Camera2 folder and launch BeatSaber to get it back.
 
-Please pay attention to the specifications, especially for versions of Camera2 that have not been tested.
+Please be especially careful when using Camera2 versions that have not been tested.
 
 We do not accept complaints about damage caused by the use of this tool.
 
