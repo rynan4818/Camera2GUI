@@ -212,6 +212,12 @@ class Modaldlg_custom_scenes                                              ##__BY
   end
 
   def button_add_clicked
+    if (idx = @listBox_custom_scenes.selectedString) > -1
+      unless setting_set
+        @listBox_custom_scenes.select(@select_idx)
+        return
+      end
+    end
     number = 1
     scene_name = ""
     ok = true
@@ -259,6 +265,10 @@ class Modaldlg_custom_scenes                                              ##__BY
       else
         $scene_json["customSceneBindings"][scene_setting[2]] = scene_setting[0]
       end
+    end
+    if @customScenes.size == 0
+      $scene_json["customScenes"] = {}
+      $scene_json["customSceneBindings"] = {}
     end
     $scene_json_change = true
     close(true)
