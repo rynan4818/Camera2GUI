@@ -3,10 +3,9 @@
 
 This is a GUI configuration tool for [Camera2](https://github.com/kinsi55/CS_BeatSaber_Camera2).
 
-![preview](https://rynan4818.github.io/camera2gui1.png)![preview](https://rynan4818.github.io/camera2gui2.png)
-![preview](https://rynan4818.github.io/camera2gui3.png)![preview](https://rynan4818.github.io/camera2gui4.png)
-![preview](https://rynan4818.github.io/camera2gui5.png)![preview](https://rynan4818.github.io/camera2gui6.png)
-![preview](https://rynan4818.github.io/camera2gui7.png)![preview](https://rynan4818.github.io/camera2gui8.png)
+![preview](https://rynan4818.github.io/camera2gui1.png)
+
+![preview](https://rynan4818.github.io/camera2gui2.png)
 
 # インストール方法 How to install
 
