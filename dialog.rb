@@ -21,10 +21,19 @@ class Modaldlg_setting                                              ##__BY_FDVR
   def self_created
     @edit_bs_folder.text = $bs_folder if $bs_folder
     @checkBox_japanese.check(true) if $language == "japanese"
-    @checkBox_tooltip.check($tooltip_enabled) if
+    @checkBox_tooltip.check($tooltip_enabled)
     @edit_update_check.text = $json_update_check_time
     @edit_send_time.text = $key_send_time
     @edit_wait_time.text = $autoit_wait_time
+    if $fpfc_command == "" && $bs_folder
+      if $bs_folder =~ /Steam/
+        @edit_fpfc.text = DEFAULT_STEAM_FPFC
+      elsif $bs_folder =~ /Oculus/
+        @edit_fpfc.text = DEFAULT_OCULUS_FPFC.sub(/#\(BS_FOLDER\)#/, $bs_folder)
+      end
+    else
+      @edit_fpfc.text = $fpfc_command
+    end
     dlg_move(self)
     if $tooltip_enabled
       $main_form.tooltip.addTool(@edit_bs_folder, TOOLTIP_BS_FOLDER)
@@ -33,6 +42,9 @@ class Modaldlg_setting                                              ##__BY_FDVR
       $main_form.tooltip.addTool(@edit_update_check, TOOLTIP_UPDATE_CHECK)
       $main_form.tooltip.addTool(@edit_send_time, TOOLTIP_SEND_TIME)
       $main_form.tooltip.addTool(@edit_wait_time, TOOLTIP_WAIT_TIME)
+      $main_form.tooltip.addTool(@button_steam, TOOLTIP_STEAM)
+      $main_form.tooltip.addTool(@button_oculus, TOOLTIP_OCULUS)
+      $main_form.tooltip.addTool(@edit_fpfc, TOOLTIP_FPFC)
     end
   end
 
@@ -50,6 +62,21 @@ class Modaldlg_setting                                              ##__BY_FDVR
     return unless folder
     return unless File.exist?(folder)
     @edit_bs_folder.text = folder
+    if @edit_fpfc.text.strip == ""
+      if folder =~ /Steam/
+        @edit_fpfc.text = DEFAULT_STEAM_FPFC
+      elsif folder =~ /Oculus/
+        @edit_fpfc.text = DEFAULT_OCULUS_FPFC.sub(/#\(BS_FOLDER\)#/, $bs_folder)
+      end
+    end
+  end
+
+  def button_steam_clicked
+    @edit_fpfc.text = DEFAULT_STEAM_FPFC
+  end
+
+  def button_oculus_clicked
+    @edit_fpfc.text = DEFAULT_OCULUS_FPFC.sub(/#\(BS_FOLDER\)#/, $bs_folder)
   end
 
   def button_cancel_clicked
@@ -73,14 +100,11 @@ class Modaldlg_setting                                              ##__BY_FDVR
     else
       $language  = "english"
     end
-    if @checkBox_tooltip.checked?
-      $tooltip_enabled = true
-    else
-      $tooltip_enabled = false
-    end
+    $tooltip_enabled = @checkBox_tooltip.checked?
     $json_update_check_time = @edit_update_check.text.to_i
     $key_send_time = @edit_send_time.text.to_i
     $autoit_wait_time = @edit_wait_time.text.to_i
+    $fpfc_command = @edit_fpfc.text.strip
     setting_save
     close(true)
   end

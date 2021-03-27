@@ -36,6 +36,7 @@ def setting_load
   $json_update_check_time = 0
   $key_send_time = 100
   $autoit_wait_time = 0
+  $fpfc_command = ""
   if setting = json_read(SETTING_FILE)
     set = proc{|defalut, key| setting[key] == nil ? defalut : setting[key]}
     $bs_folder   = set.call($bs_folder, "bs_folder")
@@ -49,6 +50,7 @@ def setting_load
     $json_update_check_time = set.call($json_update_check_time, "json_update_check_time")
     $key_send_time = set.call($key_send_time, "key_send_time")
     $autoit_wait_time = set.call($autoit_wait_time, "autoit_wait_time")
+    $fpfc_command = set.call($fpfc_command, "fpfc_command")
     end
 end
 
@@ -65,7 +67,8 @@ def setting_save
   setting['json_update_check_time'] = $json_update_check_time
   setting['key_send_time'] = $key_send_time
   setting['autoit_wait_time'] = $autoit_wait_time
-File.open(SETTING_FILE,'w') do |file|
+  setting['fpfc_command'] = $fpfc_command
+  File.open(SETTING_FILE,'w') do |file|
     JSON.pretty_generate(setting).each do |line|
       file.puts line
     end
@@ -390,9 +393,9 @@ def dlg_move(dlg_self)
   dlg_self.move(x, y, d[2], d[3])
 end
 
-def open_url(url)
+def wsh_run(url)
   begin
-    WINSHELL.Run(%Q!"#{url}"!)
+    WINSHELL.Run(%Q!#{url}!)
   rescue Exception => e
     $main_form.messageBox("#{MAIN_WSH_ERR}\r\n#{e.inspect}", MAIN_WSH_ERR_TITLE, 16)
   end

@@ -197,23 +197,39 @@ class Form_main                                                     ##__BY_FDVR
     camera2_setting_load
   end
 
-  def camera2gui_clicked
-    open_url("https://github.com/rynan4818/Camera2GUI")
+  def menu_camera2gui_clicked
+    wsh_run("https://github.com/rynan4818/Camera2GUI")
   end
 
-  def camera2_clicked
-    open_url("https://github.com/kinsi55/CS_BeatSaber_Camera2")
+  def menu_camera2_clicked
+    wsh_run("https://github.com/kinsi55/CS_BeatSaber_Camera2")
   end
 
-  def wiki_clicked
-    open_url("https://github.com/kinsi55/CS_BeatSaber_Camera2/wiki")
+  def menu_wiki_clicked
+    wsh_run("https://github.com/kinsi55/CS_BeatSaber_Camera2/wiki")
   end
 
-  def version_clicked
+  def menu_version_clicked
     messageBox(APP_VER_COOMENT, MAIN_MENU_VERSION_TITLE, 0)
   end
 
-  def exit_clicked
+  def menu_fpfc_clicked
+    if $fpfc_command.strip == ""
+      messageBox(MENU_FPFC_NOCOMMAND_MES, MENU_FPFC_NOCOMMAND_TITLE, WConst::MB_ICONWARNING | WConst::MB_OK)
+      return
+    end
+    if AUTOIT.WinExists(BEATSABER_WINDOW_NAME) == 1
+      messageBox(MENU_FPFC_EXIST_MES, MENU_FPFC_EXIST_TITLE, WConst::MB_ICONWARNING | WConst::MB_OK)
+      return
+    end
+    if AUTOIT.WinExists(STEAM_WINDOW_NAME) == 1
+      AUTOIT.WinActivate(STEAM_WINDOW_NAME)
+      AUTOIT.WinWaitActive(BEATSABER_WINDOW_NAME, "", 3)
+    end
+    wsh_run($fpfc_command)
+  end
+
+  def menu_exit_clicked
     close
   end
 

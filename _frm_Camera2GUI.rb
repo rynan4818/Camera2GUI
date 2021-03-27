@@ -34,17 +34,21 @@ class Modaldlg_setting < VRModalDialog
 
   def construct
     self.caption = 'Setting'
-    self.move(321,364,597,391)
+    self.move(473,361,597,431)
     addControl(VRButton,'button_bs_folder_open',"Open",520,40,40,24)
-    addControl(VRButton,'button_cancel',"CANCEL",344,296,88,32)
-    addControl(VRButton,'button_ok',"OK",456,296,96,32)
+    addControl(VRButton,'button_cancel',"CANCEL",344,336,88,32)
+    addControl(VRButton,'button_oculus',"Oculus default",416,264,112,24)
+    addControl(VRButton,'button_ok',"OK",464,336,96,32)
+    addControl(VRButton,'button_steam',"Steam default",264,264,120,24)
     addControl(VRCheckbox,'checkBox_japanese',"Japanese messages (Enabled after restart)",232,112,336,32)
     addControl(VRCheckbox,'checkBox_tooltip',"Show tooltip",232,88,288,24)
     addControl(VREdit,'edit_bs_folder',"",32,40,488,24)
+    addControl(VREdit,'edit_fpfc',"",32,288,520,24)
     addControl(VREdit,'edit_send_time',"",480,192,40,24)
     addControl(VREdit,'edit_update_check',"",480,160,40,24)
     addControl(VREdit,'edit_wait_time',"",480,224,40,24)
     addControl(VRStatic,'static_bs_folder',"BeatSaber Folder",32,16,152,24)
+    addControl(VRStatic,'static_fpfc',"fpfc mode startup command",32,264,200,24)
     addControl(VRStatic,'static_send_time',"Ctrl + Shift + F1 to Camera2 Time to keep sending",8,192,464,24,0x2)
     addControl(VRStatic,'static_send_time_unit',"msec",528,192,40,24)
     addControl(VRStatic,'static_update_check',"Time ignored by camera2 configuration file update check",40,160,432,24,0x2)
@@ -436,16 +440,19 @@ class Form_main < VRForm
     @mainmenu1 = newMenu.set(
       [
         ["&File",[
-          ["E&xit", "exit"]]
+          ["E&xit", "menu_exit"]]
         ],
         ["&Option",[
           ["&Setting", "menu_setting"]]
         ],
+        ["&BeatSaber",[
+          ["&fpfc start-up", "menu_fpfc"]]
+        ],
         ["&Help",[
-          ["Versio&n", "version"],
-          ["Camera2&GUI web site", "camera2gui"],
-          ["Camera2 web site", "camera2"],
-          ["Camera2 wiki page", "wiki"]]
+          ["Versio&n", "menu_version"],
+          ["Camera2&GUI web site", "menu_camera2gui"],
+          ["Camera2 web site", "menu_camera2"],
+          ["Camera2 wiki page", "menu_wiki"]]
         ]
       ]
     )
