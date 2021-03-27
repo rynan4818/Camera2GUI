@@ -21,7 +21,19 @@ class Modaldlg_setting                                              ##__BY_FDVR
   def self_created
     @edit_bs_folder.text = $bs_folder if $bs_folder
     @checkBox_japanese.check(true) if $language == "japanese"
+    @checkBox_tooltip.check($tooltip_enabled) if
+    @edit_update_check.text = $json_update_check_time
+    @edit_send_time.text = $key_send_time
+    @edit_wait_time.text = $autoit_wait_time
     dlg_move(self)
+    if $tooltip_enabled
+      $main_form.tooltip.addTool(@edit_bs_folder, TOOLTIP_BS_FOLDER)
+      $main_form.tooltip.addTool(@checkBox_tooltip, TOOLTIP_TOOLTIP)
+      $main_form.tooltip.addTool(@checkBox_japanese, TOOLTIP_JAPANESE)
+      $main_form.tooltip.addTool(@edit_update_check, TOOLTIP_UPDATE_CHECK)
+      $main_form.tooltip.addTool(@edit_send_time, TOOLTIP_SEND_TIME)
+      $main_form.tooltip.addTool(@edit_wait_time, TOOLTIP_WAIT_TIME)
+    end
   end
 
   def button_bs_folder_open_clicked
@@ -61,6 +73,14 @@ class Modaldlg_setting                                              ##__BY_FDVR
     else
       $language  = "english"
     end
+    if @checkBox_tooltip.checked?
+      $tooltip_enabled = true
+    else
+      $tooltip_enabled = false
+    end
+    $json_update_check_time = @edit_update_check.text.to_i
+    $key_send_time = @edit_send_time.text.to_i
+    $autoit_wait_time = @edit_wait_time.text.to_i
     setting_save
     close(true)
   end
@@ -71,6 +91,16 @@ class Modaldlg_custom_scenes                                              ##__BY
 
   def self_created
     dlg_move(self)
+    if $tooltip_enabled
+      $main_form.tooltip.addTool(@listBox_custom_scenes, TOOLTIP_CUSTOM_SCENES_LIST)
+      $main_form.tooltip.addTool(@edit_scene, TOOLTIP_CUSTOM_SCENES_SCENE)
+      $main_form.tooltip.addTool(@edit_bind, TOOLTIP_CUSTOM_SCENES_KEY)
+      $main_form.tooltip.addTool(@listBox_camera, TOOLTIP_CUSTOM_SCENES_CAMERA)
+      $main_form.tooltip.addTool(@button_add, TOOLTIP_CUSTOM_SCENES_ADD)
+      $main_form.tooltip.addTool(@button_del, TOOLTIP_CUSTOM_SCENES_DEL)
+      $main_form.tooltip.addTool(@button_ok, TOOLTIP_CUSTOM_SCENES_OK)
+      $main_form.tooltip.addTool(@button_cancel, TOOLTIP_CUSTOM_SCENES_CANCEL)
+    end
     @select_idx = nil
     @listBox_custom_scenes.sendMessage(0x192, 1,[20].pack('l*'))
     @customScenes = []

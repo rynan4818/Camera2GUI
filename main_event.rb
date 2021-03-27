@@ -32,6 +32,10 @@ class Form_main                                                     ##__BY_FDVR
     $change_flag = false
     $camera_type = nil
     $main_form = self
+    @tooltip = createTooltip
+    @tooltip.maxtipwidth = 30
+    @tooltip.autopopTime = 30000
+    @tooltip.bkColor = RGB(0xff,0xff,0xe1)
     unless $bs_folder && File.directory?($bs_folder)
       messageBox("#{$bs_folder ? "'#{$bs_folder}'" : ""}#{MAIN_SELF_CREATED_BSDIR_CHK_MES}",
         MAIN_SELF_CREATED_BSDIR_CHK_TITLE, WConst::MB_ICONWARNING | WConst::MB_OK)
@@ -44,11 +48,24 @@ class Form_main                                                     ##__BY_FDVR
     #l*    : 32bit signed integer
     @listBox_camera.sendMessage(0x192, 2,[15,60].pack('l*'))
     camera_load
-    @tooltip = createTooltip
-    @tooltip.maxtipwidth = 30
-    @tooltip.autopopTime = 30000
-    @tooltip.bkColor = RGB(0xff,0xff,0xe1)
+    if $tooltip_enabled
+      @tooltip.addTool(@button_reload, TOOLTIP_RELOAD)
+      @tooltip.addTool(@button_add, TOOLTIP_ADD)
+      @tooltip.addTool(@button_copy, TOOLTIP_COPY)
+      @tooltip.addTool(@button_del, TOOLTIP_DEL)
+      @tooltip.addTool(@button_save, TOOLTIP_SAVE)
+      @tooltip.addTool(@button_apply, TOOLTIP_SAVE_APPLY)
+      @tooltip.addTool(@listBox_camera, TOOLTIP_CAMERA_LIST)
+      @tooltip.addTool(@button_list_up, TOOLTIP_UP)
+      @tooltip.addTool(@button_list_down, TOOLTIP_DOWN)
+    end
     @tabPanel_main.panels[TAB_GENERAL].main_created
+    @tabPanel_main.panels[TAB_VISIBILITY].main_created
+    @tabPanel_main.panels[TAB_FOLLOW].main_created
+    @tabPanel_main.panels[TAB_MODMAPEXT].main_created
+    @tabPanel_main.panels[TAB_SCENES].main_created
+    @tabPanel_main.panels[TAB_LAYOUT].main_created
+    @tabPanel_main.panels[TAB_MOVEMENT].main_created
     addTimer(1000,"filecheck")
   end
   
@@ -127,7 +144,7 @@ class Form_main                                                     ##__BY_FDVR
     button_save_clicked
     if AUTOIT.WinWait(BEATSABER_WINDOW_NAME,"",1) == 1
       AUTOIT.WinActivate(BEATSABER_WINDOW_NAME)
-      AUTOIT.WinWaitActive(BEATSABER_WINDOW_NAME, "", 1)
+      AUTOIT.WinWaitActive(BEATSABER_WINDOW_NAME, "", 3)
       AUTOIT.Send("^+{F1}")
     end
   end
@@ -178,6 +195,18 @@ class Form_main                                                     ##__BY_FDVR
     $main_windowrect = self.windowrect
     return unless VRLocalScreen.openModalDialog(self,nil,Modaldlg_setting,nil,nil)
     camera2_setting_load
+  end
+
+  def camera2gui_clicked
+    open_url("https://github.com/rynan4818/Camera2GUI")
+  end
+
+  def camera2_clicked
+    open_url("https://github.com/kinsi55/CS_BeatSaber_Camera2")
+  end
+
+  def wiki_clicked
+    open_url("https://github.com/kinsi55/CS_BeatSaber_Camera2/wiki")
   end
 
   def version_clicked

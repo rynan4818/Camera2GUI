@@ -38,16 +38,19 @@ class Modaldlg_setting < VRModalDialog
     addControl(VRButton,'button_bs_folder_open',"Open",520,40,40,24)
     addControl(VRButton,'button_cancel',"CANCEL",344,296,88,32)
     addControl(VRButton,'button_ok',"OK",456,296,96,32)
-    addControl(VRCheckbox,'checkBox1',"ツールチップを表示する",320,224,216,24)
-    addControl(VRCheckbox,'checkBox_japanese',"Japanese messages (Restart)",48,224,232,32)
-    addControl(VREdit,'edit1',"edit1",344,96,96,24)
-    addControl(VREdit,'edit2',"edit2",344,136,96,24)
-    addControl(VREdit,'edit3',"edit3",344,176,96,24)
+    addControl(VRCheckbox,'checkBox_japanese',"Japanese messages (Enabled after restart)",232,112,336,32)
+    addControl(VRCheckbox,'checkBox_tooltip',"Show tooltip",232,88,288,24)
     addControl(VREdit,'edit_bs_folder',"",32,40,488,24)
-    addControl(VRStatic,'static1',"ファイル更新チェックで無視する時間",40,96,296,24)
-    addControl(VRStatic,'static2',"Camera2へCtrl + Shift + F1 送信する時間",40,136,296,24)
-    addControl(VRStatic,'static3',"AutoITの処理待ち時間",40,176,304,24)
+    addControl(VREdit,'edit_send_time',"",480,192,40,24)
+    addControl(VREdit,'edit_update_check',"",480,160,40,24)
+    addControl(VREdit,'edit_wait_time',"",480,224,40,24)
     addControl(VRStatic,'static_bs_folder',"BeatSaber Folder",32,16,152,24)
+    addControl(VRStatic,'static_send_time',"Ctrl + Shift + F1 to Camera2 Time to keep sending",8,192,464,24,0x2)
+    addControl(VRStatic,'static_send_time_unit',"msec",528,192,40,24)
+    addControl(VRStatic,'static_update_check',"Time ignored by camera2 configuration file update check",40,160,432,24,0x2)
+    addControl(VRStatic,'static_update_check_unit',"sec",528,160,32,24)
+    addControl(VRStatic,'static_wait_time',"AutoIT processing wait time",8,224,464,24,0x2)
+    addControl(VRStatic,'static_wait_time_unit',"msec",528,224,40,24)
   end 
 
 end
@@ -429,7 +432,7 @@ class Form_main < VRForm
     self.maximizebox=false
     self.caption = 'Camera2GUI'
     self.move(482,322,580,625)
-    #$_addControl(VRMenu,'mainmenu1',"",520,64,24,24)
+    #$_addControl(VRMenu,'mainmenu1',"",520,96,24,24)
     @mainmenu1 = newMenu.set(
       [
         ["&File",[
@@ -439,7 +442,10 @@ class Form_main < VRForm
           ["&Setting", "menu_setting"]]
         ],
         ["&Help",[
-          ["Versio&n", "version"]]
+          ["Versio&n", "version"],
+          ["Camera2&GUI web site", "camera2gui"],
+          ["Camera2 web site", "camera2"],
+          ["Camera2 wiki page", "wiki"]]
         ]
       ]
     )
@@ -449,12 +455,12 @@ class Form_main < VRForm
     addControl(VRButton,'button_apply',"SAVE and Apply",16,120,120,32)
     addControl(VRButton,'button_copy',"COPY",80,56,56,24)
     addControl(VRButton,'button_del',"DELETE",16,88,56,24)
-    addControl(VRButton,'button_list_down',"DOWN",488,96,56,32)
-    addControl(VRButton,'button_list_up',"UP",488,16,56,32)
+    addControl(VRButton,'button_list_down',"DOWN",488,56,56,32)
+    addControl(VRButton,'button_list_up',"UP",488,8,56,32)
     addControl(VRButton,'button_reload',"Reload",16,8,120,32)
     addControl(VRButton,'button_save',"SAVE",80,88,56,24)
     addControl(VRListbox,'listBox_camera',"listBox1",144,8,336,150,0x80)
-    #$_addControl(VRMgdVertLayoutFrame,'vertFrame1',"",496,64,24,24)
+    #$_addControl(VRMgdVertLayoutFrame,'vertFrame1',"",496,96,24,24)
     @vertFrame1=setMarginedFrame(VRMgdVertLayoutFrame)
     @vertFrame1.register(@tabPanel_main)
     @vertFrame1.setMargin(0,165,0,0)

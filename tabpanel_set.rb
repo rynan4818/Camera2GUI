@@ -51,8 +51,22 @@ class Form_main                                                     ##__BY_FDVR
       end
       
       def main_created
-        test = "カメラ名：半角英数記号空白(ASCII文字)のみ。\r\nただし、ファイル名に使用出来ない文字 \\/:*?\"<>| は使用不可。"
-        $main_form.tooltip.addTool(@edit_camera_name, test)
+        if $tooltip_enabled
+          $main_form.tooltip.addTool(@edit_camera_name, TOOLTIP_CAMERA_NAME)
+          $main_form.tooltip.addTool(@comboBox_camera_type, TOOLTIP_CAMERA_TYPE)
+          $main_form.tooltip.addTool(@edit_field_of_view, TOOLTIP_FIELD_OF_VIEW)
+          $main_form.tooltip.addTool(@trackBar_field_of_view, TOOLTIP_FIELD_OF_VIEW)
+          $main_form.tooltip.addTool(@edit_fps_limit, TOOLTIP_FPS_LIMIT)
+          $main_form.tooltip.addTool(@trackBar_fps_limit, TOOLTIP_FPS_LIMIT)
+          $main_form.tooltip.addTool(@edit_render_scale, TOOLTIP_RENDER_SCALE)
+          $main_form.tooltip.addTool(@trackBar_render_scale, TOOLTIP_RENDER_SCALE)
+          $main_form.tooltip.addTool(@comboBox_anti_aliasing, TOOLTIP_ANTI_ALIASING)
+          $main_form.tooltip.addTool(@comboBox_worldcam_visibility, TOOLTIP_WORLDCAM_VISIBILITY)
+          $main_form.tooltip.addTool(@edit_preview_size, TOOLTIP_PREVIEW_SIZE)
+          $main_form.tooltip.addTool(@trackBar_preview_size, TOOLTIP_PREVIEW_SIZE)
+          $main_form.tooltip.addTool(@edit_z_offset, TOOLTIP_Z_OFFSET)
+          $main_form.tooltip.addTool(@trackBar_z_offset, TOOLTIP_Z_OFFSET)
+        end
       end
 
       def control_set
@@ -124,6 +138,18 @@ class Form_main                                                     ##__BY_FDVR
         @comboBox_notes.setListStrings(COMBO_NOTE_VISIBILITY)
       end
 
+      def main_created
+        if $tooltip_enabled
+          $main_form.tooltip.addTool(@comboBox_walls, TOOLTIP_WALLS)
+          $main_form.tooltip.addTool(@comboBox_notes, TOOLTIP_NOTES)
+          $main_form.tooltip.addTool(@checkBox_debris, TOOLTIP_DEBRIS)
+          $main_form.tooltip.addTool(@checkBox_cut_particles, TOOLTIP_CUT_PARTICLES)
+          $main_form.tooltip.addTool(@checkBox_avatar, TOOLTIP_AVATAR)
+          $main_form.tooltip.addTool(@checkBox_UI, TOOLTIP_UI)
+          $main_form.tooltip.addTool(@checkBox_floor, TOOLTIP_FLOOR)
+        end
+      end
+
       def control_set
         if visible = $cameras_json[$camera_idx][CAMERA_JSON]["visibleObjects"]
           @comboBox_walls.select(@comboBox_walls.findString(visible["Walls"]))
@@ -149,6 +175,19 @@ class Form_main                                                     ##__BY_FDVR
         @trackBar_rotation_smoothing.linesize = 1
         @trackBar_rotation_smoothing.pagesize = 10
         addEvent WMsg::WM_HSCROLL
+      end
+
+      def main_created
+        if $tooltip_enabled
+          $main_form.tooltip.addTool(@checkBox_force_upright, TOOLTIP_FORCE_UPRIGHT)
+          $main_form.tooltip.addTool(@checkBox_pivoting_offset, TOOLTIP_PIVOTING_OFFSET)
+          $main_form.tooltip.addTool(@checkBox_follow_replay_position, TOOLTIP_FOLLOW_REPLAY_POSITION)
+          $main_form.tooltip.addTool(@edit_position_smoothing, TOOLTIP_POSITION_SMOOTHING)
+          $main_form.tooltip.addTool(@trackBar_position_smoothing, TOOLTIP_POSITION_SMOOTHING)
+          $main_form.tooltip.addTool(@checkBox_enabled, TOOLTIP_360ENABLED)
+          $main_form.tooltip.addTool(@edit_rotation_smoothing, TOOLTIP_ROTATION_SMOOTHING)
+          $main_form.tooltip.addTool(@trackBar_rotation_smoothing, TOOLTIP_ROTATION_SMOOTHING)
+        end
       end
 
       def control_set
@@ -201,6 +240,14 @@ class Form_main                                                     ##__BY_FDVR
 
     class Panel3                                                    ##__BY_FDVR
       #MODMAPEXT
+      def main_created
+        if $tooltip_enabled
+          $main_form.tooltip.addTool(@checkBox_move_with_map, TOOLTIP_MOVE_WITH_MAP)
+          $main_form.tooltip.addTool(@checkBox_auto_visible_walls, TOOLTIP_AUTO_VISIBLE_WALLS)
+          $main_form.tooltip.addTool(@checkBox_auto_hide_HUD, TOOLTIP_AUTO_HIDE_HUD)
+        end
+      end
+      
       def control_set
         view_set
         if extensions = $cameras_json[$camera_idx][CAMERA_JSON]["ModmapExtensions"]
@@ -226,6 +273,22 @@ class Form_main                                                     ##__BY_FDVR
 
     class Panel4                                                    ##__BY_FDVR
       #SCENES
+      def main_created
+        if $tooltip_enabled
+          $main_form.tooltip.addTool(@checkBox_menu, TOOLTIP_SCENE_MENU)
+          $main_form.tooltip.addTool(@checkBox_multiplayer_menu, TOOLTIP_SCENE_MULTIPLAYER_MENU)
+          $main_form.tooltip.addTool(@checkBox_playing, TOOLTIP_SCENE_PLAYING)
+          $main_form.tooltip.addTool(@checkBox_playing_360, TOOLTIP_SCENE_PLAYING_360)
+          $main_form.tooltip.addTool(@checkBox_playing_modmap, TOOLTIP_SCENE_PLAYING_MODMAP)
+          $main_form.tooltip.addTool(@checkBox_playing_multi, TOOLTIP_SCENE_PLAYING_MULTI)
+          $main_form.tooltip.addTool(@checkBox_replay, TOOLTIP_SCENE_REPLAY)
+          $main_form.tooltip.addTool(@checkBox_fpfc, TOOLTIP_SCENE_FPFC)
+          $main_form.tooltip.addTool(@checkBox_enable_auto_switch, TOOLTIP_ENABLE_AUTO_SWITCH)
+          $main_form.tooltip.addTool(@checkBox_autoswitch_from_custom, TOOLTIP_AUTOSWITCH_FROM_CUSTOM)
+          $main_form.tooltip.addTool(@button_custom_scenes, TOOLTIP_CUSTOM_SCENES)
+        end
+      end
+
       def control_set
         @checkBox_menu.check(false)
         @checkBox_multiplayer_menu.check(false)
@@ -280,6 +343,12 @@ class Form_main                                                     ##__BY_FDVR
         @panel_target_rot.radioBtn_target_rot5.check(true) if @panel_target_rot.radioBtn_target_rot5.caption.to_f == $rot_amount
         @panel_target_rot.radioBtn_target_rot6.check(true) if @panel_target_rot.radioBtn_target_rot6.caption.to_f == $rot_amount
         addEvent WMsg::WM_HSCROLL
+      end
+
+      def main_created
+        if $tooltip_enabled
+          $main_form.tooltip.addTool(@checkBox_auto_apply, TOOLTIP_AUTO_APPLY)
+        end
       end
 
       def control_set
@@ -390,6 +459,14 @@ class Form_main                                                     ##__BY_FDVR
 
     class Panel6                                                    ##__BY_FDVR
       #MOVEMENT
+      def main_created
+        if $tooltip_enabled
+          $main_form.tooltip.addTool(@checkBox_from_origin, TOOLTIP_MOVEMENT_FROM_ORIGIN)
+          $main_form.tooltip.addTool(@checkBox_enable_in_menu, TOOLTIP_MOVEMENT_ENABLE_IN_MENU)
+          $main_form.tooltip.addTool(@listBox_script_list, TOOLTIP_MOVEMENT_SCRIPT_LIST)
+        end
+      end
+      
       def control_set
         view_set
         @checkBox_from_origin.check(false)
@@ -406,7 +483,7 @@ class Form_main                                                     ##__BY_FDVR
           @listBox_script_list.setListStrings($movement_json)
           if movement = $cameras_json[$camera_idx][CAMERA_JSON]["MovementScript"]
             movement["scriptList"].each do |script|
-              idx = @listBox_script_list.findString(File.basename(script, ".*"))
+              idx = @listBox_script_list.findString(script)
               if idx > -1
                 @listBox_script_list.sendMessage(WMsg::LB_SETSEL, 1, idx)
               end

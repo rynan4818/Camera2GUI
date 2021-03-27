@@ -25,7 +25,7 @@ EXE_DIR = (File.dirname(File.expand_path($0)).sub(/\/$/,'') + '/').gsub(/\//,'\\
 #MAIN_RB ****** Main ruby script file name
 #ERR_LOG ****** Error log file name
 
-SOFT_VER        = '2021/03/24'
+SOFT_VER        = '2021/03/27'
 APP_VER_COOMENT = "BeatSaber Camera2 GUI Ver#{SOFT_VER}\r\n for ActiveScriptRuby(1.8.7-p330)\r\nCopyright (c) 2021 rynan4818 (Twitter @rynan4818)"
 
 #Setting
@@ -33,7 +33,6 @@ SETTING_FILE = EXE_DIR + "setting.json"
 FIRSTPERSON_DEFAULT  = EXE_DIR + "FirstPersonDefault.json"
 POSITIONABLE_DEFALUT = EXE_DIR + "PositionableDefault.json"
 BEATSABER_WINDOW_NAME = "Beat Saber"
-TIMESTAMP_NOCHECK_SEC = 0
 
 DEFAULT_BS_FOLDER = ["C:\\Program Files (x86)\\Steam\\steamapps\\common\\Beat Saber",
                      "C:\\Program Files\\Oculus\\Software\\hyperbolic-magnetism-beat-saber"]
@@ -88,7 +87,9 @@ require 'tabpanel_set'
 require 'dialog'
 
 AUTOIT = WIN32OLE.new("AutoItX3.Control")
-AUTOIT.AutoItSetOption("SendKeyDownDelay", 100)
-AUTOIT.AutoItSetOption("WinWaitDelay", 1)
+AUTOIT.AutoItSetOption("SendKeyDownDelay", $key_send_time)
+AUTOIT.AutoItSetOption("WinWaitDelay", $autoit_wait_time)
+
+WINSHELL = WIN32OLE.new("WScript.Shell")
 
 VRLocalScreen.start Form_main

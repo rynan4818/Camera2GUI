@@ -155,7 +155,7 @@ class Form_main
       scriptList = []
       tab_movement.listBox_script_list.countStrings.times do |idx|
         unless tab_movement.listBox_script_list.sendMessage(WMsg::LB_GETSEL,idx,0) == 0
-          scriptList.push "#{tab_movement.listBox_script_list.getTextOf(idx)}.json"
+          scriptList.push "#{tab_movement.listBox_script_list.getTextOf(idx)}"
         end
       end
       camera["MovementScript"]["scriptList"] = scriptList

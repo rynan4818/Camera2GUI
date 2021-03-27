@@ -32,8 +32,12 @@ def setting_load
   $rot_amount = nil
   $main_form_x = 200
   $main_form_y = 200
+  $tooltip_enabled = true
+  $json_update_check_time = 0
+  $key_send_time = 100
+  $autoit_wait_time = 0
   if setting = json_read(SETTING_FILE)
-    set = proc{|defalut, key| setting[key] ? setting[key] : defalut}
+    set = proc{|defalut, key| setting[key] == nil ? defalut : setting[key]}
     $bs_folder   = set.call($bs_folder, "bs_folder")
     $language    = set.call($language, "language")
     $pos_amount  = set.call($pos_amount, "pos_amount")
@@ -41,7 +45,11 @@ def setting_load
     $rot_amount  = set.call($rot_amount, "rot_amount")
     $main_form_x = set.call($main_form_x, "main_form_x")
     $main_form_y = set.call($main_form_y, "main_form_y")
-  end
+    $tooltip_enabled = set.call($tooltip_enabled, "tooltip_enabled")
+    $json_update_check_time = set.call($json_update_check_time, "json_update_check_time")
+    $key_send_time = set.call($key_send_time, "key_send_time")
+    $autoit_wait_time = set.call($autoit_wait_time, "autoit_wait_time")
+    end
 end
 
 def setting_save
@@ -53,7 +61,11 @@ def setting_save
   setting["rot_amount"] = $rot_amount
   setting['main_form_x'] = $main_windowrect[0]
   setting['main_form_y'] = $main_windowrect[1]
-  File.open(SETTING_FILE,'w') do |file|
+  setting['tooltip_enabled'] = $tooltip_enabled
+  setting['json_update_check_time'] = $json_update_check_time
+  setting['key_send_time'] = $key_send_time
+  setting['autoit_wait_time'] = $autoit_wait_time
+File.open(SETTING_FILE,'w') do |file|
     JSON.pretty_generate(setting).each do |line|
       file.puts line
     end
@@ -84,12 +96,12 @@ end
 def file_timestamp_check
   scene_json_file = "#{$bs_folder}\\#{CAMERA2_SCENES_JSON}"
   if File.exist? scene_json_file
-    return false if $scene_json_mtime < File.stat(scene_json_file).mtime - TIMESTAMP_NOCHECK_SEC
+    return false if $scene_json_mtime < File.stat(scene_json_file).mtime - $json_update_check_time
   end
   cameras_dir = "#{$bs_folder}\\#{CAMERA2_CAMERAS_DIR}\\*.json".gsub(/\\/,"/")
   Dir.glob(cameras_dir) do |json_file|
     if timestamp = $cameras_json_mtime[json_file]
-      return false if timestamp < File.stat(json_file).mtime - TIMESTAMP_NOCHECK_SEC
+      return false if timestamp < File.stat(json_file).mtime - $json_update_check_time
     else
       return false
     end
@@ -99,15 +111,21 @@ end
 
 def file_json_compare
   scene_json_file = "#{$bs_folder}\\#{CAMERA2_SCENES_JSON}"
-  scene_json_data = json_read(scene_json_file)
-  return false unless $scene_json == scene_json_data
+  begin
+    scene_json_data = json_read(scene_json_file)
+    return false unless $scene_json == scene_json_data
+  rescue
+  end
   cameras_dir = "#{$bs_folder}\\#{CAMERA2_CAMERAS_DIR}\\*.json".gsub(/\\/,"/")
   cameras_json_data = []
   Dir.glob(cameras_dir) do |json_file|
     new_file = true
     $cameras_json.each do |camera|
       if camera[CAMERA_NAME] == File.basename(json_file, ".*")
-        return false unless json_read(json_file) == camera[CAMERA_JSON]
+        begin
+          return false unless json_read(json_file) == camera[CAMERA_JSON]
+        rescue
+        end
         new_file = false
         break
       end
@@ -370,4 +388,12 @@ def dlg_move(dlg_self)
   x = cx - (d[2] / 2)
   y = cy - (d[3] / 2)
   dlg_self.move(x, y, d[2], d[3])
+end
+
+def open_url(url)
+  begin
+    WINSHELL.Run(%Q!"#{url}"!)
+  rescue Exception => e
+    $main_form.messageBox("#{MAIN_WSH_ERR}\r\n#{e.inspect}", MAIN_WSH_ERR_TITLE, 16)
+  end
 end
