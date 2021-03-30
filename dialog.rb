@@ -34,6 +34,7 @@ class Modaldlg_setting                                              ##__BY_FDVR
     else
       @edit_fpfc.text = $fpfc_command
     end
+    @edit_setting_folder.text = $setting_folder
     dlg_move(self)
     if $tooltip_enabled
       $main_form.tooltip.addTool(@edit_bs_folder, TOOLTIP_BS_FOLDER)
@@ -45,6 +46,7 @@ class Modaldlg_setting                                              ##__BY_FDVR
       $main_form.tooltip.addTool(@button_steam, TOOLTIP_STEAM)
       $main_form.tooltip.addTool(@button_oculus, TOOLTIP_OCULUS)
       $main_form.tooltip.addTool(@edit_fpfc, TOOLTIP_FPFC)
+      $main_form.tooltip.addTool(@edit_setting_folder, TOOLTIP_SETTING_FOLDER)
     end
   end
 
@@ -79,6 +81,14 @@ class Modaldlg_setting                                              ##__BY_FDVR
     @edit_fpfc.text = DEFAULT_OCULUS_FPFC.sub(/#\(BS_FOLDER\)#/, $bs_folder)
   end
 
+  def button_setting_folder_clicked
+    defalut = nil unless File.directory?(defalut = @edit_setting_folder.text.strip)
+    folder = SWin::CommonDialog::selectDirectory(self,"Setting file save and load folder",defalut,1)
+    return unless folder
+    return unless File.exist?(folder)
+    @edit_setting_folder.text = folder
+  end
+
   def button_cancel_clicked
     close(false)
   end
@@ -105,6 +115,7 @@ class Modaldlg_setting                                              ##__BY_FDVR
     $key_send_time = @edit_send_time.text.to_i
     $autoit_wait_time = @edit_wait_time.text.to_i
     $fpfc_command = @edit_fpfc.text.strip
+    $setting_folder = @edit_setting_folder.text.strip
     setting_save
     close(true)
   end

@@ -37,6 +37,7 @@ def setting_load
   $key_send_time = 100
   $autoit_wait_time = 0
   $fpfc_command = ""
+  $setting_folder = ""
   if setting = json_read(SETTING_FILE)
     set = proc{|defalut, key| setting[key] == nil ? defalut : setting[key]}
     $bs_folder   = set.call($bs_folder, "bs_folder")
@@ -51,6 +52,7 @@ def setting_load
     $key_send_time = set.call($key_send_time, "key_send_time")
     $autoit_wait_time = set.call($autoit_wait_time, "autoit_wait_time")
     $fpfc_command = set.call($fpfc_command, "fpfc_command")
+    $setting_folder = set.call($setting_folder, "setting_folder")
     end
 end
 
@@ -68,6 +70,7 @@ def setting_save
   setting['key_send_time'] = $key_send_time
   setting['autoit_wait_time'] = $autoit_wait_time
   setting['fpfc_command'] = $fpfc_command
+  setting['setting_folder'] = $setting_folder
   File.open(SETTING_FILE,'w') do |file|
     JSON.pretty_generate(setting).each do |line|
       file.puts line
@@ -307,24 +310,36 @@ def json_file_save
     camera[CAMERA_JSON]["layer"] = idx + 1
   end
   fail_list = []
-  $delete_camera.each do |camera|
-    begin
-      File.delete camera[CAMERA_ORG] if File.exist? camera[CAMERA_ORG]
-    rescue
-      fail_list.push camera
+  cameras_dir = "#{$bs_folder}\\#{CAMERA2_CAMERAS_DIR}\\*.json".gsub(/\\/,"/")
+  Dir.glob(cameras_dir) do |json_file|
+    camera_file_name = File.basename(json_file, ".*")
+    delete_flag = true
+    $cameras_json.each do |camera|
+      if camera[CAMERA_NAME] == camera_file_name
+        delete_flag = false
+        break
+      end
+    end
+    if delete_flag
+      begin
+        File.delete json_file if File.exist? json_file
+      rescue
+        fail_list.push json_file
+      end
     end
   end
-  $delete_camera = fail_list
+  fail_list.each do |json_file|
+    sleep 1
+    begin
+      File.delete json_file if File.exist? json_file
+    rescue
+      $main_form.messageBox("#{json_file}\r\n#{JSON_FILE_SAVE_DEL_ERR_MES}",
+        JSON_FILE_SAVE_DEL_ERR_TITLE, WConst::MB_ICONERROR | WConst::MB_OK)
+    end
+  end
   $cameras_json.each do |camera|
     next unless camera[CAMERA_CHANGE]
     all_ok = true
-    if File.basename(camera[CAMERA_ORG], ".*") != camera[CAMERA_NAME]
-      begin
-        File.delete camera[CAMERA_ORG] if File.exist? camera[CAMERA_ORG]
-      rescue
-        all_ok = false
-      end
-    end
     camera_file = "#{$bs_folder}\\#{CAMERA2_CAMERAS_DIR}\\#{camera[CAMERA_NAME]}.json"
     begin
       File.open(camera_file, 'w') do |file|
@@ -349,6 +364,42 @@ def json_file_save
     end
   end
   $scene_json_change = false
+end
+
+def all_json_file_save
+  ext_list = [["JSON(*.json)", "*.json"], ["all(*.*)", "*.*"]]
+  fn = SWin::CommonDialog::saveFilename($main_form, ext_list, 0x2, ALL_JSON_FILE_SAVE_TITLE, '*.json', $setting_folder)
+  return unless fn
+  all_json = {}
+  all_json["scene_json"] = $scene_json
+  all_json["cameras_json"] = $cameras_json
+  File.open(fn, 'w') do |file|
+    JSON.pretty_generate(all_json).each do |line|
+      file.puts line
+    end
+  end
+end
+
+def all_json_file_load
+  ext_list = [["JSON(*.json)", "*.json"], ["all(*.*)", "*.*"]]
+  fn = SWin::CommonDialog::openFilename($main_form, ext_list, 0x1004, ALL_JSON_FILE_LOAD_TITLE, '*.json', $setting_folder)
+  return false unless fn
+  all_json = {}
+  begin
+    all_json = json_read(fn)
+  rescue
+  end
+  if all_json["scene_json"] && all_json["cameras_json"]
+    $scene_json = all_json["scene_json"]
+    $scene_json_change = true
+    $cameras_json = all_json["cameras_json"]
+    $cameras_json.each do |camera|
+      camera[CAMERA_CHANGE] = true
+    end
+    return true
+  end
+  $main_form.messageBox(ALL_JSON_FILE_LOAD_ERR_MES, ALL_JSON_FILE_LOAD_ERR_TITLE, WConst::MB_ICONWARNING | WConst::MB_OK)
+  return false
 end
 
 def cos(d)

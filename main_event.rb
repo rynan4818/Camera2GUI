@@ -191,6 +191,22 @@ class Form_main                                                     ##__BY_FDVR
     $apply_ok = true
   end
   
+  def menu_file_save_clicked
+    camera_list_set($camera_idx) if control_json_save
+    deleteTimer("filecheck")
+    all_json_file_save
+    addTimer(1000,"filecheck")
+  end
+
+  def menu_file_load_clicked
+    deleteTimer("filecheck")
+    if all_json_file_load
+      file_timestamp_reset
+      camera_list_set
+    end
+    addTimer(1000,"filecheck")
+  end
+  
   def menu_setting_clicked
     $main_windowrect = self.windowrect
     return unless VRLocalScreen.openModalDialog(self,nil,Modaldlg_setting,nil,nil)

@@ -25,7 +25,7 @@ EXE_DIR = (File.dirname(File.expand_path($0)).sub(/\/$/,'') + '/').gsub(/\//,'\\
 #MAIN_RB ****** Main ruby script file name
 #ERR_LOG ****** Error log file name
 
-SOFT_VER        = '2021/03/27rev2'
+SOFT_VER        = '2021/03/30'
 APP_VER_COOMENT = "BeatSaber Camera2 GUI Ver#{SOFT_VER}\r\n for ActiveScriptRuby(1.8.7-p330)\r\nCopyright (c) 2021 rynan4818 (Twitter @rynan4818)"
 
 #Setting
