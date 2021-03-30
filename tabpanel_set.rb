@@ -116,18 +116,17 @@ class Form_main                                                     ##__BY_FDVR
         positionable_control = [@static_warldcam_visibiity, @comboBox_worldcam_visibility, @static_preview_size,
                                 @edit_preview_size, @trackBar_preview_size]
         if $camera_type == TYPE_FIRSTPERSON
-          control_disable(positionable_control)
+          control_disable(positionable_control, false)
           control_enable(firstperson_control)
           edit_z_offset_changed
         elsif $camera_type == TYPE_POSITIONABLE
-          control_disable(firstperson_control)
-          control_enable(positionable_control)
-          edit_preview_size_changed
           if @comboBox_worldcam_visibility.selectedString == -1
             @comboBox_worldcam_visibility.select(@comboBox_worldcam_visibility.findString($positionable_default["worldCamVisibility"]))
           end
+          control_disable(firstperson_control, false)
+          control_enable(positionable_control)
+          edit_preview_size_changed
         end
-        refresh
       end
     end                                                             ##__BY_FDVR
 
@@ -225,16 +224,15 @@ class Form_main                                                     ##__BY_FDVR
           @static_position_smoothing, @edit_position_smoothing, @trackBar_position_smoothing]
         positionable_control = [@static_follow360, @checkBox_enabled]
         if $camera_type == TYPE_FIRSTPERSON
-          control_disable(positionable_control)
+          control_disable(positionable_control, false)
           control_enable(firstperson_control)
           edit_position_smoothing_changed
           edit_rotation_smoothing_changed
         elsif $camera_type == TYPE_POSITIONABLE
-          control_disable(firstperson_control)
+          control_disable(firstperson_control, false)
           control_enable(positionable_control)
           edit_rotation_smoothing_changed
         end
-        refresh
       end
     end                                                             ##__BY_FDVR
 
@@ -429,9 +427,9 @@ class Form_main                                                     ##__BY_FDVR
           @panel_target_rot.radioBtn_target_rot4, @panel_target_rot.radioBtn_target_rot5, @panel_target_rot.radioBtn_target_rot6,
           @static_pos_amount, @edit_pos_amount, @trackBar_pos_amount, @checkBox_auto_apply, @button_reset]
         if $camera_type == TYPE_FIRSTPERSON
-          control_disable(control_list)
+          control_disable(control_list, false)
         elsif $camera_type == TYPE_POSITIONABLE
-          control_enable(control_list)
+          control_enable(control_list, false)
         end
         checkBox_view_rect_full_clicked
       end
@@ -513,7 +511,6 @@ class Form_main                                                     ##__BY_FDVR
         elsif $camera_type == TYPE_POSITIONABLE
           control_enable(positionable_control)
         end
-        refresh
       end
     
     end                                                             ##__BY_FDVR

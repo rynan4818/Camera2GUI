@@ -247,7 +247,7 @@ def rounding(num, point)
   return (num * point).round.to_f / point.to_f
 end
 
-def control_disable(control_list)
+def control_disable(control_list, ref = true)
   control_list.each do |control|
     if control.class == VREdit
       control.readonly = true
@@ -255,10 +255,10 @@ def control_disable(control_list)
       control.style |= WStyle::WS_DISABLED
     end
   end
-  refresh
+  refresh if ref
 end
 
-def control_enable(control_list)
+def control_enable(control_list, ref = true)
   control_list.each do |control|
     if control.class == VREdit
       control.readonly = false
@@ -266,7 +266,7 @@ def control_enable(control_list)
       control.style &= ~WStyle::WS_DISABLED
     end
   end
-  refresh
+  refresh if ref
 end
 
 def character_check(vr_ogj,regular,text)

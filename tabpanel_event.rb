@@ -121,7 +121,6 @@ class Form_main                                                     ##__BY_FDVR
           @edit_view_rect_height.text = @view_height_backup
           control_enable(control_list)
         end
-        refresh
         @change_view_ok = true
         $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
       end
