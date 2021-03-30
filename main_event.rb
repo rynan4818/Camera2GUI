@@ -23,6 +23,11 @@ class Form_main                                                     ##__BY_FDVR
   attr_reader :tooltip
   
   def self_created
+    if $Exerb
+      extractIconA = Win32API.new('shell32','ExtractIconA','LPI','L')
+      myIconData = extractIconA.Call(0, "#{EXE_DIR}#{File.basename(MAIN_RB, '.*')}.exe", 0)
+      sendMessage(128, 0, myIconData)
+    end
     self.caption += "  Ver #{SOFT_VER}"
     $main_windowrect = self.windowrect
     self.move($main_form_x, $main_form_y, $main_windowrect[2], $main_windowrect[3]) 
