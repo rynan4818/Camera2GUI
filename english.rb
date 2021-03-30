@@ -116,3 +116,7 @@ ALL_JSON_FILE_LOAD_TITLE             = "Load all camera and scene settings from 
 ALL_JSON_FILE_LOAD_ERR_MES           = "This JSON file cannot be read"
 ALL_JSON_FILE_LOAD_ERR_TITLE         = "JSON file error"
 TOOLTIP_SETTING_FOLDER               = "This setting is used to save all camera and scene settings in a JSON file, and to fix the folder to be read out."
+TOOLTIP_RESET                        = "Reset Target Pos and Rot to 0"
+TOOLTIP_POS_AMOUNT                   = "Amount of movement of Target Pos"
+TOOLTIP_ROT_AMOUNT                   = "Amount of movement of Target Rot"
+TOOLTIP_VIEW_AMOUNT                  = "Amount of movement of View Rect"

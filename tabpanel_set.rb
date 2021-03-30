@@ -348,6 +348,20 @@ class Form_main                                                     ##__BY_FDVR
       def main_created
         if $tooltip_enabled
           $main_form.tooltip.addTool(@checkBox_auto_apply, TOOLTIP_AUTO_APPLY)
+          $main_form.tooltip.addTool(@button_reset, TOOLTIP_RESET)
+          $main_form.tooltip.addTool(@edit_pos_amount, TOOLTIP_POS_AMOUNT)
+          $main_form.tooltip.addTool(@trackBar_pos_amount, TOOLTIP_POS_AMOUNT)
+          $main_form.tooltip.addTool(@panel_target_rot.radioBtn_target_rot1, TOOLTIP_ROT_AMOUNT)
+          $main_form.tooltip.addTool(@panel_target_rot.radioBtn_target_rot2, TOOLTIP_ROT_AMOUNT)
+          $main_form.tooltip.addTool(@panel_target_rot.radioBtn_target_rot3, TOOLTIP_ROT_AMOUNT)
+          $main_form.tooltip.addTool(@panel_target_rot.radioBtn_target_rot4, TOOLTIP_ROT_AMOUNT)
+          $main_form.tooltip.addTool(@panel_target_rot.radioBtn_target_rot5, TOOLTIP_ROT_AMOUNT)
+          $main_form.tooltip.addTool(@panel_target_rot.radioBtn_target_rot6, TOOLTIP_ROT_AMOUNT)
+          $main_form.tooltip.addTool(@panel_target_rot.radioBtn_target_rot1, TOOLTIP_ROT_AMOUNT)
+          $main_form.tooltip.addTool(@panel_view_rect.radioBtn_view_rect1, TOOLTIP_VIEW_AMOUNT)
+          $main_form.tooltip.addTool(@panel_view_rect.radioBtn_view_rect2, TOOLTIP_VIEW_AMOUNT)
+          $main_form.tooltip.addTool(@panel_view_rect.radioBtn_view_rect3, TOOLTIP_VIEW_AMOUNT)
+          $main_form.tooltip.addTool(@panel_view_rect.radioBtn_view_rect4, TOOLTIP_VIEW_AMOUNT)
         end
       end
 
@@ -418,8 +432,8 @@ class Form_main                                                     ##__BY_FDVR
           control_disable(control_list)
         elsif $camera_type == TYPE_POSITIONABLE
           control_enable(control_list)
-          checkBox_view_rect_full_clicked
         end
+        checkBox_view_rect_full_clicked
       end
 
       def view_amount

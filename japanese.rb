@@ -116,3 +116,7 @@ ALL_JSON_FILE_LOAD_TITLE             = "全カメラとシーン設定を保存したJSONファイ
 ALL_JSON_FILE_LOAD_ERR_MES           = "このJSONファイルは読み込めません"
 ALL_JSON_FILE_LOAD_ERR_TITLE         = "JSONファイルエラー"
 TOOLTIP_SETTING_FOLDER               = "全カメラとシーン設定をJSONファイルに保存し、また、読出しを行うフォルダを固定する場合に設定します"
+TOOLTIP_RESET                        = "Target PosとRotを0にリセットします"
+TOOLTIP_POS_AMOUNT                   = "Target Posの移動量"
+TOOLTIP_ROT_AMOUNT                   = "Target Rotの移動量"
+TOOLTIP_VIEW_AMOUNT                  = "View Rectの移動量"
