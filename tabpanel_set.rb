@@ -135,15 +135,16 @@ class Form_main                                                     ##__BY_FDVR
       def self_created
         @comboBox_walls.setListStrings(COMBO_WALL_VISIBLITY)
         @comboBox_notes.setListStrings(COMBO_NOTE_VISIBILITY)
+        @comboBox_avatar.setListStrings(COMBO_AVATAR_VISIBILITY)
       end
 
       def main_created
         if $tooltip_enabled
           $main_form.tooltip.addTool(@comboBox_walls, TOOLTIP_WALLS)
           $main_form.tooltip.addTool(@comboBox_notes, TOOLTIP_NOTES)
+          $main_form.tooltip.addTool(@comboBox_avatar, TOOLTIP_AVATAR)
           $main_form.tooltip.addTool(@checkBox_debris, TOOLTIP_DEBRIS)
           $main_form.tooltip.addTool(@checkBox_cut_particles, TOOLTIP_CUT_PARTICLES)
-          $main_form.tooltip.addTool(@checkBox_avatar, TOOLTIP_AVATAR)
           $main_form.tooltip.addTool(@checkBox_UI, TOOLTIP_UI)
           $main_form.tooltip.addTool(@checkBox_floor, TOOLTIP_FLOOR)
         end
@@ -153,9 +154,9 @@ class Form_main                                                     ##__BY_FDVR
         if visible = $cameras_json[$camera_idx][CAMERA_JSON]["visibleObjects"]
           @comboBox_walls.select(@comboBox_walls.findString(visible["Walls"]))
           @comboBox_notes.select(@comboBox_notes.findString(visible["Notes"]))
+          @comboBox_avatar.select(@comboBox_avatar.findString(visible["Avatar"]))
           @checkBox_debris.check(visible["Debris"])
           @checkBox_cut_particles.check(visible["CutParticles"])
-          @checkBox_avatar.check(visible["Avatar"])
           @checkBox_UI.check(visible["UI"])
           @checkBox_floor.check(visible["Floor"])
         end
@@ -281,7 +282,7 @@ class Form_main                                                     ##__BY_FDVR
           $main_form.tooltip.addTool(@checkBox_playing_multi, TOOLTIP_SCENE_PLAYING_MULTI)
           $main_form.tooltip.addTool(@checkBox_replay, TOOLTIP_SCENE_REPLAY)
           $main_form.tooltip.addTool(@checkBox_fpfc, TOOLTIP_SCENE_FPFC)
-          $main_form.tooltip.addTool(@checkBox_enable_auto_switch, TOOLTIP_ENABLE_AUTO_SWITCH)
+          $main_form.tooltip.addTool(@checkBox_spectating_multi, TOOLTIP_SCENE_SPECTATING_MULTI)
           $main_form.tooltip.addTool(@checkBox_autoswitch_from_custom, TOOLTIP_AUTOSWITCH_FROM_CUSTOM)
           $main_form.tooltip.addTool(@button_custom_scenes, TOOLTIP_CUSTOM_SCENES)
         end
@@ -296,7 +297,7 @@ class Form_main                                                     ##__BY_FDVR
         @checkBox_playing_multi.check(false)
         @checkBox_replay.check(false)
         @checkBox_fpfc.check(false)
-        @checkBox_enable_auto_switch.check(false)
+        @checkBox_spectating_multi.check(false)
         @checkBox_autoswitch_from_custom.check(false)
         if scenes = $scene_json["scenes"]
           camera_name = $cameras_json[$camera_idx][CAMERA_NAME]
@@ -309,9 +310,9 @@ class Form_main                                                     ##__BY_FDVR
             @checkBox_playing_multi.check(true) if scene == "PlayingMulti" && cameras.index(camera_name)
             @checkBox_replay.check(true) if scene == "Replay" && cameras.index(camera_name)
             @checkBox_fpfc.check(true) if scene == "FPFC" && cameras.index(camera_name)
+            @checkBox_spectating_multi.check(true) if scene == "SpectatingMulti" && cameras.index(camera_name)
           end
         end
-        @checkBox_enable_auto_switch.check(true) if $scene_json["enableAutoSwitch"]
         @checkBox_autoswitch_from_custom.check(true) if $scene_json["autoswitchFromCustom"]
       end
 
@@ -364,6 +365,7 @@ class Form_main                                                     ##__BY_FDVR
       end
 
       def control_set
+        $apply_ok = false
         @edit_view_rect_x.text = ""
         @edit_view_rect_y.text = ""
         @edit_view_rect_width.text = ""
@@ -384,14 +386,14 @@ class Form_main                                                     ##__BY_FDVR
             @view_height_backup = "380"
           else
             @checkBox_view_rect_full.check(false)
-            @view_x_backup = view["x"].to_i
-            @view_y_backup = view["y"].to_i
-            @view_width_backup = view["width"].to_i
-            @view_height_backup = view["height"].to_i
-            @edit_view_rect_x.text = view["x"].to_i
-            @edit_view_rect_y.text = view["y"].to_i
-            @edit_view_rect_width.text = view["width"].to_i
-            @edit_view_rect_height.text = view["height"].to_i
+            @view_x_backup = view["x"]
+            @view_y_backup = view["y"]
+            @view_width_backup = view["width"]
+            @view_height_backup = view["height"]
+            @edit_view_rect_x.text = view["x"]
+            @edit_view_rect_y.text = view["y"]
+            @edit_view_rect_width.text = view["width"]
+            @edit_view_rect_height.text = view["height"]
           end
         end
         if $camera_type == TYPE_POSITIONABLE
@@ -408,6 +410,7 @@ class Form_main                                                     ##__BY_FDVR
         end
         @edit_pos_amount.text = $pos_amount
         view_set
+        $apply_ok = true
       end
 
       def msghandler(msg)

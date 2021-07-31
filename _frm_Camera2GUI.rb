@@ -134,23 +134,25 @@ class Form_main < VRForm
     class Panel1 < VRPanel
       include VRStdControlContainer
       attr_reader :checkBox_UI
-      attr_reader :checkBox_avatar
       attr_reader :checkBox_cut_particles
       attr_reader :checkBox_debris
       attr_reader :checkBox_floor
+      attr_reader :comboBox_avatar
       attr_reader :comboBox_notes
       attr_reader :comboBox_walls
+      attr_reader :static_avatar
       attr_reader :static_notes
       attr_reader :static_walls
 
       def construct
         addControl(VRCheckbox,'checkBox_UI',"UI",108,232,128,24)
-        addControl(VRCheckbox,'checkBox_avatar',"Avatar",108,192,120,24)
-        addControl(VRCheckbox,'checkBox_cut_particles',"Cut Particles",108,152,120,24)
-        addControl(VRCheckbox,'checkBox_debris',"Debris",108,112,80,24)
+        addControl(VRCheckbox,'checkBox_cut_particles',"Cut Particles",108,192,120,24)
+        addControl(VRCheckbox,'checkBox_debris',"Debris",108,152,80,24)
         addControl(VRCheckbox,'checkBox_floor',"Floor",108,272,136,24)
+        addControl(VRCombobox,'comboBox_avatar',"",108,112,352,120)
         addControl(VRCombobox,'comboBox_notes',"",108,72,352,120)
         addControl(VRCombobox,'comboBox_walls',"",108,32,352,120)
+        addControl(VRStatic,'static_avatar',"Avatar",52,112,48,24)
         addControl(VRStatic,'static_notes',"Notes",52,72,48,24)
         addControl(VRStatic,'static_walls',"Walls",60,32,40,24)
       end
@@ -209,7 +211,6 @@ class Form_main < VRForm
       include VRStdControlContainer
       attr_reader :button_custom_scenes
       attr_reader :checkBox_autoswitch_from_custom
-      attr_reader :checkBox_enable_auto_switch
       attr_reader :checkBox_fpfc
       attr_reader :checkBox_menu
       attr_reader :checkBox_multiplayer_menu
@@ -218,21 +219,22 @@ class Form_main < VRForm
       attr_reader :checkBox_playing_modmap
       attr_reader :checkBox_playing_multi
       attr_reader :checkBox_replay
+      attr_reader :checkBox_spectating_multi
       attr_reader :static1
 
       def construct
         addControl(VRButton,'button_custom_scenes',"Custom scenes setup",28,288,168,32)
         addControl(VRCheckbox,'checkBox_autoswitch_from_custom',"autoswitchFromCustom",36,248,184,24)
-        addControl(VRCheckbox,'checkBox_enable_auto_switch',"enableAutoSwitch",36,208,144,32)
-        addControl(VRCheckbox,'checkBox_fpfc',"FPFC",284,136,176,32)
+        addControl(VRCheckbox,'checkBox_fpfc',"FPFC",36,176,176,32)
         addControl(VRCheckbox,'checkBox_menu',"Menu",36,16,72,32)
         addControl(VRCheckbox,'checkBox_multiplayer_menu',"Multiplayer Menu",284,16,152,32)
         addControl(VRCheckbox,'checkBox_playing',"Playing",36,56,72,24)
         addControl(VRCheckbox,'checkBox_playing_360',"Playing360",284,56,104,32)
         addControl(VRCheckbox,'checkBox_playing_modmap',"Playing Modmap",36,96,136,32)
         addControl(VRCheckbox,'checkBox_playing_multi',"Playing Multi",284,96,120,32)
-        addControl(VRCheckbox,'checkBox_replay',"Replay",36,136,80,32)
-        addControl(VRStatic,'static1',"=== Camera2 common settings ===",28,184,264,24)
+        addControl(VRCheckbox,'checkBox_replay',"Replay",284,136,80,32)
+        addControl(VRCheckbox,'checkBox_spectating_multi',"SpectatingMulti",36,136,176,32)
+        addControl(VRStatic,'static1',"=== Camera2 common settings ===",28,216,264,24)
       end
     end
 
@@ -438,7 +440,7 @@ class Form_main < VRForm
     self.sizebox=false
     self.maximizebox=false
     self.caption = 'Camera2GUI'
-    self.move(482,322,580,625)
+    self.move(495,227,580,625)
     #$_addControl(VRMenu,'mainmenu1',"",520,96,24,24)
     @mainmenu1 = newMenu.set(
       [

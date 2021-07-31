@@ -25,7 +25,7 @@ EXE_DIR = (File.dirname(File.expand_path($0)).sub(/\/$/,'') + '/').gsub(/\//,'\\
 #MAIN_RB ****** Main ruby script file name
 #ERR_LOG ****** Error log file name
 
-SOFT_VER        = '2021/03/30'
+SOFT_VER        = '2021/07/31'
 APP_VER_COOMENT = "BeatSaber Camera2 GUI Ver#{SOFT_VER}\r\n for ActiveScriptRuby(1.8.7-p330)\r\nCopyright (c) 2021 rynan4818 (Twitter @rynan4818)"
 
 #Setting
@@ -60,10 +60,11 @@ CAMERA_CHANGE = 3
 POS_ROT_ROUND = 1000.0
 #Combobox
 COMBO_CAMERA_TYPE         = ["FirstPerson","Positionable"]
-COMBO_WORLD_CAMVISIBILITY = ["Visible","HiddenWhilePlaying","Hidden"]
+COMBO_WORLD_CAMVISIBILITY = ["Visible","Hidden","HiddenWhilePlaying"]
 COMBO_ANTI_ALIASING       = ["1","2","4","8"]
 COMBO_WALL_VISIBLITY      = ["Visible","Transparent","Hidden"]
 COMBO_NOTE_VISIBILITY     = ["Hidden","Visible","ForceCustomNotes"]
+COMBO_AVATAR_VISIBILITY   = ["Hidden","Visible","ForceVisibleInFP"]
 
 TYPE_FIRSTPERSON  = COMBO_CAMERA_TYPE.index("FirstPerson")
 TYPE_POSITIONABLE = COMBO_CAMERA_TYPE.index("Positionable")

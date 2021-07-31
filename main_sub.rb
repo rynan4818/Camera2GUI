@@ -103,9 +103,9 @@ class Form_main
     camera["visibleObjects"] = {} unless camera["visibleObjects"]
     camera["visibleObjects"]["Walls"] = tab_visibility.comboBox_walls.getTextOf(tab_visibility.comboBox_walls.selectedString)
     camera["visibleObjects"]["Notes"] = tab_visibility.comboBox_notes.getTextOf(tab_visibility.comboBox_notes.selectedString)
+    camera["visibleObjects"]["Avatar"] = tab_visibility.comboBox_avatar.getTextOf(tab_visibility.comboBox_avatar.selectedString)
     camera["visibleObjects"]["Debris"] = tab_visibility.checkBox_debris.checked?
     camera["visibleObjects"]["CutParticles"] = tab_visibility.checkBox_cut_particles.checked?
-    camera["visibleObjects"]["Avatar"] = tab_visibility.checkBox_avatar.checked?
     camera["visibleObjects"]["UI"] = tab_visibility.checkBox_UI.checked?
     camera["visibleObjects"]["Floor"] = tab_visibility.checkBox_floor.checked?
     camera["targetPos"] = {} unless camera["targetPos"]
@@ -170,10 +170,7 @@ class Form_main
     scenes_json_set("PlayingMulti", tab_scenes.checkBox_playing_multi.checked?, before_camera_name, after_camera_name)
     scenes_json_set("Replay", tab_scenes.checkBox_replay.checked?, before_camera_name, after_camera_name)
     scenes_json_set("FPFC", tab_scenes.checkBox_fpfc.checked?, before_camera_name, after_camera_name)
-    unless $scene_json["enableAutoSwitch"] == tab_scenes.checkBox_enable_auto_switch.checked?
-      $scene_json_change = true
-      $scene_json["enableAutoSwitch"] = tab_scenes.checkBox_enable_auto_switch.checked?
-    end
+    scenes_json_set("SpectatingMulti", tab_scenes.checkBox_spectating_multi.checked?, before_camera_name, after_camera_name)
     unless $scene_json["autoswitchFromCustom"] == tab_scenes.checkBox_autoswitch_from_custom.checked?
       $scene_json_change = true
       $scene_json["autoswitchFromCustom"] = tab_scenes.checkBox_autoswitch_from_custom.checked?

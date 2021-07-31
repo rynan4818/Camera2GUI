@@ -109,10 +109,10 @@ class Form_main                                                     ##__BY_FDVR
           @view_y_backup = @edit_view_rect_y.text
           @view_width_backup = @edit_view_rect_width.text
           @view_height_backup = @edit_view_rect_height.text
-          @edit_view_rect_x.text = "0"
-          @edit_view_rect_y.text = "0"
-          @edit_view_rect_width.text = "-1"
-          @edit_view_rect_height.text = "-1"
+          @edit_view_rect_x.text = "0.0"
+          @edit_view_rect_y.text = "0.0"
+          @edit_view_rect_width.text = "-1.0"
+          @edit_view_rect_height.text = "-1.0"
           control_disable(control_list)
         else
           @edit_view_rect_x.text = @view_x_backup
@@ -200,8 +200,8 @@ class Form_main                                                     ##__BY_FDVR
       def edit_view_rect_x_changed
         return unless @change_view_ok
         @change_view_ok = false
-        change_x = @edit_view_rect_x.text.to_i
-        change_x = 0 if change_x < 0
+        change_x = @edit_view_rect_x.text.to_f
+        change_x = change_x.to_i if change_x > 0 || @edit_view_rect_x.text.strip == "0"
         @edit_view_rect_x.text = change_x.to_s unless @edit_view_rect_x.text == change_x.to_s
         @change_view_ok = true
         $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
@@ -210,8 +210,8 @@ class Form_main                                                     ##__BY_FDVR
       def edit_view_rect_y_changed
         return unless @change_view_ok
         @change_view_ok = false
-        change_y = @edit_view_rect_y.text.to_i
-        change_y = 0 if change_y < 0
+        change_y = @edit_view_rect_y.text.to_f
+        change_y = change_y.to_i if change_y > 0 || @edit_view_rect_y.text.strip == "0"
         @edit_view_rect_y.text = change_y.to_s unless @edit_view_rect_y.text == change_y.to_s
         @change_view_ok = true
         $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
@@ -220,8 +220,8 @@ class Form_main                                                     ##__BY_FDVR
       def edit_view_rect_width_changed
         return unless @change_view_ok
         @change_view_ok = false
-        change_w = @edit_view_rect_width.text.to_i
-        change_w = -1 if change_w < 0
+        change_w = @edit_view_rect_width.text.to_f
+        change_w = change_w.to_i if change_w > 0 || @edit_view_rect_width.text.strip == "0"
         @edit_view_rect_width.text = change_w.to_s unless @edit_view_rect_width.text == change_w.to_s
         @change_view_ok = true
         $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
@@ -230,8 +230,8 @@ class Form_main                                                     ##__BY_FDVR
       def edit_view_rect_height_changed
         return unless @change_view_ok
         @change_view_ok = false
-        change_h = @edit_view_rect_height.text.to_i
-        change_h = -1 if change_h < 0
+        change_h = @edit_view_rect_height.text.to_f
+        change_h = change_h.to_i if change_h > 0 || @edit_view_rect_height.text.strip == "0"
         @edit_view_rect_height.text = change_h.to_s unless @edit_view_rect_height.text == change_h.to_s
         @change_view_ok = true
         $main_form.button_apply_clicked if @checkBox_auto_apply.checked? && $apply_ok
@@ -242,35 +242,127 @@ class Form_main                                                     ##__BY_FDVR
       end
     
       def button_view_rect_x_u_clicked
-        @edit_view_rect_x.text = @edit_view_rect_x.text.to_i + view_amount
+        if @edit_view_rect_x.text.to_i > 0 || @edit_view_rect_x.text.strip == "0"
+          @edit_view_rect_x.text = @edit_view_rect_x.text.to_i + view_amount
+        else
+          new_rect = @edit_view_rect_x.text.to_f + view_amount.to_f / 1000.0
+          if new_rect > 0.0
+            @edit_view_rect_x.text = "0.0"
+          else
+            @edit_view_rect_x.text = new_rect.to_s
+          end
+        end
       end
     
       def button_view_rect_x_d_clicked
-        @edit_view_rect_x.text = @edit_view_rect_x.text.to_i - view_amount
+        if @edit_view_rect_x.text.to_i > 0 || @edit_view_rect_x.text.strip == "0"
+          new_rect = @edit_view_rect_x.text.to_i - view_amount
+          if new_rect < 0
+            @edit_view_rect_x.text = "0"
+          else
+            @edit_view_rect_x.text = new_rect
+          end
+        else
+          new_rect = @edit_view_rect_x.text.to_f - view_amount.to_f / 1000.0
+          if new_rect < -1.0
+            @edit_view_rect_x.text = "-1.0"
+          else
+            @edit_view_rect_x.text = new_rect
+          end
+        end
       end
     
       def button_view_rect_y_u_clicked
-        @edit_view_rect_y.text = @edit_view_rect_y.text.to_i + view_amount
+        if @edit_view_rect_y.text.to_i > 0 || @edit_view_rect_y.text.strip == "0"
+          @edit_view_rect_y.text = @edit_view_rect_y.text.to_i + view_amount
+        else
+          new_rect = @edit_view_rect_y.text.to_f + view_amount.to_f / 1000.0
+          if new_rect > 0.0
+            @edit_view_rect_y.text = "0.0"
+          else
+            @edit_view_rect_y.text = new_rect.to_s
+          end
+        end
       end
     
       def button_view_rect_y_d_clicked
-        @edit_view_rect_y.text = @edit_view_rect_y.text.to_i - view_amount
+        if @edit_view_rect_y.text.to_i > 0 || @edit_view_rect_y.text.strip == "0"
+          new_rect = @edit_view_rect_y.text.to_i - view_amount
+          if new_rect < 0
+            @edit_view_rect_y.text = "0"
+          else
+            @edit_view_rect_y.text = new_rect
+          end
+        else
+          new_rect = @edit_view_rect_y.text.to_f - view_amount.to_f / 1000.0
+          if new_rect < -1.0
+            @edit_view_rect_y.text = "-1.0"
+          else
+            @edit_view_rect_y.text = new_rect
+          end
+        end
       end
     
       def button_view_rect_width_u_clicked
-        @edit_view_rect_width.text = @edit_view_rect_width.text.to_i + view_amount
+        if @edit_view_rect_width.text.to_i > 0 || @edit_view_rect_width.text.strip == "0"
+          @edit_view_rect_width.text = @edit_view_rect_width.text.to_i + view_amount
+        else
+          new_rect = @edit_view_rect_width.text.to_f + view_amount.to_f / 1000.0
+          if new_rect > 0.0
+            @edit_view_rect_width.text = "0.0"
+          else
+            @edit_view_rect_width.text = new_rect.to_s
+          end
+        end
       end
     
       def button_view_rect_width_d_clicked
-        @edit_view_rect_width.text = @edit_view_rect_width.text.to_i - view_amount
+        if @edit_view_rect_width.text.to_i > 0 || @edit_view_rect_width.text.strip == "0"
+          new_rect = @edit_view_rect_width.text.to_i - view_amount
+          if new_rect < 0
+            @edit_view_rect_width.text = "0"
+          else
+            @edit_view_rect_width.text = new_rect
+          end
+        else
+          new_rect = @edit_view_rect_width.text.to_f - view_amount.to_f / 1000.0
+          if new_rect < -1.0
+            @edit_view_rect_width.text = "-1.0"
+          else
+            @edit_view_rect_width.text = new_rect
+          end
+        end
       end
     
       def button_view_rect_height_u_clicked
-        @edit_view_rect_height.text = @edit_view_rect_height.text.to_i + view_amount
+        if @edit_view_rect_height.text.to_i > 0 || @edit_view_rect_height.text.strip == "0"
+          @edit_view_rect_height.text = @edit_view_rect_height.text.to_i + view_amount
+        else
+          new_rect = @edit_view_rect_height.text.to_f + view_amount.to_f / 1000.0
+          if new_rect > 0.0
+            @edit_view_rect_height.text = "0.0"
+          else
+            @edit_view_rect_height.text = new_rect.to_s
+          end
+        end
       end
     
       def button_view_rect_height_d_clicked
-        @edit_view_rect_height.text = @edit_view_rect_height.text.to_i - view_amount
+        if @edit_view_rect_height.text.to_i > 0 || @edit_view_rect_height.text.strip == "0"
+          new_rect = @edit_view_rect_height.text.to_i - view_amount
+          if new_rect < 0
+            @edit_view_rect_height.text = "0"
+          else
+            @edit_view_rect_height.text = new_rect
+          end
+        else
+          new_rect = @edit_view_rect_height.text.to_f - view_amount.to_f / 1000.0
+          if new_rect < -1.0
+            @edit_view_rect_height.text = "-1.0"
+          else
+            @edit_view_rect_height.text = new_rect
+          end
+        end
       end
     
       def button_target_pos_x_u_clicked
