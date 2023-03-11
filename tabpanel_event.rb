@@ -48,10 +48,6 @@ class Form_main                                                     ##__BY_FDVR
         trackbar_set(@edit_field_of_view, @trackBar_field_of_view, $firstperson_default["FOV"])
       end
     
-      def edit_fps_limit_changed
-        trackbar_set(@edit_fps_limit, @trackBar_fps_limit, $firstperson_default["FPSLimiter"]["fpsLimit"])
-      end
-    
       def edit_render_scale_changed
         trackbar_set(@edit_render_scale, @trackBar_render_scale, $firstperson_default["renderScale"])
       end
@@ -517,6 +513,14 @@ class Form_main                                                     ##__BY_FDVR
     class Panel6                                                    ##__BY_FDVR
       #MOVEMENT
     end                                                             ##__BY_FDVR
+    
+    class Panel7
+      #MISC
+      def edit_fps_limit_changed
+        trackbar_set(@edit_fps_limit, @trackBar_fps_limit, $firstperson_default["FPSLimiter"]["fpsLimit"])
+      end
+      
+    end
     
   end                                                               ##__BY_FDVR
   

@@ -30,10 +30,6 @@ class Form_main                                                     ##__BY_FDVR
         @trackBar_field_of_view.rangeMax = 1400
         @trackBar_field_of_view.linesize = 5
         @trackBar_field_of_view.pagesize = 50
-        @trackBar_fps_limit.rangeMin = 0
-        @trackBar_fps_limit.rangeMax = 2400
-        @trackBar_fps_limit.linesize = 10
-        @trackBar_fps_limit.pagesize = 100
         @trackBar_render_scale.rangeMin = 2
         @trackBar_render_scale.rangeMax = 30
         @trackBar_render_scale.linesize = 1
@@ -56,8 +52,6 @@ class Form_main                                                     ##__BY_FDVR
           $main_form.tooltip.addTool(@comboBox_camera_type, TOOLTIP_CAMERA_TYPE)
           $main_form.tooltip.addTool(@edit_field_of_view, TOOLTIP_FIELD_OF_VIEW)
           $main_form.tooltip.addTool(@trackBar_field_of_view, TOOLTIP_FIELD_OF_VIEW)
-          $main_form.tooltip.addTool(@edit_fps_limit, TOOLTIP_FPS_LIMIT)
-          $main_form.tooltip.addTool(@trackBar_fps_limit, TOOLTIP_FPS_LIMIT)
           $main_form.tooltip.addTool(@edit_render_scale, TOOLTIP_RENDER_SCALE)
           $main_form.tooltip.addTool(@trackBar_render_scale, TOOLTIP_RENDER_SCALE)
           $main_form.tooltip.addTool(@comboBox_anti_aliasing, TOOLTIP_ANTI_ALIASING)
@@ -66,6 +60,10 @@ class Form_main                                                     ##__BY_FDVR
           $main_form.tooltip.addTool(@trackBar_preview_size, TOOLTIP_PREVIEW_SIZE)
           $main_form.tooltip.addTool(@edit_z_offset, TOOLTIP_Z_OFFSET)
           $main_form.tooltip.addTool(@trackBar_z_offset, TOOLTIP_Z_OFFSET)
+          $main_form.tooltip.addTool(@edit_x_rotation_offset, TOOLTIP_X_ROTATION_OFFSET)
+          $main_form.tooltip.addTool(@trackBar_x_rotation_offset, TOOLTIP_X_ROTATION_OFFSET)
+          $main_form.tooltip.addTool(@checkBox_pivoting_offset, TOOLTIP_PIVOTING_OFFSET)
+          $main_form.tooltip.addTool(@checkBox_lock_screen, TOOLTIP_LOCK_SCREEN)
         end
       end
 
@@ -84,10 +82,6 @@ class Form_main                                                     ##__BY_FDVR
         comboBox_camera_type_selchanged
         @edit_field_of_view.text = "%.15g"%$cameras_json[$camera_idx][CAMERA_JSON]["FOV"]
         edit_field_of_view_changed
-        if fpslimit = $cameras_json[$camera_idx][CAMERA_JSON]["FPSLimiter"]
-          @edit_fps_limit.text = "%.15g"%fpslimit["fpsLimit"]
-          edit_fps_limit_changed
-        end
         @edit_render_scale.text = "%.15g"%$cameras_json[$camera_idx][CAMERA_JSON]["renderScale"]
         edit_render_scale_changed
         @comboBox_anti_aliasing.select(@comboBox_anti_aliasing.findString($cameras_json[$camera_idx][CAMERA_JSON]["antiAliasing"].to_s))
@@ -97,10 +91,12 @@ class Form_main                                                     ##__BY_FDVR
           end
           @comboBox_worldcam_visibility.select(-1)
           @edit_preview_size.text = ""
+          @checkBox_pivoting_offset.check(follow["pivotingOffset"])
         elsif $camera_type == TYPE_POSITIONABLE
           @edit_z_offset.text = ""
           @comboBox_worldcam_visibility.select(@comboBox_worldcam_visibility.findString($cameras_json[$camera_idx][CAMERA_JSON]["worldCamVisibility"]))
           @edit_preview_size.text = $cameras_json[$camera_idx][CAMERA_JSON]["previewScreenSize"]
+          @checkBox_pivoting_offset.check(false)
         end
         edit_preview_size_changed
         edit_z_offset_changed
@@ -112,7 +108,7 @@ class Form_main                                                     ##__BY_FDVR
       end
 
       def view_set
-        firstperson_control = [@static_z_offset, @edit_z_offset, @trackBar_z_offset]
+        firstperson_control = [@static_z_offset, @edit_z_offset, @trackBar_z_offset, @checkBox_pivoting_offset]
         positionable_control = [@static_warldcam_visibiity, @comboBox_worldcam_visibility, @static_preview_size,
                                 @edit_preview_size, @trackBar_preview_size]
         if $camera_type == TYPE_FIRSTPERSON
@@ -180,7 +176,6 @@ class Form_main                                                     ##__BY_FDVR
       def main_created
         if $tooltip_enabled
           $main_form.tooltip.addTool(@checkBox_force_upright, TOOLTIP_FORCE_UPRIGHT)
-          $main_form.tooltip.addTool(@checkBox_pivoting_offset, TOOLTIP_PIVOTING_OFFSET)
           $main_form.tooltip.addTool(@checkBox_follow_replay_position, TOOLTIP_FOLLOW_REPLAY_POSITION)
           $main_form.tooltip.addTool(@edit_position_smoothing, TOOLTIP_POSITION_SMOOTHING)
           $main_form.tooltip.addTool(@trackBar_position_smoothing, TOOLTIP_POSITION_SMOOTHING)
@@ -196,7 +191,6 @@ class Form_main                                                     ##__BY_FDVR
           if follow = $cameras_json[$camera_idx][CAMERA_JSON]["Smoothfollow"]
             @checkBox_force_upright.check(follow["forceUpright"])
             @checkBox_follow_replay_position.check(follow["followReplayPosition"])
-            @checkBox_pivoting_offset.check(follow["pivotingOffset"])
             @edit_position_smoothing.text = "%.15g"%follow["position"]
             @edit_rotation_smoothing.text = "%.15g"%follow["rotation"]
             @checkBox_enabled.check(false)
@@ -205,7 +199,6 @@ class Form_main                                                     ##__BY_FDVR
           if follow = $cameras_json[$camera_idx][CAMERA_JSON]["Follow360"]
             @checkBox_force_upright.check(false)
             @checkBox_follow_replay_position.check(false)
-            @checkBox_pivoting_offset.check(false)
             @edit_position_smoothing.text = ""
             @checkBox_enabled.check(follow["enabled"])
             @edit_rotation_smoothing.text = "%.15g"%follow["smoothing"]
@@ -221,7 +214,7 @@ class Form_main                                                     ##__BY_FDVR
       end
 
       def view_set
-        firstperson_control = [@static_smoothfollow, @checkBox_force_upright, @checkBox_pivoting_offset, @checkBox_follow_replay_position,
+        firstperson_control = [@static_smoothfollow, @checkBox_force_upright, @checkBox_follow_replay_position,
           @static_position_smoothing, @edit_position_smoothing, @trackBar_position_smoothing]
         positionable_control = [@static_follow360, @checkBox_enabled]
         if $camera_type == TYPE_FIRSTPERSON
@@ -477,7 +470,6 @@ class Form_main                                                     ##__BY_FDVR
       def main_created
         if $tooltip_enabled
           $main_form.tooltip.addTool(@checkBox_from_origin, TOOLTIP_MOVEMENT_FROM_ORIGIN)
-          $main_form.tooltip.addTool(@checkBox_enable_in_menu, TOOLTIP_MOVEMENT_ENABLE_IN_MENU)
           $main_form.tooltip.addTool(@listBox_script_list, TOOLTIP_MOVEMENT_SCRIPT_LIST)
         end
       end
@@ -485,11 +477,9 @@ class Form_main                                                     ##__BY_FDVR
       def control_set
         view_set
         @checkBox_from_origin.check(false)
-        @checkBox_enable_in_menu.check(false)
         if $camera_type == TYPE_POSITIONABLE
           if movement = $cameras_json[$camera_idx][CAMERA_JSON]["MovementScript"]
             @checkBox_from_origin.check(movement["fromOrigin"])
-            @checkBox_enable_in_menu.check(movement["enableInMenu"])
           end
         end
         if $movement_json == []
@@ -508,7 +498,7 @@ class Form_main                                                     ##__BY_FDVR
       end
 
       def view_set
-        positionable_control = [@checkBox_from_origin, @checkBox_enable_in_menu, @listBox_script_list, @static_movement_script]
+        positionable_control = [@checkBox_from_origin, @listBox_script_list, @static_movement_script]
         if $camera_type == TYPE_FIRSTPERSON
           control_disable(positionable_control)
         elsif $camera_type == TYPE_POSITIONABLE
@@ -517,6 +507,67 @@ class Form_main                                                     ##__BY_FDVR
       end
     
     end                                                             ##__BY_FDVR
+
+    class Panel7                                                    ##__BY_FDVR
+      #MISC
+      def self_created
+        @trackBar_fps_limit.rangeMin = 0
+        @trackBar_fps_limit.rangeMax = 2400
+        @trackBar_fps_limit.linesize = 10
+        @trackBar_fps_limit.pagesize = 100
+      end
+      
+      def main_created
+        if $tooltip_enabled
+          $main_form.tooltip.addTool(@checkBox_orthographic, TOOLTIP_ORTHOGRAPHIC)
+          $main_form.tooltip.addTool(@checkBox_follow_spectator_plattform, TOOLTIP_FOLLOW_SPECTATOR_PLATTFORM)
+          $main_form.tooltip.addTool(@checkBox_enable_in_menu, TOOLTIP_MOVEMENT_ENABLE_IN_MENU)
+          $main_form.tooltip.addTool(@edit_far_z, TOOLTIP_FAR_Z)
+          $main_form.tooltip.addTool(@edit_vmc_destination, TOOLTIP_VMC_DESTINATION)
+          $main_form.tooltip.addTool(@comboBox_vmc_mode, TOOLTIP_VMC_MODE)
+          $main_form.tooltip.addTool(@edit_fps_limit, TOOLTIP_FPS_LIMIT)
+          $main_form.tooltip.addTool(@trackBar_fps_limit, TOOLTIP_FPS_LIMIT)
+        end
+      end
+      
+      def control_set
+        view_set
+        @checkBox_orthographic.check($cameras_json[$camera_idx][CAMERA_JSON]["orthographic"])
+        if multiplayer = $cameras_json[$camera_idx][CAMERA_JSON]["Multiplayer"]
+          @checkBox_follow_spectator_plattform.check(multiplayer["followSpectatorPlattform"])
+        else
+          @checkBox_follow_spectator_plattform.check(false)
+        end
+        @checkBox_enable_in_menu.check(false)
+        if $camera_type == TYPE_POSITIONABLE
+          if movement = $cameras_json[$camera_idx][CAMERA_JSON]["MovementScript"]
+            @checkBox_enable_in_menu.check(movement["enableInMenu"])
+          end
+          if vmc_protocol = $cameras_json[$camera_idx][CAMERA_JSON]["VMCProtocol"]
+            @edit_vmc_destination.text = vmc_protocol["destination"]
+            @comboBox_vmc_mode.select(@comboBox_vmc_mode.findString(vmc_protocol["mode"].to_s))
+          end
+        else
+          @edit_vmc_destination.text = ""
+          @comboBox_vmc_mode.select(-1)
+        end
+        @edit_far_z.text = $cameras_json[$camera_idx][CAMERA_JSON]["farZ"]
+        if fpslimit = $cameras_json[$camera_idx][CAMERA_JSON]["FPSLimiter"]
+          @edit_fps_limit.text = "%.15g"%fpslimit["fpsLimit"]
+          edit_fps_limit_changed
+        end
+      end
+      
+      def view_set
+        positionable_control = [@checkBox_enable_in_menu, @edit_vmc_destination, @static_vmc_destination, @static_vmc_mode, @static_vmc_protocol, @comboBox_vmc_mode]
+        if $camera_type == TYPE_FIRSTPERSON
+          control_disable(positionable_control)
+        elsif $camera_type == TYPE_POSITIONABLE
+          control_enable(positionable_control)
+        end
+      end
+      
+    end
 
   end                                                               ##__BY_FDVR
   

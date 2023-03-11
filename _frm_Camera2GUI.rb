@@ -75,59 +75,64 @@ class Form_main < VRForm
     attr_reader :panel4
     attr_reader :panel5
     attr_reader :panel6
+    attr_reader :panel7
     auto_panelresize(true)
 
     class Panel0 < VRPanel
       include VRStdControlContainer
       include VRComCtlContainer
+      attr_reader :checkBox_lock_screen
+      attr_reader :checkBox_pivoting_offset
       attr_reader :comboBox_anti_aliasing
       attr_reader :comboBox_camera_type
       attr_reader :comboBox_worldcam_visibility
       attr_reader :edit_camera_name
       attr_reader :edit_field_of_view
-      attr_reader :edit_fps_limit
       attr_reader :edit_preview_size
       attr_reader :edit_render_scale
+      attr_reader :edit_x_rotation_offset
       attr_reader :edit_z_offset
       attr_reader :static_anti_aliasing
       attr_reader :static_camera_name
       attr_reader :static_camera_type
       attr_reader :static_field_of_view
-      attr_reader :static_fps_limit
       attr_reader :static_preview_size
       attr_reader :static_render_scale
       attr_reader :static_warldcam_visibiity
+      attr_reader :static_x_rotation_offset
       attr_reader :static_z_offset
       attr_reader :trackBar_field_of_view
-      attr_reader :trackBar_fps_limit
       attr_reader :trackBar_preview_size
       attr_reader :trackBar_render_scale
+      attr_reader :trackBar_x_rotation_offset
       attr_reader :trackBar_z_offset
 
       def construct
-        addControl(VRCombobox,'comboBox_anti_aliasing',"",140,200,104,120)
-        addControl(VRCombobox,'comboBox_camera_type',"",140,64,384,80)
-        addControl(VRCombobox,'comboBox_worldcam_visibility',"",140,240,376,120)
-        addControl(VREdit,'edit_camera_name',"",140,24,384,24)
-        addControl(VREdit,'edit_field_of_view',"",140,104,64,24)
-        addControl(VREdit,'edit_fps_limit',"",140,136,64,24)
-        addControl(VREdit,'edit_preview_size',"",140,280,72,24)
-        addControl(VREdit,'edit_render_scale',"",140,168,64,24)
-        addControl(VREdit,'edit_z_offset',"",140,320,72,24)
-        addControl(VRStatic,'static_anti_aliasing',"Anti Aliasing",36,200,96,24)
-        addControl(VRStatic,'static_camera_name',"Camera Name",28,24,104,24)
-        addControl(VRStatic,'static_camera_type',"Camera Type",36,64,96,24)
-        addControl(VRStatic,'static_field_of_view',"Field of View",36,104,96,24)
-        addControl(VRStatic,'static_fps_limit',"FPS Limit (0=off)",12,136,120,24)
-        addControl(VRStatic,'static_preview_size',"Preview Size",36,280,88,24)
-        addControl(VRStatic,'static_render_scale',"Render Scale",28,168,96,24)
-        addControl(VRStatic,'static_warldcam_visibiity',"Worldcam Visibility",4,240,128,24)
-        addControl(VRStatic,'static_z_offset',"Z-Offset",60,320,72,24)
-        addControl(VRTrackbar,'trackBar_field_of_view',"trackBar1",220,104,304,24)
-        addControl(VRTrackbar,'trackBar_fps_limit',"trackBar1",220,136,304,24)
-        addControl(VRTrackbar,'trackBar_preview_size',"trackBar2",220,280,304,24)
-        addControl(VRTrackbar,'trackBar_render_scale',"trackBar1",220,168,304,24)
-        addControl(VRTrackbar,'trackBar_z_offset',"trackBar1",220,320,304,24)
+        addControl(VRCheckbox,'checkBox_lock_screen',"Lock screen position / size",268,384,224,24)
+        addControl(VRCheckbox,'checkBox_pivoting_offset',"Pivoting Firstperson Offset",40,384,212,24)
+        addControl(VRCombobox,'comboBox_anti_aliasing',"",164,184,104,120)
+        addControl(VRCombobox,'comboBox_camera_type',"",164,64,392,80)
+        addControl(VRCombobox,'comboBox_worldcam_visibility',"",164,224,384,120)
+        addControl(VREdit,'edit_camera_name',"",164,24,392,24)
+        addControl(VREdit,'edit_field_of_view',"",164,104,104,24)
+        addControl(VREdit,'edit_preview_size',"",164,264,72,24)
+        addControl(VREdit,'edit_render_scale',"",164,144,104,24)
+        addControl(VREdit,'edit_x_rotation_offset',"",164,344,72,24)
+        addControl(VREdit,'edit_z_offset',"",164,304,72,24)
+        addControl(VRStatic,'static_anti_aliasing',"Anti Aliasing",60,184,96,24)
+        addControl(VRStatic,'static_camera_name',"Camera Name",52,24,104,24)
+        addControl(VRStatic,'static_camera_type',"Camera Type",60,64,96,24)
+        addControl(VRStatic,'static_field_of_view',"Field of View",60,104,96,24)
+        addControl(VRStatic,'static_preview_size',"Ingame preview Size",4,264,144,24)
+        addControl(VRStatic,'static_render_scale',"Render Scale",52,144,96,24)
+        addControl(VRStatic,'static_warldcam_visibiity',"Ingame Cam Visibility",4,224,152,24)
+        addControl(VRStatic,'static_x_rotation_offset',"X Rotation Offset (Pitch)",28,336,120,40)
+        addControl(VRStatic,'static_z_offset',"Z-Offset",84,304,72,24)
+        addControl(VRTrackbar,'trackBar_field_of_view',"trackBar1",268,104,288,24)
+        addControl(VRTrackbar,'trackBar_preview_size',"trackBar2",252,264,304,24)
+        addControl(VRTrackbar,'trackBar_render_scale',"trackBar1",268,144,288,24)
+        addControl(VRTrackbar,'trackBar_x_rotation_offset',"trackBar1",252,344,304,24)
+        addControl(VRTrackbar,'trackBar_z_offset',"trackBar1",252,304,304,24)
       end
     end
 
@@ -164,7 +169,6 @@ class Form_main < VRForm
       attr_reader :checkBox_enabled
       attr_reader :checkBox_follow_replay_position
       attr_reader :checkBox_force_upright
-      attr_reader :checkBox_pivoting_offset
       attr_reader :edit_position_smoothing
       attr_reader :edit_rotation_smoothing
       attr_reader :static_follow360
@@ -180,13 +184,12 @@ class Form_main < VRForm
         addControl(VRCheckbox,'checkBox_enabled',"Enabled",60,184,96,32)
         addControl(VRCheckbox,'checkBox_follow_replay_position',"Follow Replay Position",60,72,208,24)
         addControl(VRCheckbox,'checkBox_force_upright',"Force Upright",60,32,200,32)
-        addControl(VRCheckbox,'checkBox_pivoting_offset',"Pivoting Offset",284,40,176,24)
         addControl(VREdit,'edit_position_smoothing',"",172,112,72,24)
         addControl(VREdit,'edit_rotation_smoothing',"",172,272,72,24)
-        addControl(VRStatic,'static_follow360',"=======FOLLOW360=======",60,160,256,24)
+        addControl(VRStatic,'static_follow360',"=======360/90=======",60,160,256,24)
         addControl(VRStatic,'static_position_smoothing',"Position Smoothing*",20,112,144,24)
         addControl(VRStatic,'static_rotation_smoothing',"Rotation Smoothing*",20,272,144,24)
-        addControl(VRStatic,'static_smooth_and_360',"=======360 and SMOOTH FOLLOW=======",52,232,336,24)
+        addControl(VRStatic,'static_smooth_and_360',"=======360/90 and SMOOTH FOLLOW=======",52,232,384,24)
         addControl(VRStatic,'static_smoothfollow',"=======SMOOTHFOLLOW=======",60,8,320,24)
         addControl(VRStatic,'static_smoothing_tips',"*Lower value = More smoothing",148,320,240,24)
         addControl(VRTrackbar,'trackBar_position_smoothing',"trackBar1",252,112,272,24)
@@ -203,7 +206,7 @@ class Form_main < VRForm
       def construct
         addControl(VRCheckbox,'checkBox_auto_hide_HUD',"Auto-Hide HUD",60,104,208,24)
         addControl(VRCheckbox,'checkBox_auto_visible_walls',"Auto-Visible Walls",60,64,208,32)
-        addControl(VRCheckbox,'checkBox_move_with_map',"Move with Map",60,24,208,32)
+        addControl(VRCheckbox,'checkBox_move_with_map',"Follow Map movement",60,24,208,32)
       end
     end
 
@@ -289,6 +292,10 @@ class Form_main < VRForm
       attr_reader :edit_view_rect_y
       attr_reader :panel_target_rot
       attr_reader :panel_view_rect
+      attr_reader :static2
+      attr_reader :static3
+      attr_reader :static4
+      attr_reader :static5
       attr_reader :static_flying_control
       attr_reader :static_pos_amount
       attr_reader :static_target_pos
@@ -305,21 +312,6 @@ class Form_main < VRForm
       attr_reader :static_view_rect_x
       attr_reader :static_view_rect_y
       attr_reader :trackBar_pos_amount
-
-      class Panel_view_rect < VRPanel
-        include VRStdControlContainer
-        attr_reader :radioBtn_view_rect1
-        attr_reader :radioBtn_view_rect2
-        attr_reader :radioBtn_view_rect3
-        attr_reader :radioBtn_view_rect4
-
-        def construct
-          addControl(VRRadiobutton,'radioBtn_view_rect1',"1",8,8,32,24)
-          addControl(VRRadiobutton,'radioBtn_view_rect2',"10",48,8,48,24)
-          addControl(VRRadiobutton,'radioBtn_view_rect3',"50",96,8,40,24)
-          addControl(VRRadiobutton,'radioBtn_view_rect4',"100",144,8,48,24)
-        end
-      end
 
       class Panel_target_rot < VRPanel
         include VRStdControlContainer
@@ -340,19 +332,34 @@ class Form_main < VRForm
         end
       end
 
+      class Panel_view_rect < VRPanel
+        include VRStdControlContainer
+        attr_reader :radioBtn_view_rect1
+        attr_reader :radioBtn_view_rect2
+        attr_reader :radioBtn_view_rect3
+        attr_reader :radioBtn_view_rect4
+
+        def construct
+          addControl(VRRadiobutton,'radioBtn_view_rect1',"1",8,8,32,24)
+          addControl(VRRadiobutton,'radioBtn_view_rect2',"10",48,8,48,24)
+          addControl(VRRadiobutton,'radioBtn_view_rect3',"50",96,8,40,24)
+          addControl(VRRadiobutton,'radioBtn_view_rect4',"100",144,8,48,24)
+        end
+      end
+
       def construct
         addControl(Panel_target_rot,'panel_target_rot',"panel1",372,160,184,64)
         addControl(Panel_view_rect,'panel_view_rect',"panel2",12,192,208,32)
-        addControl(VRButton,'button_back',"BACK",252,312,72,40)
-        addControl(VRButton,'button_down',"DOWN",340,328,88,24)
-        addControl(VRButton,'button_front',"FRONT",252,224,72,40)
-        addControl(VRButton,'button_left',"LEFT",132,272,104,40)
-        addControl(VRButton,'button_pitch_down',"PITCH DOWN",132,328,104,24)
-        addControl(VRButton,'button_pitch_up',"PITCH UP",132,232,104,24)
+        addControl(VRButton,'button_back',"BACK",252,376,72,40)
+        addControl(VRButton,'button_down',"DOWN",340,392,88,24)
+        addControl(VRButton,'button_front',"FRONT",252,280,72,40)
+        addControl(VRButton,'button_left',"LEFT",132,328,104,40)
+        addControl(VRButton,'button_pitch_down',"PITCH DOWN",132,392,104,24)
+        addControl(VRButton,'button_pitch_up',"PITCH UP",132,280,104,24)
         addControl(VRButton,'button_reset',"RESET",340,16,48,24)
-        addControl(VRButton,'button_right',"RIGHT",340,272,88,40)
-        addControl(VRButton,'button_roll_left',"ROLL LEFT",20,304,96,24)
-        addControl(VRButton,'button_roll_right',"ROLL RIGHT",452,304,88,24)
+        addControl(VRButton,'button_right',"RIGHT",340,328,88,40)
+        addControl(VRButton,'button_roll_left',"ROLL LEFT",20,368,96,24)
+        addControl(VRButton,'button_roll_right',"ROLL RIGHT",452,368,88,24)
         addControl(VRButton,'button_target_pos_x_d',"D",340,48,24,24)
         addControl(VRButton,'button_target_pos_x_u',"U",316,48,24,24)
         addControl(VRButton,'button_target_pos_y_d',"D",340,88,24,24)
@@ -365,7 +372,7 @@ class Form_main < VRForm
         addControl(VRButton,'button_target_rot_y_u',"U",484,88,24,24)
         addControl(VRButton,'button_target_rot_z_d',"D",508,128,24,24)
         addControl(VRButton,'button_target_rot_z_u',"U",484,128,24,24)
-        addControl(VRButton,'button_up',"UP",340,232,88,24)
+        addControl(VRButton,'button_up',"UP",340,280,88,24)
         addControl(VRButton,'button_view_rect_height_d',"D",180,168,24,24)
         addControl(VRButton,'button_view_rect_height_u',"U",156,168,24,24)
         addControl(VRButton,'button_view_rect_width_d',"D",180,128,24,24)
@@ -374,9 +381,9 @@ class Form_main < VRForm
         addControl(VRButton,'button_view_rect_x_u',"U",156,48,24,24)
         addControl(VRButton,'button_view_rect_y_d',"D",180,88,24,24)
         addControl(VRButton,'button_view_rect_y_u',"U",156,88,24,24)
-        addControl(VRButton,'button_yaw_left',"YAW LEFT",20,256,96,24)
-        addControl(VRButton,'button_yaw_right',"YAW RIGHT",452,256,88,24)
-        addControl(VRCheckbox,'checkBox_auto_apply',"Auto Apply",444,224,104,16)
+        addControl(VRButton,'button_yaw_left',"YAW LEFT",20,304,96,24)
+        addControl(VRButton,'button_yaw_right',"YAW RIGHT",452,304,88,24)
+        addControl(VRCheckbox,'checkBox_auto_apply',"Auto Apply",20,256,104,24)
         addControl(VRCheckbox,'checkBox_view_rect_full',"Full Screen",108,16,104,24)
         addControl(VREdit,'edit_pos_amount',"",316,184,48,24)
         addControl(VREdit,'edit_target_pos_x',"",244,48,72,24)
@@ -389,7 +396,11 @@ class Form_main < VRForm
         addControl(VREdit,'edit_view_rect_width',"",92,128,64,24)
         addControl(VREdit,'edit_view_rect_x',"",92,48,64,24)
         addControl(VREdit,'edit_view_rect_y',"",92,88,64,24)
-        addControl(VRStatic,'static_flying_control',"Flying control",260,272,64,40)
+        addControl(VRStatic,'static2',"0.001",20,224,40,24)
+        addControl(VRStatic,'static3',"0.01",68,224,32,16)
+        addControl(VRStatic,'static4',"0.05",116,224,32,24)
+        addControl(VRStatic,'static5',"0.1",180,224,24,24)
+        addControl(VRStatic,'static_flying_control',"Flying control",260,328,64,40)
         addControl(VRStatic,'static_pos_amount',"Pos amount",228,192,80,16)
         addControl(VRStatic,'static_target_pos',"Target Pos",244,16,88,24)
         addControl(VRStatic,'static_target_pos_x',"X",228,48,16,24)
@@ -410,16 +421,52 @@ class Form_main < VRForm
 
     class Panel6 < VRPanel
       include VRStdControlContainer
-      attr_reader :checkBox_enable_in_menu
       attr_reader :checkBox_from_origin
       attr_reader :listBox_script_list
       attr_reader :static_movement_script
 
       def construct
-        addControl(VRCheckbox,'checkBox_enable_in_menu',"Enable in menu",308,16,128,32)
         addControl(VRCheckbox,'checkBox_from_origin',"From Origin",180,16,104,32)
-        addControl(VRListbox,'listBox_script_list',"listBox1",28,56,488,240,0x8)
+        addControl(VRListbox,'listBox_script_list',"listBox1",28,56,536,348,0x8)
         addControl(VRStatic,'static_movement_script',"Movement Script",28,24,128,16)
+      end
+    end
+
+    class Panel7 < VRPanel
+      include VRStdControlContainer
+      include VRComCtlContainer
+      attr_reader :checkBox_enable_in_menu
+      attr_reader :checkBox_follow_spectator_plattform
+      attr_reader :checkBox_orthographic
+      attr_reader :comboBox_vmc_mode
+      attr_reader :edit_far_z
+      attr_reader :edit_fps_limit
+      attr_reader :edit_vmc_destination
+      attr_reader :static_far_z
+      attr_reader :static_fps_limit
+      attr_reader :static_fps_limit_comment1
+      attr_reader :static_fps_limit_comment2
+      attr_reader :static_vmc_destination
+      attr_reader :static_vmc_mode
+      attr_reader :static_vmc_protocol
+      attr_reader :trackBar_fps_limit
+
+      def construct
+        addControl(VRCheckbox,'checkBox_enable_in_menu',"Enable Movementscript in Menu",52,80,248,32)
+        addControl(VRCheckbox,'checkBox_follow_spectator_plattform',"Attach to Spectating Plattform (MP)",52,48,328,32)
+        addControl(VRCheckbox,'checkBox_orthographic',"Use Orthoraphic projection",52,16,288,32)
+        addControl(VRCombobox,'comboBox_vmc_mode',"",140,232,312,80)
+        addControl(VREdit,'edit_far_z',"",100,120,104,24)
+        addControl(VREdit,'edit_fps_limit',"",196,368,64,24)
+        addControl(VREdit,'edit_vmc_destination',"",140,192,312,24)
+        addControl(VRStatic,'static_far_z',"farZ",60,120,32,24)
+        addControl(VRStatic,'static_fps_limit',"FPS Limit (0=off)",68,368,120,24)
+        addControl(VRStatic,'static_fps_limit_comment1',"Do not set a FPS limit unless you either absolutely need to, or understand the consequences.",36,288,560,40)
+        addControl(VRStatic,'static_fps_limit_comment2',"Check the Camera Configuration Wiki page for more details.",36,332,424,24)
+        addControl(VRStatic,'static_vmc_destination',"Destination",52,192,80,24)
+        addControl(VRStatic,'static_vmc_mode',"Mode",92,232,40,24)
+        addControl(VRStatic,'static_vmc_protocol',"==== VMCProtocol ====",44,160,192,24)
+        addControl(VRTrackbar,'trackBar_fps_limit',"trackBar1",260,368,304,24)
       end
     end
 
@@ -431,7 +478,8 @@ class Form_main < VRForm
         ['MODMAPEXT',Panel3,'panel3'],
         ['SCENES',Panel4,'panel4'],
         ['LAYOUT',Panel5,'panel5'],
-        ['MOVEMENT',Panel6,'panel6']
+        ['MOVEMENT',Panel6,'panel6'],
+        ['MISC',Panel7,'panel7']
       ])
     end
   end
@@ -440,8 +488,8 @@ class Form_main < VRForm
     self.sizebox=false
     self.maximizebox=false
     self.caption = 'Camera2GUI'
-    self.move(495,227,580,625)
-    #$_addControl(VRMenu,'mainmenu1',"",520,96,24,24)
+    self.move(495,227,630,700)
+    #$_addControl(VRMenu,'mainmenu1',"",576,96,24,24)
     @mainmenu1 = newMenu.set(
       [
         ["&File",[
@@ -470,12 +518,12 @@ class Form_main < VRForm
     addControl(VRButton,'button_apply',"SAVE and Apply",16,120,120,32)
     addControl(VRButton,'button_copy',"COPY",80,56,56,24)
     addControl(VRButton,'button_del',"DELETE",16,88,56,24)
-    addControl(VRButton,'button_list_down',"DOWN",488,56,56,32)
-    addControl(VRButton,'button_list_up',"UP",488,8,56,32)
+    addControl(VRButton,'button_list_down',"DOWN",544,56,56,32)
+    addControl(VRButton,'button_list_up',"UP",544,8,56,32)
     addControl(VRButton,'button_reload',"Reload",16,8,120,32)
     addControl(VRButton,'button_save',"SAVE",80,88,56,24)
-    addControl(VRListbox,'listBox_camera',"listBox1",144,8,336,150,0x80)
-    #$_addControl(VRMgdVertLayoutFrame,'vertFrame1',"",496,96,24,24)
+    addControl(VRListbox,'listBox_camera',"listBox1",152,8,376,150,0x80)
+    #$_addControl(VRMgdVertLayoutFrame,'vertFrame1',"",552,96,24,24)
     @vertFrame1=setMarginedFrame(VRMgdVertLayoutFrame)
     @vertFrame1.register(@tabPanel_main)
     @vertFrame1.setMargin(0,165,0,0)

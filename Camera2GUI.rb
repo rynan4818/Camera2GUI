@@ -51,6 +51,7 @@ TAB_MODMAPEXT  = 3
 TAB_SCENES     = 4
 TAB_LAYOUT     = 5
 TAB_MOVEMENT   = 6
+TAB_MISC       = 7
 
 CAMERA_NAME   = 0
 CAMERA_JSON   = 1
@@ -65,6 +66,7 @@ COMBO_ANTI_ALIASING       = ["1","2","4","8"]
 COMBO_WALL_VISIBLITY      = ["Visible","Transparent","Hidden"]
 COMBO_NOTE_VISIBILITY     = ["Hidden","Visible","ForceCustomNotes"]
 COMBO_AVATAR_VISIBILITY   = ["Hidden","Visible","ForceVisibleInFP"]
+COMBO_VMC_PROTOCOL_MODE   = ["Disabld","Sender"]
 
 TYPE_FIRSTPERSON  = COMBO_CAMERA_TYPE.index("FirstPerson")
 TYPE_POSITIONABLE = COMBO_CAMERA_TYPE.index("Positionable")

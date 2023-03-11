@@ -71,6 +71,7 @@ class Form_main                                                     ##__BY_FDVR
     @tabPanel_main.panels[TAB_SCENES].main_created
     @tabPanel_main.panels[TAB_LAYOUT].main_created
     @tabPanel_main.panels[TAB_MOVEMENT].main_created
+    @tabPanel_main.panels[TAB_MISC].main_created
     addTimer(1000,"filecheck")
   end
   
